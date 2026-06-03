@@ -12,13 +12,28 @@ import { PaymentIntentView } from './components/PaymentIntentView'
 import { PaymentTracker } from './components/PaymentTracker'
 import { RouteComparison } from './components/RouteComparison'
 import { ScenarioSelector } from './components/ScenarioSelector'
+import { StepIndicator } from './components/StepIndicator'
+import { ArrowRight } from 'lucide-react'
 
 function App() {
   const [scenarioId, setScenarioId] = useState(demoScenarios[0].id)
+  const [step, setStep] = useState<1 | 2 | 3>(1)
+
   const scenario = useMemo(
     () => demoScenarios.find((candidate) => candidate.id === scenarioId) ?? demoScenarios[0],
     [scenarioId],
   )
+
+  function handleScenarioMatched(id: string) {
+    setScenarioId(id)
+    setStep(2)
+  }
+
+  function handleStepClick(s: number) {
+    if (s === 1 || s === 2 || s === 3) {
+      setStep(s as 1 | 2 | 3)
+    }
+  }
 
   return (
     <main className="app-shell">
@@ -34,28 +49,83 @@ function App() {
         </div>
       </header>
 
-      <section className="control-band" aria-label="Control room">
-        <ControlRoom trace={scenario.trace} />
-      </section>
+      <div className="journey-wrapper">
+        <StepIndicator currentStep={step} onStepClick={handleStepClick} />
 
-      <section className="workspace">
-        <aside className="left-rail" aria-label="Scenario and payment intent">
-          <PaymentIntentIntake scenarios={demoScenarios} selectedScenario={scenario} onScenarioMatched={setScenarioId} />
-          <ScenarioSelector scenarios={demoScenarios} selectedId={scenario.id} onSelect={setScenarioId} />
-          <PaymentIntentView intent={scenario.intent} />
-        </aside>
+        {/* ── STEP 1: INTENT ── */}
+        <section className="step-section" aria-label="Step 1: Intent">
+          <div className="intent-grid-layout">
+            <div>
+              <PaymentIntentIntake
+                scenarios={demoScenarios}
+                selectedScenario={scenario}
+                onScenarioMatched={handleScenarioMatched}
+              />
+            </div>
+            <div>
+              <ScenarioSelector scenarios={demoScenarios} selectedId={scenario.id} onSelect={setScenarioId} />
+            </div>
+          </div>
 
-        <section className="main-panel" aria-label="Route comparison">
-          <RouteComparison trace={scenario.trace} />
-          <LeafletRouteMap trace={scenario.trace} />
-          <FallbackEventView trace={scenario.trace} />
-          <PaymentTracker trace={scenario.trace} />
+          {/* Payment Intent summary card */}
+          <div className="intent-summary-row">
+            <PaymentIntentView intent={scenario.intent} />
+          </div>
+
+          <div className="step-action-row">
+            <button
+              type="button"
+              className="primary-btn"
+              onClick={() => setStep(2)}
+            >
+              Analyse Route
+              <ArrowRight size={16} aria-hidden="true" />
+            </button>
+          </div>
         </section>
 
-        <aside className="right-rail" aria-label="Decision Trace">
-          <DecisionTracePanel trace={scenario.trace} />
-        </aside>
-      </section>
+        {/* ── STEP 2: ROUTE ANALYSIS ── */}
+        {step >= 2 && (
+          <section className="step-section" aria-label="Step 2: Route Analysis">
+            <div className="analysis-grid">
+              <div>
+                <RouteComparison trace={scenario.trace} />
+              </div>
+              <div>
+                <DecisionTracePanel trace={scenario.trace} />
+              </div>
+            </div>
+
+            <div className="map-fallback-row">
+              <LeafletRouteMap trace={scenario.trace} />
+              {scenario.trace.fallbackEvent && (
+                <FallbackEventView trace={scenario.trace} />
+              )}
+            </div>
+
+            <div className="step-action-row">
+              <button
+                type="button"
+                className="primary-btn"
+                onClick={() => setStep(3)}
+              >
+                Authorise &amp; Track
+                <ArrowRight size={16} aria-hidden="true" />
+              </button>
+            </div>
+          </section>
+        )}
+
+        {/* ── STEP 3: EXECUTION ── */}
+        {step >= 3 && (
+          <section className="step-section execution-section" aria-label="Step 3: Execution">
+            <PaymentTracker trace={scenario.trace} />
+            <div className="control-band">
+              <ControlRoom trace={scenario.trace} />
+            </div>
+          </section>
+        )}
+      </div>
     </main>
   )
 }

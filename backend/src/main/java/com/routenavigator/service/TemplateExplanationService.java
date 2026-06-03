@@ -2,19 +2,14 @@ package com.routenavigator.service;
 
 import com.routenavigator.domain.DecisionTrace;
 import com.routenavigator.domain.RouteExplanationResponse;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-@ApplicationScoped
 public class TemplateExplanationService implements GeminiExplanationService {
     private final TraceRedactionService traceRedactionService;
     private final boolean geminiEnabled;
 
-    @Inject
     public TemplateExplanationService(
             TraceRedactionService traceRedactionService,
-            @ConfigProperty(name = "gemini.enabled", defaultValue = "false") boolean geminiEnabled) {
+            boolean geminiEnabled) {
         this.traceRedactionService = traceRedactionService;
         this.geminiEnabled = geminiEnabled;
     }

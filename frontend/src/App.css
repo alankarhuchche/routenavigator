@@ -65,6 +65,7 @@ h2 {
   font-size: 12px;
 }
 
+/* ── Legacy workspace (kept for reference, superseded by journey layout) ── */
 .workspace {
   display: grid;
   grid-template-columns: minmax(260px, 320px) minmax(420px, 1fr) minmax(320px, 420px);
@@ -73,7 +74,7 @@ h2 {
 }
 
 .control-band {
-  padding: 16px 16px 0;
+  padding: 16px 0 0;
 }
 
 .left-rail,
@@ -83,6 +84,174 @@ h2 {
   flex-direction: column;
   gap: 16px;
   min-width: 0;
+}
+
+/* ── Journey layout ── */
+.journey-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 20px 24px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.step-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.intent-grid-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.intent-summary-row {
+  /* full-width summary card */
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: 55fr 45fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.map-fallback-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.map-fallback-row > *:only-child {
+  grid-column: 1 / -1;
+}
+
+.execution-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.step-action-row {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 4px;
+}
+
+.primary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 20px;
+  border: 1px solid #0f766e;
+  border-radius: 6px;
+  background: #0f766e;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 850;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.primary-btn:hover {
+  background: #0d6460;
+  border-color: #0d6460;
+}
+
+/* ── Step Indicator ── */
+.step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 16px 0 8px;
+}
+
+.step-indicator-item {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.step-indicator-item:last-child {
+  flex: 0 0 auto;
+}
+
+.step-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.step-btn.step-future {
+  cursor: default;
+}
+
+.step-circle {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid #d9dee8;
+  background: #f8fafc;
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 850;
+  flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.step-btn.step-active .step-circle {
+  background: #0f766e;
+  border-color: #0f766e;
+  color: #ffffff;
+}
+
+.step-btn.step-completed .step-circle {
+  background: #d1fae5;
+  border-color: #059669;
+  color: #047857;
+}
+
+.step-label {
+  font-size: 14px;
+  font-weight: 750;
+  color: #94a3b8;
+  transition: color 0.15s;
+}
+
+.step-btn.step-active .step-label {
+  color: #0f766e;
+}
+
+.step-btn.step-completed .step-label {
+  color: #334155;
+}
+
+.step-connector {
+  flex: 1;
+  height: 2px;
+  margin: 0 12px;
+  background: #d9dee8;
+  border-radius: 999px;
+  transition: background 0.15s;
+}
+
+.step-connector.step-connector-done {
+  background: #059669;
 }
 
 .panel {
@@ -716,10 +885,17 @@ meter {
   .right-rail {
     grid-column: 1 / -1;
   }
+
+  .analysis-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 780px) {
-  .app-header,
+  .app-header {
+    padding: 12px;
+  }
+
   .workspace {
     padding: 12px;
   }
@@ -737,8 +913,15 @@ meter {
     grid-template-columns: 1fr;
   }
 
-  .control-band {
-    padding: 12px 12px 0;
+  .journey-wrapper {
+    padding: 12px 12px 32px;
+    gap: 16px;
+  }
+
+  .intent-grid-layout,
+  .analysis-grid,
+  .map-fallback-row {
+    grid-template-columns: 1fr;
   }
 
   .control-grid,

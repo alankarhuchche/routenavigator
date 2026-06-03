@@ -3,7 +3,7 @@
 Codex must update this file after every completed or blocked backlog item.
 
 ## Current status
-MVP backlog complete. Backend, frontend, fallback simulator, Control Room, README walkthrough and Cloud Run deployment notes are implemented, tested where possible, committed and pushed.
+MVP backlog complete plus Gemini real implementation and UX journey-flow restructure. Backend has real Gemini explanation service (activates via GEMINI_ENABLED + GEMINI_API_KEY env vars). Frontend restructured into a 3-step journey: Intent → Route Analysis → Execution.
 
 ## Completed tasks
 - 1. Create monorepo folders: `backend/`, `frontend/`, `docs/agent/`, `deployment/`.
@@ -58,6 +58,21 @@ MVP backlog complete. Backend, frontend, fallback simulator, Control Room, READM
 
 ## In progress
 None.
+
+## Post-MVP enhancements completed
+
+### 2026-06-03 — Real Gemini explanation service
+Change: Implemented RealGeminiExplanationService using MicroProfile REST Client to call Gemini 2.0 Flash. Added GeminiApiClient, GeminiServiceProducer (CDI producer selecting real vs template service), updated TemplateExplanationService to plain bean. Service activates only when GEMINI_ENABLED=true AND GEMINI_API_KEY is set; falls back gracefully on any error.
+Files: `backend/pom.xml`, `backend/src/main/resources/application.properties`, `backend/src/main/java/com/routenavigator/service/GeminiApiClient.java`, `RealGeminiExplanationService.java`, `GeminiServiceProducer.java`, `TemplateExplanationService.java`
+Commands: `cd backend && ./mvnw test`
+Result: passed. 18/18 tests pass.
+To enable on Cloud Run: set env vars GEMINI_ENABLED=true and GEMINI_API_KEY=<your-key>
+
+### 2026-06-03 — Journey-based UX restructure
+Change: Replaced static 3-column dashboard with a 3-step guided flow: Step 1 (Intent) → Step 2 (Route Analysis) → Step 3 (Execution). Customer Intent Intake is now the full-width hero at the top. Decision Trace panel is wider (45% of analysis grid vs cramped right rail). Control Room demoted to Step 3 where it has context. Added StepIndicator navigation component.
+Files: `frontend/src/App.tsx`, `frontend/src/App.css`, `frontend/src/components/StepIndicator.tsx`
+Commands: `cd frontend && npm run typecheck && npm run build`
+Result: passed. Zero TypeScript errors, production build clean.
 
 ## Blocked
 None.
