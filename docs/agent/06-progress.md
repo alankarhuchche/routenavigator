@@ -205,3 +205,4 @@ Blockers: none
 - Gemini remains default off, as required. Template explanations work without credentials. A real Gemini client can be added later behind `GeminiExplanationService`, but it must remain explanation-only and receive only redacted traces.
 - Persistence is intentionally local JSON plus in-memory trace/state storage for the MVP. PostgreSQL should be added later behind the existing service/repository boundary for saved decisions, audit history or multi-user demo sessions.
 - The frontend currently uses static scenario fixtures that mirror the backend demo scenarios. Backend APIs are implemented and documented; wiring the UI to live API calls is a good next enhancement if the demo needs real-time API-driven interaction.
+- Added Customer Intent Intake in the frontend after deployment feedback: the demo now starts with a natural-language payment request plus preferences, then deterministically maps that request to the closest simulated scenario.

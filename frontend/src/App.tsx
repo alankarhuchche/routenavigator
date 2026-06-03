@@ -7,6 +7,7 @@ import { DisclaimerBanner } from './components/DisclaimerBanner'
 import { DecisionTracePanel } from './components/DecisionTracePanel'
 import { FallbackEventView } from './components/FallbackEventView'
 import { LeafletRouteMap } from './components/LeafletRouteMap'
+import { PaymentIntentIntake } from './components/PaymentIntentIntake'
 import { PaymentIntentView } from './components/PaymentIntentView'
 import { PaymentTracker } from './components/PaymentTracker'
 import { RouteComparison } from './components/RouteComparison'
@@ -39,6 +40,7 @@ function App() {
 
       <section className="workspace">
         <aside className="left-rail" aria-label="Scenario and payment intent">
+          <PaymentIntentIntake scenarios={demoScenarios} selectedScenario={scenario} onScenarioMatched={setScenarioId} />
           <ScenarioSelector scenarios={demoScenarios} selectedId={scenario.id} onSelect={setScenarioId} />
           <PaymentIntentView intent={scenario.intent} />
         </aside>

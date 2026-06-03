@@ -55,6 +55,8 @@ cd frontend && npm run build
 ```
 
 ## Demo walkthrough
+Start in **Customer Intent Intake**. Type a natural-language request, choose the objective and route preferences, then click **Match route**. The app deterministically maps that customer-style request to the closest simulated scenario and updates the Control Room, Route Comparison, map, tracker and Decision Trace.
+
 1. Select `SCN-001` to show the simple domestic GBP case. Instant UK bank transfer wins because the payment is domestic, low-value and beneficiary-reachable.
 2. Select `SCN-002` to show fastest GBP-to-USD bank payout. The fast digital-dollar route wins only after gates pass; the app must describe it as incomplete until beneficiary usable fiat value is confirmed.
 3. Select `SCN-003` to show wallet-to-wallet USDC. The wallet route wins because the source asset and beneficiary endpoint match.

@@ -220,6 +220,107 @@ h2 {
   padding: 10px;
 }
 
+.intent-form {
+  display: grid;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.intent-form label {
+  display: grid;
+  gap: 6px;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.intent-form textarea,
+.intent-form select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #111827;
+  font: inherit;
+  font-size: 13px;
+}
+
+.intent-form textarea {
+  resize: vertical;
+  min-height: 112px;
+  padding: 10px;
+  line-height: 1.45;
+}
+
+.intent-form select {
+  min-height: 36px;
+  padding: 0 8px;
+}
+
+.preference-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.intent-form .check-row {
+  grid-template-columns: 18px 1fr;
+  align-items: center;
+  gap: 8px;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.check-row input {
+  width: 16px;
+  height: 16px;
+}
+
+.intent-actions {
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.intent-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  border: 1px solid #0f766e;
+  border-radius: 6px;
+  background: #0f766e;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.intent-actions span {
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.match-summary {
+  display: grid;
+  gap: 4px;
+  padding: 0 16px 16px;
+}
+
+.match-summary p {
+  margin: 4px 0 0;
+  color: #475569;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 .scenario-button {
   display: grid;
   grid-template-columns: 62px 1fr;
