@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
 import { demoScenarios } from './data/demoData'
+import { ControlRoom } from './components/ControlRoom'
 import { DisclaimerBanner } from './components/DisclaimerBanner'
 import { DecisionTracePanel } from './components/DecisionTracePanel'
 import { FallbackEventView } from './components/FallbackEventView'
@@ -31,6 +32,10 @@ function App() {
           <strong>{scenario.trace.selectedRoute.family}</strong>
         </div>
       </header>
+
+      <section className="control-band" aria-label="Control room">
+        <ControlRoom trace={scenario.trace} />
+      </section>
 
       <section className="workspace">
         <aside className="left-rail" aria-label="Scenario and payment intent">

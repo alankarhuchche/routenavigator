@@ -3,7 +3,7 @@
 Codex must update this file after every completed or blocked backlog item.
 
 ## Current status
-Fallback scenario complete. Execution simulator supports pre-PONR degradation, fallback route activation and post-PONR investigation handling.
+Control Room UI complete. Fallback scenario complete with pre-PONR route activation and post-PONR investigation handling.
 
 ## Completed tasks
 - 1. Create monorepo folders: `backend/`, `frontend/`, `docs/agent/`, `deployment/`.
@@ -50,6 +50,7 @@ Fallback scenario complete. Execution simulator supports pre-PONR degradation, f
 - 42. Implement fallback evaluation and fallback event append.
 - 43. Ensure post-point-of-no-return failures are not labelled fallback.
 - 44. Add UI view for fallback event and updated route.
+- 45. Build ControlRoom view with current state, PONR, fallback, gates, score, trace, AI boundary and events.
 
 ## In progress
 None.
@@ -64,7 +65,7 @@ None.
 - `cd frontend && npm run build`
 
 ## Next task
-45. Build ControlRoom view with current state, PONR, fallback, gates, score, trace, AI boundary and events.
+46. Add README demo walkthrough.
 
 ## Change log format
 When updating, use this format:
@@ -149,4 +150,12 @@ Files: `backend/src/main/java/com/routenavigator/domain/PaymentExecutionSnapshot
 Commands: `cd backend && ./mvnw test -Dtest=PaymentExecutionResourceTest`, `cd backend && ./mvnw test`, `cd frontend && npm run lint`, `cd frontend && npm run typecheck`, `cd frontend && npm run build`
 Result: passed. Backend tests passed with 18 tests. Frontend lint, typecheck and production build passed.
 Next: Task 45. Build ControlRoom view with current state, PONR, fallback, gates, score, trace, AI boundary and events.
+Blockers: none
+
+2026-06-03 22:44 — Task 45: ControlRoom view
+Change: Added a ControlRoom dashboard band with current state, selected and active route, PONR status, fallback status, gate summary, selected-route score, trace ID, AI boundary and recent events.
+Files: `frontend/src/components/ControlRoom.tsx`, `frontend/src/App.tsx`, `frontend/src/App.css`, `docs/agent/03-backlog.md`, `docs/agent/06-progress.md`
+Commands: `cd frontend && npm run lint`, `cd frontend && npm run typecheck`, `cd frontend && npm run build`, `curl -I http://127.0.0.1:5173/`
+Result: passed. Frontend lint, typecheck and production build passed. Local dev server returned HTTP 200. In-app browser visual smoke could not run because the browser runtime failed to start in this session.
+Next: Task 46. Add README demo walkthrough.
 Blockers: none

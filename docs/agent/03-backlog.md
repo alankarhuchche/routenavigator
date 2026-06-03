@@ -65,7 +65,7 @@ Work through these tasks in order. Do not skip ahead unless blocked.
 - [x] 44. Add UI view for fallback event and updated route.
 
 ## Epic 10 — Control room and polish
-- [ ] 45. Build ControlRoom view with current state, PONR, fallback, gates, score, trace, AI boundary and events.
+- [x] 45. Build ControlRoom view with current state, PONR, fallback, gates, score, trace, AI boundary and events.
 - [ ] 46. Add README demo walkthrough.
 - [ ] 47. Add deployment Dockerfile and Cloud Run demo notes.
 - [ ] 48. Run full backend tests and frontend build.
