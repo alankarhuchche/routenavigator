@@ -3,10 +3,14 @@
 Codex must update this file after every completed or blocked backlog item.
 
 ## Current status
-Not started.
+Repository foundation complete. Backend and frontend skeletons build successfully.
 
 ## Completed tasks
-None.
+- 1. Create monorepo folders: `backend/`, `frontend/`, `docs/agent/`, `deployment/`.
+- 2. Create backend Quarkus skeleton in `backend/`.
+- 3. Create frontend React + Vite + TypeScript skeleton in `frontend/`.
+- 4. Add root `README.md` explaining demo purpose and safety disclaimer.
+- 5. Add `.gitignore` for Java, Node, build outputs and local secrets.
 
 ## In progress
 None.
@@ -15,10 +19,15 @@ None.
 None.
 
 ## Last commands run
-None.
+- `mvn io.quarkus.platform:quarkus-maven-plugin:create -DprojectGroupId=com.routenavigator -DprojectArtifactId=backend -DprojectVersion=0.1.0-SNAPSHOT -DclassName="com.routenavigator.api.HealthResource" -Dpath="/api/health" -Dextensions="rest-jackson" -DnoCode=false`
+- `npm create vite@latest frontend -- --template react-ts`
+- `cd frontend && npm install`
+- `cd backend && ./mvnw test`
+- `cd frontend && npm run typecheck`
+- `cd frontend && npm run build`
 
 ## Next task
-1. Create monorepo folders: `backend/`, `frontend/`, `docs/agent/`, `deployment/`.
+6. Add mock data files under `backend/src/main/resources/data/`.
 
 ## Change log format
 When updating, use this format:
@@ -32,3 +41,11 @@ Result: <passed/failed/not run and why>
 Next: <next backlog item>
 Blockers: <none or details>
 ```
+
+2026-06-03 22:18 — Task 1-5: Repository foundation
+Change: Created monorepo folders, generated Quarkus backend skeleton, generated React + Vite + TypeScript frontend skeleton, verified existing README and root .gitignore, pinned backend Java release and JVM Docker image to Java 21, and added a frontend typecheck script.
+Files: `backend/`, `frontend/`, `deployment/.gitkeep`, `README.md`, `.gitignore`, `docs/agent/03-backlog.md`, `docs/agent/06-progress.md`
+Commands: `mvn io.quarkus.platform:quarkus-maven-plugin:create ...`, `npm create vite@latest frontend -- --template react-ts`, `cd frontend && npm install`, `cd backend && ./mvnw test`, `cd frontend && npm run typecheck`, `cd frontend && npm run build`
+Result: passed. Backend tests passed with 1 test. Frontend typecheck and production build passed.
+Next: Task 6. Add mock data files under `backend/src/main/resources/data/`.
+Blockers: none

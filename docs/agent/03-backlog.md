@@ -3,11 +3,11 @@
 Work through these tasks in order. Do not skip ahead unless blocked.
 
 ## Epic 1 — Repository foundation
-- [ ] 1. Create monorepo folders: `backend/`, `frontend/`, `docs/agent/`, `deployment/`.
-- [ ] 2. Create backend Quarkus skeleton in `backend/`.
-- [ ] 3. Create frontend React + Vite + TypeScript skeleton in `frontend/`.
-- [ ] 4. Add root `README.md` explaining demo purpose and safety disclaimer.
-- [ ] 5. Add `.gitignore` for Java, Node, build outputs and local secrets.
+- [x] 1. Create monorepo folders: `backend/`, `frontend/`, `docs/agent/`, `deployment/`.
+- [x] 2. Create backend Quarkus skeleton in `backend/`.
+- [x] 3. Create frontend React + Vite + TypeScript skeleton in `frontend/`.
+- [x] 4. Add root `README.md` explaining demo purpose and safety disclaimer.
+- [x] 5. Add `.gitignore` for Java, Node, build outputs and local secrets.
 
 ## Epic 2 — Mock data and domain model
 - [ ] 6. Add mock data files under `backend/src/main/resources/data/`: `scenarios.json`, `route-catalogue.json`, `gate-policies.json`, `scoring-policies.json`, `reason-codes.json`, `mock-fx-quotes.json`, `mock-liquidity.json`, `mock-compliance.json`, `mock-route-health.json`, `mock-beneficiaries.json`, `execution-scripts.json`.
