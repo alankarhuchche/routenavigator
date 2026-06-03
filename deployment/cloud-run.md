@@ -34,7 +34,10 @@ gcloud artifacts repositories create route-navigator \
 Build and push:
 
 ```bash
-gcloud builds submit --tag "${IMAGE}" .
+gcloud builds submit \
+  --config=cloudbuild.yaml \
+  --substitutions=_IMAGE="${IMAGE}" \
+  .
 ```
 
 Deploy:
