@@ -3,7 +3,7 @@
 Codex must update this file after every completed or blocked backlog item.
 
 ## Current status
-Cloud Run deployment notes and single-container Dockerfile complete. README demo walkthrough complete.
+MVP backlog complete. Backend, frontend, fallback simulator, Control Room, README walkthrough and Cloud Run deployment notes are implemented, tested where possible, committed and pushed.
 
 ## Completed tasks
 - 1. Create monorepo folders: `backend/`, `frontend/`, `docs/agent/`, `deployment/`.
@@ -53,6 +53,8 @@ Cloud Run deployment notes and single-container Dockerfile complete. README demo
 - 45. Build ControlRoom view with current state, PONR, fallback, gates, score, trace, AI boundary and events.
 - 46. Add README demo walkthrough.
 - 47. Add deployment Dockerfile and Cloud Run demo notes.
+- 48. Run full backend tests and frontend build.
+- 49. Update `docs/agent/06-progress.md` with final status and known gaps.
 
 ## In progress
 None.
@@ -67,7 +69,7 @@ None.
 - `cd frontend && npm run build`
 
 ## Next task
-48. Run full backend tests and frontend build.
+Deployment handover: install Docker or use Cloud Build, then follow `deployment/cloud-run.md`.
 
 ## Change log format
 When updating, use this format:
@@ -177,3 +179,26 @@ Commands: `cd backend && ./mvnw test`, `cd backend && ./mvnw package -DskipTests
 Result: passed with local limitation. Backend tests passed with 18 tests, backend package passed after rerunning serially, and frontend production build passed. Docker is not installed locally, so the container build itself was not run.
 Next: Task 48. Run full backend tests and frontend build.
 Blockers: none
+
+2026-06-03 22:48 — Task 48: Full verification
+Change: Re-ran the full local verification suite after deployment packaging.
+Files: `docs/agent/03-backlog.md`, `docs/agent/06-progress.md`
+Commands: `cd backend && ./mvnw test`, `cd backend && ./mvnw package -DskipTests`, `cd frontend && npm run lint`, `cd frontend && npm run typecheck`, `cd frontend && npm run build`
+Result: passed. Backend tests passed with 18 tests. Backend package, frontend lint, frontend typecheck and frontend production build passed.
+Next: Task 49. Update final progress and known gaps.
+Blockers: none
+
+2026-06-03 22:48 — Task 49: Final status and known gaps
+Change: Marked backlog complete and recorded handover gaps.
+Files: `docs/agent/03-backlog.md`, `docs/agent/06-progress.md`
+Commands: not run; progress documentation only after task 48 verification.
+Result: not run; documentation-only update.
+Next: Deployment handover: install Docker or use Cloud Build, then follow `deployment/cloud-run.md`.
+Blockers: none
+
+## Known gaps and handover notes
+- Docker is not installed locally, so `docker build -f deployment/Dockerfile -t route-navigator:local .` was not run here. Cloud Build can build the same Dockerfile.
+- In-app browser visual smoke could not run because the browser runtime failed to start in this session. The local Vite server returned HTTP 200 and the frontend lint/typecheck/build checks passed.
+- Gemini remains default off, as required. Template explanations work without credentials. A real Gemini client can be added later behind `GeminiExplanationService`, but it must remain explanation-only and receive only redacted traces.
+- Persistence is intentionally local JSON plus in-memory trace/state storage for the MVP. PostgreSQL should be added later behind the existing service/repository boundary for saved decisions, audit history or multi-user demo sessions.
+- The frontend currently uses static scenario fixtures that mirror the backend demo scenarios. Backend APIs are implemented and documented; wiring the UI to live API calls is a good next enhancement if the demo needs real-time API-driven interaction.
