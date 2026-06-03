@@ -3,7 +3,7 @@
 Codex must update this file after every completed or blocked backlog item.
 
 ## Current status
-Mock data and backend domain loading foundation complete. Backend and frontend skeletons build successfully.
+Gate evaluation foundation complete. Backend and frontend skeletons build successfully.
 
 ## Completed tasks
 - 1. Create monorepo folders: `backend/`, `frontend/`, `docs/agent/`, `deployment/`.
@@ -15,6 +15,10 @@ Mock data and backend domain loading foundation complete. Backend and frontend s
 - 7. Implement Java domain records/classes.
 - 8. Implement ScenarioService and RouteCatalogueService loading data from JSON.
 - 9. Add unit tests for loading scenarios and routes.
+- 10. Implement UniversalHardGateEvaluator.
+- 11. Implement RouteSpecificGateEvaluator for UK domestic, correspondent banking, local payout, stablecoin bridge and wallet-to-wallet stablecoin.
+- 12. Ensure failed blocking gates mark route as EXCLUDED before scoring.
+- 13. Add tests proving excluded routes are not scored.
 
 ## In progress
 None.
@@ -26,7 +30,7 @@ None.
 - `cd backend && ./mvnw test`
 
 ## Next task
-10. Implement UniversalHardGateEvaluator.
+14. Implement scoring profiles: FASTEST, CHEAPEST, MOST_TRANSPARENT, HIGHEST_CERTAINTY, BALANCED.
 
 ## Change log format
 When updating, use this format:
@@ -55,4 +59,12 @@ Files: `backend/src/main/java/com/routenavigator/domain/`, `backend/src/main/jav
 Commands: `cd backend && ./mvnw test`
 Result: passed. Backend tests passed with 3 tests.
 Next: Task 10. Implement UniversalHardGateEvaluator.
+Blockers: none
+
+2026-06-03 22:24 — Task 10-13: Gate evaluation
+Change: Added universal and route-specific hard gate evaluators, gate evaluation outcome model, pre-scoring surviving/excluded route boundary, and tests for traditional-only exclusions, wallet-to-wallet eligibility, and excluded route separation before scoring.
+Files: `backend/src/main/java/com/routenavigator/domain/GateEvaluationOutcome.java`, `backend/src/main/java/com/routenavigator/service/UniversalHardGateEvaluator.java`, `backend/src/main/java/com/routenavigator/service/RouteSpecificGateEvaluator.java`, `backend/src/main/java/com/routenavigator/service/GateEvaluationService.java`, `backend/src/test/java/com/routenavigator/service/GateEvaluationServiceTest.java`, `docs/agent/03-backlog.md`, `docs/agent/06-progress.md`
+Commands: `cd backend && ./mvnw test`
+Result: passed. Backend tests passed with 6 tests.
+Next: Task 14. Implement scoring profiles.
 Blockers: none

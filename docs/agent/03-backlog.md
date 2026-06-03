@@ -16,10 +16,10 @@ Work through these tasks in order. Do not skip ahead unless blocked.
 - [x] 9. Add unit tests for loading scenarios and routes.
 
 ## Epic 3 — Gate evaluation
-- [ ] 10. Implement UniversalHardGateEvaluator.
-- [ ] 11. Implement RouteSpecificGateEvaluator for UK domestic, correspondent banking, local payout, stablecoin bridge and wallet-to-wallet stablecoin.
-- [ ] 12. Ensure failed blocking gates mark route as EXCLUDED before scoring.
-- [ ] 13. Add tests proving excluded routes are not scored.
+- [x] 10. Implement UniversalHardGateEvaluator.
+- [x] 11. Implement RouteSpecificGateEvaluator for UK domestic, correspondent banking, local payout, stablecoin bridge and wallet-to-wallet stablecoin.
+- [x] 12. Ensure failed blocking gates mark route as EXCLUDED before scoring.
+- [x] 13. Add tests proving excluded routes are not scored.
 
 ## Epic 4 — Scoring and route decision
 - [ ] 14. Implement scoring profiles: FASTEST, CHEAPEST, MOST_TRANSPARENT, HIGHEST_CERTAINTY, BALANCED.
