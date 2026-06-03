@@ -1,0 +1,13 @@
+{
+  "simulated": true,
+  "routes": [
+    {"routeId": "route-uk-instant-bank-transfer", "status": "HEALTHY"},
+    {"routeId": "route-correspondent-banking", "status": "HEALTHY"},
+    {"routeId": "route-local-payout-partner", "status": "HEALTHY"},
+    {"routeId": "route-stablecoin-bridge-fiat-payout", "status": "HEALTHY"},
+    {"routeId": "route-wallet-to-wallet-stablecoin", "status": "HEALTHY"}
+  ],
+  "degradationScripts": [
+    {"scenarioId": "SCN-006", "routeId": "route-stablecoin-bridge-fiat-payout", "event": "US payout partner unavailable before token transfer commitment"}
+  ]
+}

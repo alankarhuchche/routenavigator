@@ -1,0 +1,13 @@
+{
+  "simulated": true,
+  "scripts": [
+    {
+      "routeId": "route-stablecoin-bridge-fiat-payout",
+      "states": ["AUTHORISED", "FX_RESERVED", "WALLET_SCREENED", "TOKEN_TRANSFER_COMMITTED", "FIAT_PAYOUT_CONFIRMED", "BENEFICIARY_USABLE_VALUE_CONFIRMED"]
+    },
+    {
+      "routeId": "route-correspondent-banking",
+      "states": ["AUTHORISED", "FX_BOOKED", "PAYMENT_MESSAGE_SENT", "INTERMEDIARY_PROCESSING", "BENEFICIARY_BANK_CREDITED"]
+    }
+  ]
+}

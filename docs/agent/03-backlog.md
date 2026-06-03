@@ -10,10 +10,10 @@ Work through these tasks in order. Do not skip ahead unless blocked.
 - [x] 5. Add `.gitignore` for Java, Node, build outputs and local secrets.
 
 ## Epic 2 — Mock data and domain model
-- [ ] 6. Add mock data files under `backend/src/main/resources/data/`: `scenarios.json`, `route-catalogue.json`, `gate-policies.json`, `scoring-policies.json`, `reason-codes.json`, `mock-fx-quotes.json`, `mock-liquidity.json`, `mock-compliance.json`, `mock-route-health.json`, `mock-beneficiaries.json`, `execution-scripts.json`.
-- [ ] 7. Implement Java domain records/classes for PaymentIntent, RouteCandidate, CanonicalRoute, RouteLeg, GateResult, ScoreResult, DecisionTrace, EvidenceReference, ExecutionEvent.
-- [ ] 8. Implement ScenarioService and RouteCatalogueService loading data from JSON.
-- [ ] 9. Add unit tests for loading scenarios and routes.
+- [x] 6. Add mock data files under `backend/src/main/resources/data/`: `scenarios.json`, `route-catalogue.json`, `gate-policies.json`, `scoring-policies.json`, `reason-codes.json`, `mock-fx-quotes.json`, `mock-liquidity.json`, `mock-compliance.json`, `mock-route-health.json`, `mock-beneficiaries.json`, `execution-scripts.json`.
+- [x] 7. Implement Java domain records/classes for PaymentIntent, RouteCandidate, CanonicalRoute, RouteLeg, GateResult, ScoreResult, DecisionTrace, EvidenceReference, ExecutionEvent.
+- [x] 8. Implement ScenarioService and RouteCatalogueService loading data from JSON.
+- [x] 9. Add unit tests for loading scenarios and routes.
 
 ## Epic 3 — Gate evaluation
 - [ ] 10. Implement UniversalHardGateEvaluator.

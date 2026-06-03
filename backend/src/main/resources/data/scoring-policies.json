@@ -1,0 +1,10 @@
+{
+  "simulated": true,
+  "profiles": {
+    "FASTEST": {"speed": 0.55, "cost": 0.15, "certainty": 0.2, "transparency": 0.1},
+    "CHEAPEST": {"speed": 0.15, "cost": 0.55, "certainty": 0.2, "transparency": 0.1},
+    "MOST_TRANSPARENT": {"speed": 0.15, "cost": 0.15, "certainty": 0.25, "transparency": 0.45},
+    "HIGHEST_CERTAINTY": {"speed": 0.15, "cost": 0.1, "certainty": 0.6, "transparency": 0.15},
+    "BALANCED": {"speed": 0.3, "cost": 0.25, "certainty": 0.25, "transparency": 0.2}
+  }
+}

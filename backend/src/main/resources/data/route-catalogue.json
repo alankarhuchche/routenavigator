@@ -1,0 +1,177 @@
+[
+  {
+    "routeId": "route-uk-instant-bank-transfer",
+    "customerLabel": "Instant UK bank transfer",
+    "family": "UK_DOMESTIC_INSTANT",
+    "description": "Simulated domestic UK instant bank transfer for eligible GBP payments.",
+    "supportedObjectives": ["FASTEST", "BALANCED", "HIGHEST_CERTAINTY"],
+    "requiredCapabilities": ["UK_REACHABILITY", "DOMESTIC_GBP"],
+    "legs": [
+      {
+        "legId": "leg-uk-instant",
+        "type": "BANK_TRANSFER",
+        "description": "Send GBP over simulated UK domestic instant rail.",
+        "from": "source-bank",
+        "to": "beneficiary-bank",
+        "assetIn": "GBP",
+        "assetOut": "GBP",
+        "estimatedMinutes": 2,
+        "pointOfNoReturn": true
+      }
+    ],
+    "pointOfNoReturn": "Payment instruction accepted by simulated domestic rail.",
+    "finalityModel": "Beneficiary usable value after simulated bank credit confirmation.",
+    "simulated": true
+  },
+  {
+    "routeId": "route-correspondent-banking",
+    "customerLabel": "International bank transfer",
+    "family": "CORRESPONDENT_BANKING",
+    "description": "Simulated international bank transfer using correspondent banking. SWIFT is the message layer; gpi is tracking where available.",
+    "supportedObjectives": ["MOST_TRANSPARENT", "HIGHEST_CERTAINTY", "BALANCED"],
+    "requiredCapabilities": ["FX_QUOTE", "CORRESPONDENT_BANKING", "GPI_TRACKING"],
+    "legs": [
+      {
+        "legId": "leg-fx",
+        "type": "FX_CONVERSION",
+        "description": "Illustrative GBP/USD FX conversion.",
+        "from": "source-bank",
+        "to": "source-bank",
+        "assetIn": "GBP",
+        "assetOut": "USD",
+        "estimatedMinutes": 15,
+        "pointOfNoReturn": false
+      },
+      {
+        "legId": "leg-correspondent",
+        "type": "CORRESPONDENT_BANKING",
+        "description": "Simulated correspondent banking transfer with SWIFT messaging and optional gpi tracking.",
+        "from": "source-bank",
+        "to": "beneficiary-bank",
+        "assetIn": "USD",
+        "assetOut": "USD",
+        "estimatedMinutes": 1440,
+        "pointOfNoReturn": true
+      }
+    ],
+    "pointOfNoReturn": "Correspondent banking payment instruction released to the simulated message layer.",
+    "finalityModel": "Beneficiary usable value only after beneficiary bank credit confirmation.",
+    "simulated": true
+  },
+  {
+    "routeId": "route-local-payout-partner",
+    "customerLabel": "Local payout route",
+    "family": "LOCAL_PAYOUT_PARTNER",
+    "description": "Simulated FX plus local US payout partner route.",
+    "supportedObjectives": ["CHEAPEST", "BALANCED"],
+    "requiredCapabilities": ["FX_QUOTE", "LOCAL_PAYOUT_PARTNER", "BENEFICIARY_REACHABILITY"],
+    "legs": [
+      {
+        "legId": "leg-local-fx",
+        "type": "FX_CONVERSION",
+        "description": "Illustrative GBP/USD FX conversion.",
+        "from": "source-bank",
+        "to": "payout-partner",
+        "assetIn": "GBP",
+        "assetOut": "USD",
+        "estimatedMinutes": 10,
+        "pointOfNoReturn": false
+      },
+      {
+        "legId": "leg-local-payout",
+        "type": "LOCAL_PAYOUT",
+        "description": "Simulated local ACH-style payout to US beneficiary bank.",
+        "from": "payout-partner",
+        "to": "beneficiary-bank",
+        "assetIn": "USD",
+        "assetOut": "USD",
+        "estimatedMinutes": 240,
+        "pointOfNoReturn": true
+      }
+    ],
+    "pointOfNoReturn": "Local payout partner accepts payout instruction.",
+    "finalityModel": "Beneficiary usable value after simulated local payout settlement.",
+    "simulated": true
+  },
+  {
+    "routeId": "route-stablecoin-bridge-fiat-payout",
+    "customerLabel": "Fast digital-dollar route",
+    "family": "STABLECOIN_BRIDGE_FIAT_PAYOUT",
+    "description": "Simulated stablecoin bridge followed by fiat payout to a bank account.",
+    "supportedObjectives": ["FASTEST", "BALANCED"],
+    "requiredCapabilities": ["FX_QUOTE", "USDC_LIQUIDITY", "WALLET_SCREENING", "REDEMPTION_PARTNER", "PAYOUT_PARTNER"],
+    "legs": [
+      {
+        "legId": "leg-mint-usdc",
+        "type": "STABLECOIN_BRIDGE",
+        "description": "Illustrative GBP to USDC bridge using simulated liquidity.",
+        "from": "source-bank",
+        "to": "digital-asset-venue",
+        "assetIn": "GBP",
+        "assetOut": "USDC",
+        "estimatedMinutes": 5,
+        "pointOfNoReturn": false
+      },
+      {
+        "legId": "leg-token-transfer",
+        "type": "TOKEN_TRANSFER",
+        "description": "Simulated token transfer after wallet screening.",
+        "from": "digital-asset-venue",
+        "to": "redemption-partner",
+        "assetIn": "USDC",
+        "assetOut": "USDC",
+        "estimatedMinutes": 3,
+        "pointOfNoReturn": true
+      },
+      {
+        "legId": "leg-fiat-payout",
+        "type": "FIAT_PAYOUT",
+        "description": "Simulated USD redemption and payout to beneficiary bank.",
+        "from": "redemption-partner",
+        "to": "beneficiary-bank",
+        "assetIn": "USDC",
+        "assetOut": "USD",
+        "estimatedMinutes": 30,
+        "pointOfNoReturn": false
+      }
+    ],
+    "pointOfNoReturn": "Token transfer commitment after wallet screening and before redemption.",
+    "finalityModel": "Not complete until beneficiary usable fiat value is confirmed.",
+    "simulated": true
+  },
+  {
+    "routeId": "route-wallet-to-wallet-stablecoin",
+    "customerLabel": "Digital-dollar wallet transfer",
+    "family": "WALLET_TO_WALLET_STABLECOIN",
+    "description": "Simulated wallet-to-wallet stablecoin transfer with wallet screening.",
+    "supportedObjectives": ["FASTEST", "MOST_TRANSPARENT"],
+    "requiredCapabilities": ["WALLET_SCREENING", "NETWORK_HEALTH"],
+    "legs": [
+      {
+        "legId": "leg-wallet-screening",
+        "type": "WALLET_SCREENING",
+        "description": "Screen source and beneficiary wallets using simulated controls.",
+        "from": "source-wallet",
+        "to": "screening-service",
+        "assetIn": "USDC",
+        "assetOut": "USDC",
+        "estimatedMinutes": 1,
+        "pointOfNoReturn": false
+      },
+      {
+        "legId": "leg-wallet-transfer",
+        "type": "TOKEN_TRANSFER",
+        "description": "Simulated direct USDC wallet transfer.",
+        "from": "source-wallet",
+        "to": "beneficiary-wallet",
+        "assetIn": "USDC",
+        "assetOut": "USDC",
+        "estimatedMinutes": 2,
+        "pointOfNoReturn": true
+      }
+    ],
+    "pointOfNoReturn": "Token transfer is submitted to the simulated network.",
+    "finalityModel": "Beneficiary usable value after wallet balance is confirmed, not merely after first-leg acknowledgement.",
+    "simulated": true
+  }
+]

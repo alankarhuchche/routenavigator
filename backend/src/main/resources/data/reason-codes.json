@@ -1,0 +1,11 @@
+{
+  "simulated": true,
+  "codes": [
+    {"code": "PASS_UNIVERSAL_GATES", "message": "All universal hard gates passed using simulated evidence."},
+    {"code": "EXCLUDED_CUSTOMER_CONSTRAINT", "message": "Route excluded by customer constraint."},
+    {"code": "EXCLUDED_ROUTE_HEALTH", "message": "Route excluded due to simulated route health failure."},
+    {"code": "SELECTED_FASTEST_USABLE_VALUE", "message": "Selected route has fastest estimated time to beneficiary usable value after gates pass."},
+    {"code": "SELECTED_LOWEST_COST", "message": "Selected route has lowest illustrative total expected cost after gates pass."},
+    {"code": "NOT_SELECTED_COMPARATIVE_SCORE", "message": "Route passed gates but did not win under the selected scoring profile."}
+  ]
+}

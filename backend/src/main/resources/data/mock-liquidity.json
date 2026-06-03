@@ -1,0 +1,8 @@
+{
+  "simulated": true,
+  "positions": [
+    {"asset": "GBP", "available": 1000000, "status": "AVAILABLE"},
+    {"asset": "USD", "available": 1250000, "status": "AVAILABLE"},
+    {"asset": "USDC", "available": 750000, "status": "AVAILABLE"}
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "simulated": true,
+  "screeningResults": [
+    {"scenarioId": "SCN-001", "status": "PASS"},
+    {"scenarioId": "SCN-002", "status": "PASS"},
+    {"scenarioId": "SCN-003", "status": "PASS"},
+    {"scenarioId": "SCN-004", "status": "PASS"},
+    {"scenarioId": "SCN-005", "status": "PASS"},
+    {"scenarioId": "SCN-006", "status": "PASS"}
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "simulated": true,
+  "beneficiaries": [
+    {"beneficiaryId": "BEN-UK-001", "country": "GB", "endpoint": "UK_BANK_ACCOUNT", "reachable": true},
+    {"beneficiaryId": "BEN-US-001", "country": "US", "endpoint": "US_BANK_ACCOUNT", "reachable": true},
+    {"beneficiaryId": "BEN-USDC-001", "country": "US", "endpoint": "DIGITAL_WALLET", "reachable": true}
+  ]
+}

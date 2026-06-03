@@ -1,0 +1,6 @@
+{
+  "simulated": true,
+  "quotes": [
+    {"pair": "GBP/USD", "rate": 1.25, "source": "SIMULATED_FX", "validForSeconds": 300}
+  ]
+}
