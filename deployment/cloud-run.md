@@ -40,6 +40,12 @@ gcloud builds submit \
   .
 ```
 
+The repository also keeps a root `Dockerfile` that mirrors `deployment/Dockerfile`, so the simpler Cloud Build command below is valid too:
+
+```bash
+gcloud builds submit --tag "${IMAGE}" .
+```
+
 Deploy:
 
 ```bash
