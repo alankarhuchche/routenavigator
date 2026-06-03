@@ -3,7 +3,7 @@
 Codex must update this file after every completed or blocked backlog item.
 
 ## Current status
-Frontend core UI complete with static demo data. Backend route-decision APIs complete.
+Gemini explanation boundary complete with deterministic template fallback. Frontend core UI complete with static demo data.
 
 ## Completed tasks
 - 1. Create monorepo folders: `backend/`, `frontend/`, `docs/agent/`, `deployment/`.
@@ -35,6 +35,12 @@ Frontend core UI complete with static demo data. Backend route-decision APIs com
 - 27. Build DecisionTracePanel with customer/executive/technical tabs.
 - 28. Build GateResultTable and ScoreBreakdown components.
 - 29. Build disclaimer banner stating no live payment connectivity.
+- 30. Implement TraceRedactionService.
+- 31. Implement GeminiExplanationService interface and deterministic TemplateExplanationService fallback.
+- 32. Add configuration flag `GEMINI_ENABLED`.
+- 33. Add Quarkus REST API endpoint `POST /api/explanations/route`.
+- 34. Add frontend GeminiExplanationPanel.
+- 35. Add tests ensuring Gemini receives no PII fields in redacted trace.
 
 ## In progress
 None.
@@ -43,15 +49,13 @@ None.
 None.
 
 ## Last commands run
-- `cd frontend && npm install leaflet react-leaflet lucide-react`
-- `cd frontend && npm install -D @types/leaflet`
+- `cd backend && ./mvnw test`
 - `cd frontend && npm run lint`
 - `cd frontend && npm run typecheck`
 - `cd frontend && npm run build`
-- `curl -I http://127.0.0.1:5173/`
 
 ## Next task
-30. Implement TraceRedactionService.
+36. Implement PaymentState enum and PaymentStateMachineService.
 
 ## Change log format
 When updating, use this format:
@@ -112,4 +116,12 @@ Files: `frontend/src/App.tsx`, `frontend/src/App.css`, `frontend/src/index.css`,
 Commands: `cd frontend && npm install leaflet react-leaflet lucide-react`, `cd frontend && npm install -D @types/leaflet`, `cd frontend && npm run lint`, `cd frontend && npm run typecheck`, `cd frontend && npm run build`, `curl -I http://127.0.0.1:5173/`
 Result: passed. Frontend lint, typecheck and production build passed. Local dev server returned HTTP 200. In-app browser visual smoke was attempted but the browser runtime failed to start in this session.
 Next: Task 30. Implement TraceRedactionService.
+Blockers: none
+
+2026-06-03 22:36 — Task 30-35: Gemini explanation boundary
+Change: Added trace redaction, GeminiExplanationService interface, deterministic template fallback, default-off `gemini.enabled` config, route explanation API endpoint, frontend GeminiExplanationPanel and redaction/API tests proving PII-like fields are masked before explanation.
+Files: `backend/src/main/resources/application.properties`, `backend/src/main/java/com/routenavigator/api/RouteExplanationRequest.java`, `backend/src/main/java/com/routenavigator/api/RouteExplanationResource.java`, `backend/src/main/java/com/routenavigator/domain/RouteExplanationResponse.java`, `backend/src/main/java/com/routenavigator/service/TraceRedactionService.java`, `backend/src/main/java/com/routenavigator/service/GeminiExplanationService.java`, `backend/src/main/java/com/routenavigator/service/TemplateExplanationService.java`, `backend/src/test/java/com/routenavigator/api/RouteExplanationResourceTest.java`, `backend/src/test/java/com/routenavigator/service/TraceRedactionServiceTest.java`, `frontend/src/components/GeminiExplanationPanel.tsx`, `frontend/src/components/DecisionTracePanel.tsx`, `frontend/src/App.css`, `docs/agent/03-backlog.md`, `docs/agent/06-progress.md`
+Commands: `cd backend && ./mvnw test`, `cd frontend && npm run lint`, `cd frontend && npm run typecheck`, `cd frontend && npm run build`
+Result: passed. Backend tests passed with 14 tests. Frontend lint, typecheck and production build passed.
+Next: Task 36. Implement PaymentState enum and PaymentStateMachineService.
 Blockers: none

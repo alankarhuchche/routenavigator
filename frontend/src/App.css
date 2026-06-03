@@ -318,6 +318,30 @@ dd {
   line-height: 1.5;
 }
 
+.gemini-panel {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: #eff6ff;
+}
+
+.gemini-panel div {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #1d4ed8;
+  font-size: 12px;
+}
+
+.gemini-panel p {
+  margin: 0;
+  color: #334155;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .trace-id {
   display: block;
   padding: 8px 10px;

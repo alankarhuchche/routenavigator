@@ -44,12 +44,12 @@ Work through these tasks in order. Do not skip ahead unless blocked.
 - [x] 29. Build disclaimer banner stating no live payment connectivity.
 
 ## Epic 7 — Gemini explanation
-- [ ] 30. Implement TraceRedactionService.
-- [ ] 31. Implement GeminiExplanationService interface and deterministic TemplateExplanationService fallback.
-- [ ] 32. Add configuration flag `GEMINI_ENABLED`.
-- [ ] 33. Add Quarkus REST API endpoint `POST /api/explanations/route`.
-- [ ] 34. Add frontend GeminiExplanationPanel.
-- [ ] 35. Add tests ensuring Gemini receives no PII fields in redacted trace.
+- [x] 30. Implement TraceRedactionService.
+- [x] 31. Implement GeminiExplanationService interface and deterministic TemplateExplanationService fallback.
+- [x] 32. Add configuration flag `GEMINI_ENABLED`.
+- [x] 33. Add Quarkus REST API endpoint `POST /api/explanations/route`.
+- [x] 34. Add frontend GeminiExplanationPanel.
+- [x] 35. Add tests ensuring Gemini receives no PII fields in redacted trace.
 
 ## Epic 8 — Execution simulator and state machine
 - [ ] 36. Implement PaymentState enum and PaymentStateMachineService.

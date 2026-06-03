@@ -1,6 +1,7 @@
 import { BrainCircuit, FileJson, SlidersHorizontal } from 'lucide-react'
 import { useState } from 'react'
 import type { DecisionTrace } from '../types'
+import { GeminiExplanationPanel } from './GeminiExplanationPanel'
 import { GateResultTable } from './GateResultTable'
 import { ScoreBreakdown } from './ScoreBreakdown'
 
@@ -32,7 +33,7 @@ export function DecisionTracePanel({ trace }: { trace: DecisionTrace }) {
 
       {activeTab === 'customer' && (
         <div className="trace-section">
-          <p className="trace-lead">{trace.explanation}</p>
+          <GeminiExplanationPanel trace={trace} />
           <dl className="trace-facts">
             <div>
               <dt>Selected</dt>
