@@ -7,7 +7,13 @@ import { ScoreBreakdown } from './ScoreBreakdown'
 
 type TraceTab = 'customer' | 'executive' | 'technical'
 
-export function DecisionTracePanel({ trace }: { trace: DecisionTrace }) {
+interface Props {
+  trace: DecisionTrace
+  provider?: string
+  isLoading?: boolean
+}
+
+export function DecisionTracePanel({ trace, provider, isLoading }: Props) {
   const [activeTab, setActiveTab] = useState<TraceTab>('customer')
 
   return (
@@ -33,7 +39,7 @@ export function DecisionTracePanel({ trace }: { trace: DecisionTrace }) {
 
       {activeTab === 'customer' && (
         <div className="trace-section">
-          <GeminiExplanationPanel trace={trace} />
+          <GeminiExplanationPanel trace={trace} provider={provider} isLoading={isLoading} />
           <dl className="trace-facts">
             <div>
               <dt>Selected</dt>

@@ -166,6 +166,94 @@ h2 {
   border-color: #0d6460;
 }
 
+.primary-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.secondary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 20px;
+  border: 1px solid #0f766e;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #0f766e;
+  font-size: 14px;
+  font-weight: 850;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  margin-left: 10px;
+}
+
+.secondary-btn:hover {
+  background: #f0fdfa;
+}
+
+.secondary-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.payment-state-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #f0fdfa;
+  border: 1px solid #99f6e4;
+  color: #134e4a;
+  font-size: 13px;
+  font-weight: 700;
+  align-self: flex-start;
+}
+
+.payment-state-badge strong {
+  color: #0f766e;
+  font-weight: 850;
+}
+
+.analyse-error {
+  margin-right: 12px;
+  color: #b45309;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.gemini-badge-live {
+  color: #0f766e;
+}
+
+.gemini-badge-amber {
+  color: #b45309;
+}
+
+.gemini-badge-grey {
+  color: #64748b;
+}
+
+.gemini-panel-loading {
+  opacity: 0.8;
+}
+
+.gemini-badge-analysing {
+  color: #0f766e;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.gemini-loading-text {
+  color: #94a3b8 !important;
+  font-style: italic;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
 /* ── Step Indicator ── */
 .step-indicator {
   display: flex;
