@@ -22,10 +22,10 @@ Work through these tasks in order. Do not skip ahead unless blocked.
 - [x] 13. Add tests proving excluded routes are not scored.
 
 ## Epic 4 — Scoring and route decision
-- [ ] 14. Implement scoring profiles: FASTEST, CHEAPEST, MOST_TRANSPARENT, HIGHEST_CERTAINTY, BALANCED.
-- [ ] 15. Implement RouteScoringService that scores only surviving routes.
-- [ ] 16. Implement RouteDecisionService orchestrating candidate generation, gates, scoring, selection and fallback candidate.
-- [ ] 17. Add tests for each scenario’s expected selected route.
+- [x] 14. Implement scoring profiles: FASTEST, CHEAPEST, MOST_TRANSPARENT, HIGHEST_CERTAINTY, BALANCED.
+- [x] 15. Implement RouteScoringService that scores only surviving routes.
+- [x] 16. Implement RouteDecisionService orchestrating candidate generation, gates, scoring, selection and fallback candidate.
+- [x] 17. Add tests for each scenario’s expected selected route.
 
 ## Epic 5 — Decision Trace
 - [ ] 18. Implement DecisionTraceService creating full trace for every decision.

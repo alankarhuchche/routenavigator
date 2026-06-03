@@ -3,7 +3,7 @@
 Codex must update this file after every completed or blocked backlog item.
 
 ## Current status
-Gate evaluation foundation complete. Backend and frontend skeletons build successfully.
+Scoring and route decision foundation complete. Backend and frontend skeletons build successfully.
 
 ## Completed tasks
 - 1. Create monorepo folders: `backend/`, `frontend/`, `docs/agent/`, `deployment/`.
@@ -19,6 +19,10 @@ Gate evaluation foundation complete. Backend and frontend skeletons build succes
 - 11. Implement RouteSpecificGateEvaluator for UK domestic, correspondent banking, local payout, stablecoin bridge and wallet-to-wallet stablecoin.
 - 12. Ensure failed blocking gates mark route as EXCLUDED before scoring.
 - 13. Add tests proving excluded routes are not scored.
+- 14. Implement scoring profiles: FASTEST, CHEAPEST, MOST_TRANSPARENT, HIGHEST_CERTAINTY, BALANCED.
+- 15. Implement RouteScoringService that scores only surviving routes.
+- 16. Implement RouteDecisionService orchestrating candidate generation, gates, scoring, selection and fallback candidate.
+- 17. Add tests for each scenario’s expected selected route.
 
 ## In progress
 None.
@@ -30,7 +34,7 @@ None.
 - `cd backend && ./mvnw test`
 
 ## Next task
-14. Implement scoring profiles: FASTEST, CHEAPEST, MOST_TRANSPARENT, HIGHEST_CERTAINTY, BALANCED.
+18. Implement DecisionTraceService creating full trace for every decision.
 
 ## Change log format
 When updating, use this format:
@@ -67,4 +71,12 @@ Files: `backend/src/main/java/com/routenavigator/domain/GateEvaluationOutcome.ja
 Commands: `cd backend && ./mvnw test`
 Result: passed. Backend tests passed with 6 tests.
 Next: Task 14. Implement scoring profiles.
+Blockers: none
+
+2026-06-03 22:26 — Task 14-17: Scoring and route decision
+Change: Added scoring profile loader, scoring service that accepts only surviving routes, route decision service that orchestrates gates, scoring, route selection and fallback candidate, and tests for all six scenario winners plus excluded-route scoring protection.
+Files: `backend/src/main/java/com/routenavigator/domain/RouteDecisionResult.java`, `backend/src/main/java/com/routenavigator/service/ScoringProfileService.java`, `backend/src/main/java/com/routenavigator/service/RouteScoringService.java`, `backend/src/main/java/com/routenavigator/service/RouteDecisionService.java`, `backend/src/test/java/com/routenavigator/service/RouteDecisionServiceTest.java`, `docs/agent/03-backlog.md`, `docs/agent/06-progress.md`
+Commands: `cd backend && ./mvnw test`
+Result: passed. Backend tests passed with 9 tests.
+Next: Task 18. Implement DecisionTraceService.
 Blockers: none
