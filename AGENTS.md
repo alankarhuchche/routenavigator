@@ -12,8 +12,8 @@ This is not a live payment platform. Do not connect to live payment rails, SWIFT
 - Map UI: Leaflet for simulated route visuals and map-style comparisons
 - AI: Gemini explanation service only
 - Data: local JSON/YAML mock data first
-- Persistence: no database for the initial MVP; PostgreSQL may be added later when saved routes, users, or audit persistence are required
-- Demo deployment target: containerised app suitable for Cloud Run later
+- Persistence: no database for the initial MVP, but isolate data access behind services/repositories so PostgreSQL can be added later when saved routes, users, or audit persistence are required
+- Demo deployment target: containerised app suitable for a GCP Cloud Run demo URL
 
 ## Non-negotiable domain rules
 1. The route engine is deterministic. Gemini must never select routes, score routes, override gates, approve execution, update state, or move money.
@@ -102,11 +102,13 @@ If a command is unavailable because the project is not created yet, create the r
 - Keep changes small and reviewable.
 - Prefer clean domain models over hardcoded UI logic.
 - Mock external systems via data files and services, not scattered constants.
+- Keep mock data access behind narrow services/repositories so PostgreSQL can replace local files later without rewriting route decision logic.
 - Keep customer-facing terminology simple.
 - Keep technical/internal terminology precise.
 - Include simulation flags in demo data.
 - Do not invent real scheme limits, partner capabilities, fees, FX rates or regulatory claims. Mark them as illustrative demo data.
 - Preserve a clean separation between demo architecture and future production reference architecture.
+- Add container/Cloud Run deployment files and notes where practical, but do not require live GCP credentials for local build/test verification.
 
 ## Files to read before coding
 - `docs/agent/00-mission.md`

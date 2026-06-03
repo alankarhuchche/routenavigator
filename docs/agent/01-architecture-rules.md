@@ -1,7 +1,7 @@
 # 01 — Architecture Rules
 
 ## Stack rules
-Backend must be Java Quarkus. APIs must be REST endpoints served by Quarkus. Frontend must be React + Vite + TypeScript. Map-style route visuals must use Leaflet. Gemini integration must be wrapped behind a backend service. Initial data must be local JSON/YAML mock data. Do not add a database for the initial MVP; PostgreSQL is the preferred later database if saved routes, users, or persistent audit/history become required.
+Backend must be Java Quarkus. APIs must be REST endpoints served by Quarkus. Frontend must be React + Vite + TypeScript. Map-style route visuals must use Leaflet. Gemini integration must be wrapped behind a backend service. Initial data must be local JSON/YAML mock data. Do not add a database for the initial MVP; PostgreSQL is the preferred later database if saved routes, users, or persistent audit/history become required. Keep mock data access behind services/repositories so PostgreSQL can replace local files later without rewriting route decision logic.
 
 ## Service boundaries
 Implement these backend concepts as separate classes/services even if in one Quarkus app initially:
@@ -114,3 +114,6 @@ Use Leaflet for any map-style or route-path visualization. Keep the map visual i
 
 ## Demo safety rules
 All demo data must be simulated. Include visible disclaimer in UI.
+
+## Deployment readiness rules
+The MVP should be container-ready for a GCP Cloud Run demo URL. Add Dockerfiles and deployment notes where practical. Do not make local tests or builds depend on live GCP credentials, Cloud SQL, Artifact Registry, or deployed infrastructure.

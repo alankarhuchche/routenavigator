@@ -26,6 +26,7 @@
 - Scoring service receives only routes that pass blocking gates.
 - Trace redaction removes or masks PII-like fields before Gemini.
 - Template explanation works when Gemini disabled.
+- Mock data loading is isolated behind services/repositories so PostgreSQL can be introduced later without rewriting route decision logic.
 
 ## Frontend acceptance criteria
 - Scenario selector loads scenario intent.
@@ -40,3 +41,4 @@
 - Backend tests prove Gemini is not called during route decision if disabled.
 - Frontend builds successfully.
 - No test or code should require live external credentials.
+- Container/Cloud Run deployment notes exist, but local build/test does not require GCP credentials.
