@@ -28,11 +28,11 @@ Work through these tasks in order. Do not skip ahead unless blocked.
 - [x] 17. Add tests for each scenario’s expected selected route.
 
 ## Epic 5 — Decision Trace
-- [ ] 18. Implement DecisionTraceService creating full trace for every decision.
-- [ ] 19. Include candidate routes, gates, exclusions, scores, selected route, alternatives, finality, fallback and evidence references.
-- [ ] 20. Add Quarkus REST API endpoint `POST /api/route-decisions`.
-- [ ] 21. Add Quarkus REST API endpoint `GET /api/route-decisions/{traceId}`.
-- [ ] 22. Add tests verifying trace structure for stablecoin bridge and international bank transfer.
+- [x] 18. Implement DecisionTraceService creating full trace for every decision.
+- [x] 19. Include candidate routes, gates, exclusions, scores, selected route, alternatives, finality, fallback and evidence references.
+- [x] 20. Add Quarkus REST API endpoint `POST /api/route-decisions`.
+- [x] 21. Add Quarkus REST API endpoint `GET /api/route-decisions/{traceId}`.
+- [x] 22. Add tests verifying trace structure for stablecoin bridge and international bank transfer.
 
 ## Epic 6 — Frontend core UI
 - [ ] 23. Build ScenarioSelector component.

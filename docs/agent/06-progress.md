@@ -3,7 +3,7 @@
 Codex must update this file after every completed or blocked backlog item.
 
 ## Current status
-Scoring and route decision foundation complete. Backend and frontend skeletons build successfully.
+Decision Trace and route-decision APIs complete. Backend and frontend skeletons build successfully.
 
 ## Completed tasks
 - 1. Create monorepo folders: `backend/`, `frontend/`, `docs/agent/`, `deployment/`.
@@ -23,6 +23,11 @@ Scoring and route decision foundation complete. Backend and frontend skeletons b
 - 15. Implement RouteScoringService that scores only surviving routes.
 - 16. Implement RouteDecisionService orchestrating candidate generation, gates, scoring, selection and fallback candidate.
 - 17. Add tests for each scenario’s expected selected route.
+- 18. Implement DecisionTraceService creating full trace for every decision.
+- 19. Include candidate routes, gates, exclusions, scores, selected route, alternatives, finality, fallback and evidence references.
+- 20. Add Quarkus REST API endpoint `POST /api/route-decisions`.
+- 21. Add Quarkus REST API endpoint `GET /api/route-decisions/{traceId}`.
+- 22. Add tests verifying trace structure for stablecoin bridge and international bank transfer.
 
 ## In progress
 None.
@@ -34,7 +39,7 @@ None.
 - `cd backend && ./mvnw test`
 
 ## Next task
-18. Implement DecisionTraceService creating full trace for every decision.
+23. Build ScenarioSelector component.
 
 ## Change log format
 When updating, use this format:
@@ -79,4 +84,12 @@ Files: `backend/src/main/java/com/routenavigator/domain/RouteDecisionResult.java
 Commands: `cd backend && ./mvnw test`
 Result: passed. Backend tests passed with 9 tests.
 Next: Task 18. Implement DecisionTraceService.
+Blockers: none
+
+2026-06-03 22:28 — Task 18-22: Decision Trace and APIs
+Change: Added DecisionTraceService with in-memory trace storage, expanded trace fields for exclusions, alternatives, finality, PONR, fallback, evidence and AI boundary, added route-decision request DTO and REST endpoints for creating and retrieving traces, and added API plus trace-structure tests.
+Files: `backend/src/main/java/com/routenavigator/domain/DecisionTrace.java`, `backend/src/main/java/com/routenavigator/api/RouteDecisionRequest.java`, `backend/src/main/java/com/routenavigator/api/RouteDecisionResource.java`, `backend/src/main/java/com/routenavigator/service/DecisionTraceService.java`, `backend/src/test/java/com/routenavigator/api/RouteDecisionResourceTest.java`, `backend/src/test/java/com/routenavigator/service/DecisionTraceServiceTest.java`, `docs/agent/03-backlog.md`, `docs/agent/06-progress.md`
+Commands: `cd backend && ./mvnw test`
+Result: passed. Backend tests passed with 12 tests.
+Next: Task 23. Build ScenarioSelector component.
 Blockers: none
