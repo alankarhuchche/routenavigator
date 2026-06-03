@@ -35,13 +35,13 @@ Work through these tasks in order. Do not skip ahead unless blocked.
 - [x] 22. Add tests verifying trace structure for stablecoin bridge and international bank transfer.
 
 ## Epic 6 — Frontend core UI
-- [ ] 23. Build ScenarioSelector component.
-- [ ] 24. Build PaymentIntent view.
-- [ ] 25. Build RouteComparison view.
-- [ ] 26. Build LeafletRouteMap with simulated route lines and clearly labelled illustrative geography.
-- [ ] 27. Build DecisionTracePanel with customer/executive/technical tabs.
-- [ ] 28. Build GateResultTable and ScoreBreakdown components.
-- [ ] 29. Build disclaimer banner stating no live payment connectivity.
+- [x] 23. Build ScenarioSelector component.
+- [x] 24. Build PaymentIntent view.
+- [x] 25. Build RouteComparison view.
+- [x] 26. Build LeafletRouteMap with simulated route lines and clearly labelled illustrative geography.
+- [x] 27. Build DecisionTracePanel with customer/executive/technical tabs.
+- [x] 28. Build GateResultTable and ScoreBreakdown components.
+- [x] 29. Build disclaimer banner stating no live payment connectivity.
 
 ## Epic 7 — Gemini explanation
 - [ ] 30. Implement TraceRedactionService.

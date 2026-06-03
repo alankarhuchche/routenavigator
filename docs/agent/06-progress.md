@@ -3,7 +3,7 @@
 Codex must update this file after every completed or blocked backlog item.
 
 ## Current status
-Decision Trace and route-decision APIs complete. Backend and frontend skeletons build successfully.
+Frontend core UI complete with static demo data. Backend route-decision APIs complete.
 
 ## Completed tasks
 - 1. Create monorepo folders: `backend/`, `frontend/`, `docs/agent/`, `deployment/`.
@@ -28,6 +28,13 @@ Decision Trace and route-decision APIs complete. Backend and frontend skeletons 
 - 20. Add Quarkus REST API endpoint `POST /api/route-decisions`.
 - 21. Add Quarkus REST API endpoint `GET /api/route-decisions/{traceId}`.
 - 22. Add tests verifying trace structure for stablecoin bridge and international bank transfer.
+- 23. Build ScenarioSelector component.
+- 24. Build PaymentIntent view.
+- 25. Build RouteComparison view.
+- 26. Build LeafletRouteMap with simulated route lines and clearly labelled illustrative geography.
+- 27. Build DecisionTracePanel with customer/executive/technical tabs.
+- 28. Build GateResultTable and ScoreBreakdown components.
+- 29. Build disclaimer banner stating no live payment connectivity.
 
 ## In progress
 None.
@@ -36,10 +43,15 @@ None.
 None.
 
 ## Last commands run
-- `cd backend && ./mvnw test`
+- `cd frontend && npm install leaflet react-leaflet lucide-react`
+- `cd frontend && npm install -D @types/leaflet`
+- `cd frontend && npm run lint`
+- `cd frontend && npm run typecheck`
+- `cd frontend && npm run build`
+- `curl -I http://127.0.0.1:5173/`
 
 ## Next task
-23. Build ScenarioSelector component.
+30. Implement TraceRedactionService.
 
 ## Change log format
 When updating, use this format:
@@ -92,4 +104,12 @@ Files: `backend/src/main/java/com/routenavigator/domain/DecisionTrace.java`, `ba
 Commands: `cd backend && ./mvnw test`
 Result: passed. Backend tests passed with 12 tests.
 Next: Task 23. Build ScenarioSelector component.
+Blockers: none
+
+2026-06-03 22:33 — Task 23-29: Frontend core UI
+Change: Replaced the generated Vite starter with the Route Navigator dashboard, added static demo scenario data, scenario selector, payment intent view, route comparison, Leaflet route map, Decision Trace tabs, gate result table, score breakdown and visible simulation disclaimer.
+Files: `frontend/src/App.tsx`, `frontend/src/App.css`, `frontend/src/index.css`, `frontend/src/types.ts`, `frontend/src/data/demoData.ts`, `frontend/src/components/`, `frontend/package.json`, `frontend/package-lock.json`, `frontend/index.html`, `docs/agent/03-backlog.md`, `docs/agent/06-progress.md`
+Commands: `cd frontend && npm install leaflet react-leaflet lucide-react`, `cd frontend && npm install -D @types/leaflet`, `cd frontend && npm run lint`, `cd frontend && npm run typecheck`, `cd frontend && npm run build`, `curl -I http://127.0.0.1:5173/`
+Result: passed. Frontend lint, typecheck and production build passed. Local dev server returned HTTP 200. In-app browser visual smoke was attempted but the browser runtime failed to start in this session.
+Next: Task 30. Implement TraceRedactionService.
 Blockers: none
