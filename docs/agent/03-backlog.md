@@ -59,10 +59,10 @@ Work through these tasks in order. Do not skip ahead unless blocked.
 - [x] 40. Append execution events to Decision Trace.
 
 ## Epic 9 — Fallback scenario
-- [ ] 41. Implement route degradation simulation before point-of-no-return.
-- [ ] 42. Implement fallback evaluation and fallback event append.
-- [ ] 43. Ensure post-point-of-no-return failures are not labelled fallback.
-- [ ] 44. Add UI view for fallback event and updated route.
+- [x] 41. Implement route degradation simulation before point-of-no-return.
+- [x] 42. Implement fallback evaluation and fallback event append.
+- [x] 43. Ensure post-point-of-no-return failures are not labelled fallback.
+- [x] 44. Add UI view for fallback event and updated route.
 
 ## Epic 10 — Control room and polish
 - [ ] 45. Build ControlRoom view with current state, PONR, fallback, gates, score, trace, AI boundary and events.

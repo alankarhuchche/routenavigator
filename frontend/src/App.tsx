@@ -4,6 +4,7 @@ import './App.css'
 import { demoScenarios } from './data/demoData'
 import { DisclaimerBanner } from './components/DisclaimerBanner'
 import { DecisionTracePanel } from './components/DecisionTracePanel'
+import { FallbackEventView } from './components/FallbackEventView'
 import { LeafletRouteMap } from './components/LeafletRouteMap'
 import { PaymentIntentView } from './components/PaymentIntentView'
 import { PaymentTracker } from './components/PaymentTracker'
@@ -40,6 +41,7 @@ function App() {
         <section className="main-panel" aria-label="Route comparison">
           <RouteComparison trace={scenario.trace} />
           <LeafletRouteMap trace={scenario.trace} />
+          <FallbackEventView trace={scenario.trace} />
           <PaymentTracker trace={scenario.trace} />
         </section>
 

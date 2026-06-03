@@ -5,6 +5,7 @@ import com.routenavigator.domain.ExecutionEvent;
 import com.routenavigator.domain.PaymentExecutionSnapshot;
 import com.routenavigator.domain.PaymentState;
 import com.routenavigator.domain.RouteLeg;
+import com.routenavigator.domain.RouteCandidate;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
@@ -23,6 +24,8 @@ public class ExecutionSimulatorService {
     private final PaymentStateMachineService paymentStateMachineService;
     private final ConcurrentMap<String, PaymentState> states = new ConcurrentHashMap<>();
     private final ConcurrentMap<String, Integer> completedLegIndexes = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, String> activeRouteIds = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Boolean> fallbackApplied = new ConcurrentHashMap<>();
 
     @Inject
     public ExecutionSimulatorService(
@@ -35,17 +38,19 @@ public class ExecutionSimulatorService {
     }
 
     public PaymentExecutionSnapshot authorise(String traceId) {
-        ensureTrace(traceId);
+        var trace = ensureTrace(traceId);
+        activeRouteIds.putIfAbsent(traceId, trace.selectedRoute().routeId());
         PaymentState nextState = paymentStateMachineService.authorise(states.getOrDefault(traceId, PaymentState.CREATED));
         states.put(traceId, nextState);
-        append(traceId, nextState, "Simulated payment authorised by user.", false);
+        append(traceId, activeRouteIds.get(traceId), nextState.name(), "Simulated payment authorised by user.", false);
         return snapshot(traceId);
     }
 
     public PaymentExecutionSnapshot simulateNext(String traceId) {
         var trace = ensureTrace(traceId);
         states.putIfAbsent(traceId, PaymentState.AUTHORISED);
-        CanonicalRoute route = routeCatalogueService.findByRouteId(trace.selectedRoute().routeId()).orElseThrow();
+        activeRouteIds.putIfAbsent(traceId, trace.selectedRoute().routeId());
+        CanonicalRoute route = routeCatalogueService.findByRouteId(activeRouteIds.get(traceId)).orElseThrow();
         int nextLegIndex = completedLegIndexes.getOrDefault(traceId, 0);
         if (nextLegIndex >= route.legs().size()) {
             states.put(traceId, PaymentState.COMPLETED);
@@ -57,7 +62,45 @@ public class ExecutionSimulatorService {
         PaymentState nextState = paymentStateMachineService.advance(states.get(traceId), leg.pointOfNoReturn(), finalLegCompleted);
         states.put(traceId, nextState);
         completedLegIndexes.put(traceId, nextLegIndex + 1);
-        append(traceId, nextState, "Completed simulated leg: " + leg.description(), leg.pointOfNoReturn());
+        append(traceId, route.routeId(), nextState.name(), "Completed simulated leg: " + leg.description(), leg.pointOfNoReturn());
+        return snapshot(traceId);
+    }
+
+    public PaymentExecutionSnapshot simulateDegradation(String traceId) {
+        var trace = ensureTrace(traceId);
+        activeRouteIds.putIfAbsent(traceId, trace.selectedRoute().routeId());
+        states.putIfAbsent(traceId, PaymentState.AUTHORISED);
+
+        if (pointOfNoReturnReached(traceId)) {
+            states.put(traceId, PaymentState.INVESTIGATION_REQUIRED);
+            append(traceId,
+                    activeRouteIds.get(traceId),
+                    PaymentState.INVESTIGATION_REQUIRED.name(),
+                    "Route issue occurred after point-of-no-return; servicing investigation required.",
+                    true);
+            return snapshot(traceId);
+        }
+
+        RouteCandidate fallbackCandidate = trace.fallbackCandidate();
+        if (fallbackCandidate == null) {
+            states.put(traceId, PaymentState.INVESTIGATION_REQUIRED);
+            append(traceId,
+                    activeRouteIds.get(traceId),
+                    PaymentState.INVESTIGATION_REQUIRED.name(),
+                    "Route degradation occurred before point-of-no-return, but no executable alternate route is available.",
+                    false);
+            return snapshot(traceId);
+        }
+
+        activeRouteIds.put(traceId, fallbackCandidate.routeId());
+        completedLegIndexes.put(traceId, 0);
+        fallbackApplied.put(traceId, true);
+        states.put(traceId, PaymentState.IN_PROGRESS);
+        append(traceId,
+                fallbackCandidate.routeId(),
+                "FALLBACK_SELECTED",
+                "Fallback selected before point-of-no-return: " + fallbackCandidate.customerLabel() + ".",
+                false);
         return snapshot(traceId);
     }
 
@@ -71,7 +114,15 @@ public class ExecutionSimulatorService {
     }
 
     private PaymentExecutionSnapshot snapshot(String traceId) {
-        return new PaymentExecutionSnapshot(traceId, state(traceId), events(traceId));
+        var trace = ensureTrace(traceId);
+        String activeRouteId = activeRouteIds.getOrDefault(traceId, trace.selectedRoute().routeId());
+        return new PaymentExecutionSnapshot(
+                traceId,
+                state(traceId),
+                activeRouteId,
+                pointOfNoReturnReached(traceId),
+                fallbackApplied.getOrDefault(traceId, false),
+                events(traceId));
     }
 
     private com.routenavigator.domain.DecisionTrace ensureTrace(String traceId) {
@@ -79,12 +130,17 @@ public class ExecutionSimulatorService {
                 .orElseThrow(() -> new NotFoundException("Decision Trace not found: " + traceId));
     }
 
-    private void append(String traceId, PaymentState state, String message, boolean pointOfNoReturnReached) {
+    private boolean pointOfNoReturnReached(String traceId) {
+        return ensureTrace(traceId).executionEvents().stream().anyMatch(ExecutionEvent::pointOfNoReturnReached)
+                || states.getOrDefault(traceId, PaymentState.CREATED) == PaymentState.PONR_REACHED;
+    }
+
+    private void append(String traceId, String routeId, String state, String message, boolean pointOfNoReturnReached) {
         ExecutionEvent event = new ExecutionEvent(
                 "evt-" + UUID.randomUUID(),
                 traceId,
-                ensureTrace(traceId).selectedRoute().routeId(),
-                state.name(),
+                routeId,
+                state,
                 message,
                 Instant.now().toString(),
                 pointOfNoReturnReached

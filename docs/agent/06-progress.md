@@ -3,7 +3,7 @@
 Codex must update this file after every completed or blocked backlog item.
 
 ## Current status
-Execution simulator and payment tracker complete. Gemini explanation boundary complete with deterministic template fallback.
+Fallback scenario complete. Execution simulator supports pre-PONR degradation, fallback route activation and post-PONR investigation handling.
 
 ## Completed tasks
 - 1. Create monorepo folders: `backend/`, `frontend/`, `docs/agent/`, `deployment/`.
@@ -46,6 +46,10 @@ Execution simulator and payment tracker complete. Gemini explanation boundary co
 - 38. Add Quarkus REST endpoints: `POST /api/payments/{traceId}/authorise`, `POST /api/payments/{traceId}/simulate/next`, `GET /api/payments/{traceId}/state`, `GET /api/payments/{traceId}/events`.
 - 39. Build PaymentTracker UI.
 - 40. Append execution events to Decision Trace.
+- 41. Implement route degradation simulation before point-of-no-return.
+- 42. Implement fallback evaluation and fallback event append.
+- 43. Ensure post-point-of-no-return failures are not labelled fallback.
+- 44. Add UI view for fallback event and updated route.
 
 ## In progress
 None.
@@ -60,7 +64,7 @@ None.
 - `cd frontend && npm run build`
 
 ## Next task
-41. Implement route degradation simulation before point-of-no-return.
+45. Build ControlRoom view with current state, PONR, fallback, gates, score, trace, AI boundary and events.
 
 ## Change log format
 When updating, use this format:
@@ -137,4 +141,12 @@ Files: `backend/src/main/java/com/routenavigator/domain/PaymentState.java`, `bac
 Commands: `cd backend && ./mvnw test`, `cd frontend && npm run lint`, `cd frontend && npm run typecheck`, `cd frontend && npm run build`
 Result: passed. Backend tests passed with 16 tests. Frontend lint, typecheck and production build passed.
 Next: Task 41. Implement route degradation simulation before point-of-no-return.
+Blockers: none
+
+2026-06-03 22:42 — Task 41-44: Fallback scenario
+Change: Added `simulate/degradation` payment API, active-route execution snapshots, pre-PONR fallback activation to the deterministic fallback candidate, post-PONR investigation handling with no fallback labelling, backend API tests for both branches, and a frontend fallback event panel showing the updated active route.
+Files: `backend/src/main/java/com/routenavigator/domain/PaymentExecutionSnapshot.java`, `backend/src/main/java/com/routenavigator/api/PaymentExecutionResource.java`, `backend/src/main/java/com/routenavigator/service/ExecutionSimulatorService.java`, `backend/src/test/java/com/routenavigator/api/PaymentExecutionResourceTest.java`, `frontend/src/components/FallbackEventView.tsx`, `frontend/src/App.tsx`, `frontend/src/App.css`, `frontend/src/data/demoData.ts`, `frontend/src/types.ts`, `docs/agent/03-backlog.md`, `docs/agent/06-progress.md`
+Commands: `cd backend && ./mvnw test -Dtest=PaymentExecutionResourceTest`, `cd backend && ./mvnw test`, `cd frontend && npm run lint`, `cd frontend && npm run typecheck`, `cd frontend && npm run build`
+Result: passed. Backend tests passed with 18 tests. Frontend lint, typecheck and production build passed.
+Next: Task 45. Build ControlRoom view with current state, PONR, fallback, gates, score, trace, AI boundary and events.
 Blockers: none

@@ -188,6 +188,15 @@ export const demoScenarios: DemoScenario[] = [
       'Token transfer commitment after wallet screening and before redemption.',
       'Not complete until beneficiary usable fiat value is confirmed.',
       'Fallback to International bank transfer before point-of-no-return.',
+      {
+        degradedRouteId: 'route-stablecoin-bridge-fiat-payout',
+        activeRouteId: 'route-correspondent-banking',
+        activeRouteLabel: 'International bank transfer',
+        trigger: 'US payout partner unavailable before token transfer commitment',
+        pointOfNoReturnReached: false,
+        state: 'FALLBACK_SELECTED',
+        message: 'Fallback selected before point-of-no-return; original decision retained and execution continues on International bank transfer.',
+      },
     ),
   },
 ]
@@ -199,6 +208,7 @@ function buildTrace(
   pointOfNoReturn: string,
   finality: string,
   fallback: string,
+  fallbackEvent?: DemoScenario['trace']['fallbackEvent'],
 ) {
   const candidates = [selectedRoute, ...otherCandidates]
   return {
@@ -234,7 +244,9 @@ function buildTrace(
       'Payment intent confirmed',
       'Blocking gates evaluated',
       'Route selected',
+      ...(fallbackEvent ? ['Route degradation detected', fallbackEvent.message] : []),
       'Awaiting simulated authorisation',
     ],
+    fallbackEvent,
   }
 }

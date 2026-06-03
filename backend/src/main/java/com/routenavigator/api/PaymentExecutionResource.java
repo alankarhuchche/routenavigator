@@ -33,6 +33,12 @@ public class PaymentExecutionResource {
         return executionSimulatorService.simulateNext(traceId);
     }
 
+    @POST
+    @Path("/simulate/degradation")
+    public PaymentExecutionSnapshot simulateDegradation(@PathParam("traceId") String traceId) {
+        return executionSimulatorService.simulateDegradation(traceId);
+    }
+
     @GET
     @Path("/state")
     public PaymentState state(@PathParam("traceId") String traceId) {

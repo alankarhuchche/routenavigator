@@ -41,6 +41,17 @@ export interface DecisionTrace {
   aiBoundary: string
   explanation: string
   events: string[]
+  fallbackEvent?: FallbackEvent
+}
+
+export interface FallbackEvent {
+  degradedRouteId: string
+  activeRouteId: string
+  activeRouteLabel: string
+  trigger: string
+  pointOfNoReturnReached: boolean
+  state: string
+  message: string
 }
 
 export interface DemoScenario {

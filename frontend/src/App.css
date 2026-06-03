@@ -436,6 +436,54 @@ meter {
   font-weight: 850;
 }
 
+.fallback-body {
+  display: grid;
+  gap: 12px;
+  padding: 14px 16px 16px;
+}
+
+.fallback-status {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  min-height: 32px;
+  color: #0f766e;
+}
+
+.fallback-status strong {
+  font-size: 13px;
+}
+
+.fallback-status span {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.fallback-body p {
+  margin: 0;
+  color: #334155;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.fallback-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.fallback-grid div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
 @media (max-width: 1180px) {
   .workspace {
     grid-template-columns: 300px 1fr;
