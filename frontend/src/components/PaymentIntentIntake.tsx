@@ -1,12 +1,13 @@
 import { Send, Sparkles } from 'lucide-react'
 import type { FormEvent } from 'react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { DemoScenario } from '../types'
 
 interface PaymentIntentIntakeProps {
   scenarios: DemoScenario[]
   selectedScenario: DemoScenario
   onScenarioMatched: (scenarioId: string) => void
+  onIntentTextChange?: (text: string) => void
 }
 
 type ObjectivePreference = 'FASTEST' | 'CHEAPEST' | 'MOST_TRANSPARENT'
@@ -18,8 +19,12 @@ const examplePrompts = [
   'Send USD 1,000 from GBP to a US bank account, cheapest route please.',
 ]
 
-export function PaymentIntentIntake({ scenarios, selectedScenario, onScenarioMatched }: PaymentIntentIntakeProps) {
+export function PaymentIntentIntake({ scenarios, selectedScenario, onScenarioMatched, onIntentTextChange }: PaymentIntentIntakeProps) {
   const [naturalLanguageIntent, setNaturalLanguageIntent] = useState(examplePrompts[1])
+
+  useEffect(() => {
+    onIntentTextChange?.(naturalLanguageIntent)
+  }, [])
   const [objective, setObjective] = useState<ObjectivePreference>('FASTEST')
   const [trackingRequired, setTrackingRequired] = useState(true)
   const [digitalRoutesAllowed, setDigitalRoutesAllowed] = useState(true)
@@ -56,7 +61,10 @@ export function PaymentIntentIntake({ scenarios, selectedScenario, onScenarioMat
           id="natural-language-intent"
           value={naturalLanguageIntent}
           rows={5}
-          onChange={(event) => setNaturalLanguageIntent(event.target.value)}
+          onChange={(event) => {
+            setNaturalLanguageIntent(event.target.value)
+            onIntentTextChange?.(event.target.value)
+          }}
         />
 
         <div className="preference-grid" aria-label="Payment preferences">

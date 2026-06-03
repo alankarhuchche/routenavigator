@@ -50,3 +50,13 @@ export async function getPaymentState(traceId: string): Promise<ApiPaymentSnapsh
   await requireOk(res)
   return res.json()
 }
+
+export async function classifyIntent(text: string): Promise<{ scenarioId: string; reason: string; classifiedBy: string }> {
+  const res = await fetch('/api/intent/classify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+  })
+  await requireOk(res)
+  return res.json()
+}

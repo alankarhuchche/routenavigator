@@ -578,6 +578,13 @@ h2 {
   line-height: 1.45;
 }
 
+.classify-reason {
+  margin: 8px 0 0;
+  color: #475569;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
 .scenario-button {
   display: grid;
   grid-template-columns: 62px 1fr;

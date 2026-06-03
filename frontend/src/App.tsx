@@ -16,7 +16,7 @@ import { StepIndicator } from './components/StepIndicator'
 import { ArrowRight } from 'lucide-react'
 import type { DecisionTrace } from './types'
 import type { ApiPaymentSnapshot } from './apiTypes'
-import { createRouteDecision, fetchExplanation, authorisePayment, simulateNext, simulateDegradation } from './api'
+import { createRouteDecision, fetchExplanation, authorisePayment, simulateNext, simulateDegradation, classifyIntent } from './api'
 import { adaptTrace } from './traceAdapter'
 
 function App() {
@@ -26,6 +26,8 @@ function App() {
   const [liveTraceId, setLiveTraceId] = useState<string | null>(null)
   const [liveTrace, setLiveTrace] = useState<DecisionTrace | null>(null)
   const [explanationProvider, setExplanationProvider] = useState<string | undefined>(undefined)
+  const [intentText, setIntentText] = useState('')
+  const [classifyReason, setClassifyReason] = useState<string | null>(null)
   const [isAnalysing, setIsAnalysing] = useState(false)
   const [analyseError, setAnalyseError] = useState<string | null>(null)
   const [paymentSnapshot, setPaymentSnapshot] = useState<ApiPaymentSnapshot | null>(null)
@@ -53,10 +55,25 @@ function App() {
   async function handleAnalyse() {
     setIsAnalysing(true)
     setAnalyseError(null)
+    setClassifyReason(null)
     try {
-      const apiTrace = await createRouteDecision(scenario.id)
+      // Step 1: classify the intent text to pick the best scenario
+      let resolvedScenarioId = scenario.id
+      if (intentText.trim()) {
+        try {
+          const classified = await classifyIntent(intentText)
+          resolvedScenarioId = classified.scenarioId
+          setClassifyReason(classified.reason)
+          setScenarioId(classified.scenarioId)
+        } catch {
+          // classification failed — use current scenario
+        }
+      }
+      // Step 2: run route decision + Gemini explanation
+      const apiTrace = await createRouteDecision(resolvedScenarioId)
       const explanationResp = await fetchExplanation(apiTrace.traceId)
-      const adapted = adaptTrace(apiTrace, scenario, explanationResp.explanation)
+      const matchedScenario = demoScenarios.find(s => s.id === resolvedScenarioId) ?? scenario
+      const adapted = adaptTrace(apiTrace, matchedScenario, explanationResp.explanation)
       setLiveTraceId(apiTrace.traceId)
       setLiveTrace(adapted)
       setExplanationProvider(explanationResp.provider)
@@ -141,6 +158,7 @@ function App() {
                 scenarios={demoScenarios}
                 selectedScenario={scenario}
                 onScenarioMatched={handleScenarioMatched}
+                onIntentTextChange={setIntentText}
               />
             </div>
             <div>
@@ -166,6 +184,11 @@ function App() {
               {isAnalysing ? 'Analysing...' : 'Analyse Route'}
               {!isAnalysing && <ArrowRight size={16} aria-hidden="true" />}
             </button>
+            {classifyReason && (
+              <p className="classify-reason">
+                <strong>AI matched:</strong> {classifyReason}
+              </p>
+            )}
           </div>
         </section>
 
