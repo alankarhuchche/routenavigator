@@ -46,6 +46,8 @@ The repository also keeps a root `Dockerfile` that mirrors `deployment/Dockerfil
 gcloud builds submit --tag "${IMAGE}" .
 ```
 
+The Docker build uses the official Maven/JDK 21 image for the backend stage. Local development still uses `backend/mvnw`, but container builds do not depend on Maven Wrapper downloading Maven.
+
 Deploy:
 
 ```bash

@@ -7,14 +7,12 @@ RUN npm ci
 COPY frontend/ ./
 RUN npm run build
 
-FROM eclipse-temurin:21-jdk AS backend-build
+FROM maven:3.9.16-eclipse-temurin-21 AS backend-build
 WORKDIR /workspace
-COPY backend/.mvn backend/.mvn
-COPY backend/mvnw backend/pom.xml backend/
-RUN chmod +x backend/mvnw
+COPY backend/pom.xml backend/
 COPY backend/ backend/
 COPY --from=frontend-build /workspace/frontend/dist/ backend/src/main/resources/META-INF/resources/
-RUN cd backend && ./mvnw -B package -DskipTests
+RUN cd backend && mvn -B package -DskipTests
 
 FROM registry.access.redhat.com/ubi9/openjdk-21-runtime:1.24
 ENV LANGUAGE='en_US:en'

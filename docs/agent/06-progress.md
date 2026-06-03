@@ -199,6 +199,7 @@ Blockers: none
 ## Known gaps and handover notes
 - Docker is not installed locally, so `docker build -f deployment/Dockerfile -t route-navigator:local .` was not run here. Cloud Build can build the same Dockerfile.
 - Use `gcloud builds submit --config=cloudbuild.yaml --substitutions=_IMAGE="${IMAGE}" .` for Cloud Build. A root `Dockerfile` is also present as a compatibility shim for `gcloud builds submit --tag "${IMAGE}" .`.
+- Docker backend build stages use `maven:3.9.16-eclipse-temurin-21` and `mvn` directly, avoiding Maven Wrapper checksum/download behavior inside Cloud Build containers. Local development still uses `backend/mvnw`.
 - Cloud Run deploy docs use `--max-instances=1` because traces and execution state are in memory for the MVP. Remove this only after adding shared persistence.
 - In-app browser visual smoke could not run because the browser runtime failed to start in this session. The local Vite server returned HTTP 200 and the frontend lint/typecheck/build checks passed.
 - Gemini remains default off, as required. Template explanations work without credentials. A real Gemini client can be added later behind `GeminiExplanationService`, but it must remain explanation-only and receive only redacted traces.
