@@ -67,6 +67,6 @@ Work through these tasks in order. Do not skip ahead unless blocked.
 ## Epic 10 — Control room and polish
 - [x] 45. Build ControlRoom view with current state, PONR, fallback, gates, score, trace, AI boundary and events.
 - [x] 46. Add README demo walkthrough.
-- [ ] 47. Add deployment Dockerfile and Cloud Run demo notes.
+- [x] 47. Add deployment Dockerfile and Cloud Run demo notes.
 - [ ] 48. Run full backend tests and frontend build.
 - [ ] 49. Update `docs/agent/06-progress.md` with final status and known gaps.

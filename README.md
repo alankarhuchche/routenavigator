@@ -96,6 +96,9 @@ Gemini is optional and defaults off. The route engine, gate evaluators, scoring 
 ## Persistence boundary
 The MVP intentionally uses local mock JSON data and in-memory traces. Data loading is isolated in services so PostgreSQL can be added later for saved decisions, audit history, users or shared demo sessions without rewriting gate evaluation, scoring or route selection logic.
 
+## Cloud Run
+See `deployment/cloud-run.md` for the single-container Cloud Run demo path. The deployment Dockerfile builds the React app and serves it from Quarkus alongside `/api/*`, so the demo can be handed over as one URL.
+
 ## Suggested build prompt
 ```text
 You are building the Payment Route Orchestrator demo in this repository.
