@@ -52,11 +52,11 @@ Work through these tasks in order. Do not skip ahead unless blocked.
 - [x] 35. Add tests ensuring Gemini receives no PII fields in redacted trace.
 
 ## Epic 8 — Execution simulator and state machine
-- [ ] 36. Implement PaymentState enum and PaymentStateMachineService.
-- [ ] 37. Implement ExecutionSimulatorService using route legs.
-- [ ] 38. Add Quarkus REST endpoints: `POST /api/payments/{traceId}/authorise`, `POST /api/payments/{traceId}/simulate/next`, `GET /api/payments/{traceId}/state`, `GET /api/payments/{traceId}/events`.
-- [ ] 39. Build PaymentTracker UI.
-- [ ] 40. Append execution events to Decision Trace.
+- [x] 36. Implement PaymentState enum and PaymentStateMachineService.
+- [x] 37. Implement ExecutionSimulatorService using route legs.
+- [x] 38. Add Quarkus REST endpoints: `POST /api/payments/{traceId}/authorise`, `POST /api/payments/{traceId}/simulate/next`, `GET /api/payments/{traceId}/state`, `GET /api/payments/{traceId}/events`.
+- [x] 39. Build PaymentTracker UI.
+- [x] 40. Append execution events to Decision Trace.
 
 ## Epic 9 — Fallback scenario
 - [ ] 41. Implement route degradation simulation before point-of-no-return.

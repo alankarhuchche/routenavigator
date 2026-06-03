@@ -40,6 +40,7 @@ export interface DecisionTrace {
   fallback: string
   aiBoundary: string
   explanation: string
+  events: string[]
 }
 
 export interface DemoScenario {

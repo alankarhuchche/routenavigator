@@ -58,6 +58,34 @@ public class DecisionTraceService {
         return Optional.ofNullable(traces.get(traceId));
     }
 
+    public DecisionTrace replaceExecutionEvents(String traceId, List<com.routenavigator.domain.ExecutionEvent> executionEvents) {
+        DecisionTrace currentTrace = traces.get(traceId);
+        if (currentTrace == null) {
+            throw new IllegalArgumentException("Decision Trace not found: " + traceId);
+        }
+        DecisionTrace updatedTrace = new DecisionTrace(
+                currentTrace.traceId(),
+                currentTrace.scenarioId(),
+                currentTrace.createdAt(),
+                currentTrace.customerIntent(),
+                currentTrace.candidateRoutes(),
+                currentTrace.gateResults(),
+                currentTrace.excludedRoutes(),
+                currentTrace.scoreResults(),
+                currentTrace.selectedRoute(),
+                currentTrace.alternativeReasons(),
+                currentTrace.pointOfNoReturn(),
+                currentTrace.finalityModel(),
+                currentTrace.fallbackCandidate(),
+                currentTrace.evidenceReferences(),
+                currentTrace.aiBoundary(),
+                List.copyOf(executionEvents),
+                currentTrace.simulated()
+        );
+        traces.put(traceId, updatedTrace);
+        return updatedTrace;
+    }
+
     private List<String> alternativeReasons(RouteDecisionResult decisionResult) {
         return decisionResult.candidateRoutes().stream()
                 .filter(candidate -> !candidate.routeId().equals(decisionResult.selectedRoute().routeId()))

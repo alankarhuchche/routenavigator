@@ -230,5 +230,11 @@ function buildTrace(
     fallback,
     aiBoundary: baseAiBoundary,
     explanation: `${selectedRoute.label} is selected because it best satisfies the objective after blocking gates pass. Excluded routes remain visible with hard-gate reasons.`,
+    events: [
+      'Payment intent confirmed',
+      'Blocking gates evaluated',
+      'Route selected',
+      'Awaiting simulated authorisation',
+    ],
   }
 }

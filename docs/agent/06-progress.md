@@ -3,7 +3,7 @@
 Codex must update this file after every completed or blocked backlog item.
 
 ## Current status
-Gemini explanation boundary complete with deterministic template fallback. Frontend core UI complete with static demo data.
+Execution simulator and payment tracker complete. Gemini explanation boundary complete with deterministic template fallback.
 
 ## Completed tasks
 - 1. Create monorepo folders: `backend/`, `frontend/`, `docs/agent/`, `deployment/`.
@@ -41,6 +41,11 @@ Gemini explanation boundary complete with deterministic template fallback. Front
 - 33. Add Quarkus REST API endpoint `POST /api/explanations/route`.
 - 34. Add frontend GeminiExplanationPanel.
 - 35. Add tests ensuring Gemini receives no PII fields in redacted trace.
+- 36. Implement PaymentState enum and PaymentStateMachineService.
+- 37. Implement ExecutionSimulatorService using route legs.
+- 38. Add Quarkus REST endpoints: `POST /api/payments/{traceId}/authorise`, `POST /api/payments/{traceId}/simulate/next`, `GET /api/payments/{traceId}/state`, `GET /api/payments/{traceId}/events`.
+- 39. Build PaymentTracker UI.
+- 40. Append execution events to Decision Trace.
 
 ## In progress
 None.
@@ -55,7 +60,7 @@ None.
 - `cd frontend && npm run build`
 
 ## Next task
-36. Implement PaymentState enum and PaymentStateMachineService.
+41. Implement route degradation simulation before point-of-no-return.
 
 ## Change log format
 When updating, use this format:
@@ -124,4 +129,12 @@ Files: `backend/src/main/resources/application.properties`, `backend/src/main/ja
 Commands: `cd backend && ./mvnw test`, `cd frontend && npm run lint`, `cd frontend && npm run typecheck`, `cd frontend && npm run build`
 Result: passed. Backend tests passed with 14 tests. Frontend lint, typecheck and production build passed.
 Next: Task 36. Implement PaymentState enum and PaymentStateMachineService.
+Blockers: none
+
+2026-06-03 22:38 — Task 36-40: Execution simulator and state machine
+Change: Added payment state enum, state machine service, execution simulator using selected route legs, authorise/simulate/state/events payment APIs, Decision Trace execution-event append support, backend tests, and frontend PaymentTracker component.
+Files: `backend/src/main/java/com/routenavigator/domain/PaymentState.java`, `backend/src/main/java/com/routenavigator/domain/PaymentExecutionSnapshot.java`, `backend/src/main/java/com/routenavigator/api/PaymentExecutionResource.java`, `backend/src/main/java/com/routenavigator/service/PaymentStateMachineService.java`, `backend/src/main/java/com/routenavigator/service/ExecutionSimulatorService.java`, `backend/src/main/java/com/routenavigator/service/DecisionTraceService.java`, `backend/src/test/java/com/routenavigator/api/PaymentExecutionResourceTest.java`, `backend/src/test/java/com/routenavigator/service/PaymentStateMachineServiceTest.java`, `frontend/src/components/PaymentTracker.tsx`, `frontend/src/App.tsx`, `frontend/src/App.css`, `frontend/src/data/demoData.ts`, `frontend/src/types.ts`, `docs/agent/03-backlog.md`, `docs/agent/06-progress.md`
+Commands: `cd backend && ./mvnw test`, `cd frontend && npm run lint`, `cd frontend && npm run typecheck`, `cd frontend && npm run build`
+Result: passed. Backend tests passed with 16 tests. Frontend lint, typecheck and production build passed.
+Next: Task 41. Implement route degradation simulation before point-of-no-return.
 Blockers: none
