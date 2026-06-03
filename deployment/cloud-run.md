@@ -48,6 +48,7 @@ gcloud run deploy "${SERVICE}" \
   --region="${REGION}" \
   --platform=managed \
   --allow-unauthenticated \
+  --max-instances=1 \
   --set-env-vars=GEMINI_ENABLED=false
 ```
 
@@ -61,4 +62,5 @@ curl -s "https://<cloud-run-url>/api/health"
 - Quarkus listens on `0.0.0.0` and uses the Cloud Run `PORT` environment variable with a local default of `8080`.
 - Gemini is disabled by default. Template explanations work without credentials.
 - The MVP uses local JSON mock data and in-memory traces. PostgreSQL can be added later behind the existing service/repository boundary.
+- `--max-instances=1` keeps the in-memory trace/state demo coherent until PostgreSQL or another shared persistence layer is added.
 - If you enable Gemini later, keep it explanation-only and feed it only the redacted Decision Trace.

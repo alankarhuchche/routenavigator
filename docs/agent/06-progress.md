@@ -199,6 +199,7 @@ Blockers: none
 ## Known gaps and handover notes
 - Docker is not installed locally, so `docker build -f deployment/Dockerfile -t route-navigator:local .` was not run here. Cloud Build can build the same Dockerfile.
 - Use `gcloud builds submit --config=cloudbuild.yaml --substitutions=_IMAGE="${IMAGE}" .` for Cloud Build. The Dockerfile is intentionally stored at `deployment/Dockerfile`, not the repository root.
+- Cloud Run deploy docs use `--max-instances=1` because traces and execution state are in memory for the MVP. Remove this only after adding shared persistence.
 - In-app browser visual smoke could not run because the browser runtime failed to start in this session. The local Vite server returned HTTP 200 and the frontend lint/typecheck/build checks passed.
 - Gemini remains default off, as required. Template explanations work without credentials. A real Gemini client can be added later behind `GeminiExplanationService`, but it must remain explanation-only and receive only redacted traces.
 - Persistence is intentionally local JSON plus in-memory trace/state storage for the MVP. PostgreSQL should be added later behind the existing service/repository boundary for saved decisions, audit history or multi-user demo sessions.
