@@ -28,6 +28,74 @@ Before coding, read:
 
 The deterministic route engine selects routes. Gemini may explain a redacted Decision Trace only.
 
+## Run locally
+Start the backend:
+
+```bash
+cd backend
+./mvnw quarkus:dev
+```
+
+Start the frontend:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open the Vite URL, normally `http://127.0.0.1:5173/`. The frontend is a simulated control room with static scenario fixtures that mirror the backend scenarios. The backend APIs can be exercised independently.
+
+## Checks
+```bash
+cd backend && ./mvnw test
+cd frontend && npm run lint
+cd frontend && npm run typecheck
+cd frontend && npm run build
+```
+
+## Demo walkthrough
+1. Select `SCN-001` to show the simple domestic GBP case. Instant UK bank transfer wins because the payment is domestic, low-value and beneficiary-reachable.
+2. Select `SCN-002` to show fastest GBP-to-USD bank payout. The fast digital-dollar route wins only after gates pass; the app must describe it as incomplete until beneficiary usable fiat value is confirmed.
+3. Select `SCN-003` to show wallet-to-wallet USDC. The wallet route wins because the source asset and beneficiary endpoint match.
+4. Select `SCN-004` to show cheapest GBP-to-USD bank payout. Local payout wins because the objective weights cost above speed.
+5. Select `SCN-005` to show traditional bank transfer only. Digital routes are excluded by customer constraint and international bank transfer wins.
+6. Select `SCN-006` to show fallback before point-of-no-return. The original deterministic decision remains visible, a route degradation event is appended, and execution moves to International bank transfer because PONR has not been reached.
+
+For the executive narrative, use the Control Room first, then Route Comparison, then Decision Trace. The safest sentence is: deterministic services decide and simulate; Gemini can only explain the redacted trace.
+
+## Backend API examples
+Create a route decision:
+
+```bash
+curl -s -X POST http://127.0.0.1:8080/api/route-decisions \
+  -H 'Content-Type: application/json' \
+  -d '{"scenarioId":"SCN-006"}'
+```
+
+Simulate authorisation and pre-PONR degradation:
+
+```bash
+TRACE_ID=<trace-id-from-route-decision>
+curl -s -X POST "http://127.0.0.1:8080/api/payments/${TRACE_ID}/authorise"
+curl -s -X POST "http://127.0.0.1:8080/api/payments/${TRACE_ID}/simulate/degradation"
+curl -s "http://127.0.0.1:8080/api/route-decisions/${TRACE_ID}"
+```
+
+Generate a deterministic explanation fallback:
+
+```bash
+curl -s -X POST http://127.0.0.1:8080/api/explanations/route \
+  -H 'Content-Type: application/json' \
+  -d '{"traceId":"'"${TRACE_ID}"'"}'
+```
+
+## AI boundary
+Gemini is optional and defaults off. The route engine, gate evaluators, scoring service, execution simulator and state machine are deterministic backend services. Gemini must never select routes, score routes, approve execution, update payment state or move money.
+
+## Persistence boundary
+The MVP intentionally uses local mock JSON data and in-memory traces. Data loading is isolated in services so PostgreSQL can be added later for saved decisions, audit history, users or shared demo sessions without rewriting gate evaluation, scoring or route selection logic.
+
 ## Suggested build prompt
 ```text
 You are building the Payment Route Orchestrator demo in this repository.

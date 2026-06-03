@@ -3,7 +3,7 @@
 Codex must update this file after every completed or blocked backlog item.
 
 ## Current status
-Control Room UI complete. Fallback scenario complete with pre-PONR route activation and post-PONR investigation handling.
+README demo walkthrough complete. Control Room UI complete. Fallback scenario complete with pre-PONR route activation and post-PONR investigation handling.
 
 ## Completed tasks
 - 1. Create monorepo folders: `backend/`, `frontend/`, `docs/agent/`, `deployment/`.
@@ -51,6 +51,7 @@ Control Room UI complete. Fallback scenario complete with pre-PONR route activat
 - 43. Ensure post-point-of-no-return failures are not labelled fallback.
 - 44. Add UI view for fallback event and updated route.
 - 45. Build ControlRoom view with current state, PONR, fallback, gates, score, trace, AI boundary and events.
+- 46. Add README demo walkthrough.
 
 ## In progress
 None.
@@ -65,7 +66,7 @@ None.
 - `cd frontend && npm run build`
 
 ## Next task
-46. Add README demo walkthrough.
+47. Add deployment Dockerfile and Cloud Run demo notes.
 
 ## Change log format
 When updating, use this format:
@@ -158,4 +159,12 @@ Files: `frontend/src/components/ControlRoom.tsx`, `frontend/src/App.tsx`, `front
 Commands: `cd frontend && npm run lint`, `cd frontend && npm run typecheck`, `cd frontend && npm run build`, `curl -I http://127.0.0.1:5173/`
 Result: passed. Frontend lint, typecheck and production build passed. Local dev server returned HTTP 200. In-app browser visual smoke could not run because the browser runtime failed to start in this session.
 Next: Task 46. Add README demo walkthrough.
+Blockers: none
+
+2026-06-03 22:45 — Task 46: README demo walkthrough
+Change: Added local run commands, test/build commands, six-scenario demo walkthrough, backend API examples, AI boundary and PostgreSQL-ready persistence notes.
+Files: `README.md`, `docs/agent/03-backlog.md`, `docs/agent/06-progress.md`
+Commands: not run; documentation-only change.
+Result: not run; documentation-only change.
+Next: Task 47. Add deployment Dockerfile and Cloud Run demo notes.
 Blockers: none
