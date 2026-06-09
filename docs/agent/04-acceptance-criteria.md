@@ -1,44 +1,44 @@
 # 04 — Acceptance Criteria
 
-## Global acceptance criteria
-- The app must clearly state it is a simulated demo.
-- No real payment, SWIFT, wallet, stablecoin, FX, liquidity, sanctions, fraud or customer-data integrations.
-- Route decisions must be deterministic and reproducible.
-- Gemini must not be required for route selection or execution simulation.
-- Every route decision must produce a Decision Trace.
-- Excluded routes must show hard-gate failure reasons.
-- Available but not selected routes must show comparative reasons.
-- Stablecoin bridge must not be described as complete until beneficiary usable value is confirmed.
-- International bank transfer must be modelled as correspondent banking, with SWIFT as messaging and gpi as tracking where available.
+Every change is accepted only when the applicable checks below pass, with evidence (AGENTS.md
+§2 Verification). Mark one "not applicable" explicitly with a reason — silence is not
+acceptance. Functionality and Security always apply. Resilience, RTO and SLA may be not
+applicable with a recorded reason for this demo.
 
-## Scenario acceptance criteria
-1. UK instant payment selects Instant UK bank transfer.
-2. USD fastest selects Fast digital-dollar route when gates pass.
-3. USDC wallet-to-wallet selects Digital-dollar wallet transfer.
-4. USD cheapest selects Local payout route.
-5. Traditional bank-transfer-only selects International bank transfer and excludes digital routes.
-6. Fallback scenario triggers fallback only before point-of-no-return.
+> These are the checks for review and sign-off. The actual rules live in AGENTS.md §1–§2 and
+> docs 06–08 — this file points to them, not repeats them.
 
-## Backend acceptance criteria
-- `POST /api/route-decisions` returns selected route, candidates, gates, scores and trace ID.
-- `GET /api/route-decisions/{traceId}` returns full trace.
-- Gate evaluation happens before scoring.
-- Scoring service receives only routes that pass blocking gates.
-- Trace redaction removes or masks PII-like fields before Gemini.
-- Template explanation works when Gemini disabled.
-- Mock data loading is isolated behind services/repositories so PostgreSQL can be introduced later without rewriting route decision logic.
+## A. Functionality
+- The app clearly states it is a simulated demo with no live connectivity.
+- Route decisions are deterministic and reproducible.
+- Each scenario in 05 produces the expected winning route.
+- Excluded routes show the blocking gate reason; available-not-selected routes show why they lost.
+- Decision Trace is the single source of truth; views derive from it and cannot alter it.
+- Gemini is not required for route selection or execution — template fallback always works.
+- Stablecoin bridge is not marked complete until beneficiary usable value is confirmed.
+- SWIFT is messaging; gpi is tracking — neither is a route family.
+- POST /api/route-decisions returns selected route, candidates, gates, scores and trace ID.
+- GET /api/route-decisions/{traceId} returns the full trace.
+- Gate evaluation happens before scoring; scoring service only receives routes that passed.
+- Payment tracker shows simulated lifecycle states; PONR and fallback status visible in control room.
 
-## Frontend acceptance criteria
-- Scenario selector loads scenario intent.
-- Route comparison shows selected, available-not-selected and excluded routes distinctly.
-- Decision Trace panel exposes hard gates, score, route anatomy, finality, fallback and AI boundary.
-- Payment tracker shows simulated lifecycle states.
-- Control room shows PONR and fallback status.
+## B. Resilience
+- Not applicable for MVP demo (no production traffic). The always-on rules in AGENTS.md §2
+  still apply: idempotency, exception handling, fail-closed gate paths.
 
-## Test acceptance criteria
-- Backend unit tests cover scenario route selection.
-- Backend tests prove excluded routes are not scored.
-- Backend tests prove Gemini is not called during route decision if disabled.
-- Frontend builds successfully.
-- No test or code should require live external credentials.
-- Container/Cloud Run deployment notes exist, but local build/test does not require GCP credentials.
+## C. Security
+- No live secrets in code, config, or fixtures. GEMINI_API_KEY injected via environment
+  variable only, never committed.
+- Trace redaction removes or masks sensitive fields before any data reaches Gemini.
+- Gemini tests prove no PII-like fields reach the model.
+- Template explanation works when Gemini is disabled.
+- No live external credentials needed for local build or test.
+- Input validated at API boundaries; no injection vectors.
+
+## D. RTO (recovery)
+- Not applicable for MVP demo (in-memory state; single instance by design). Documented in
+  deployment notes: --max-instances=1 until shared persistence is added.
+
+## E. SLA (performance / availability)
+- Not applicable for MVP demo. Local build and test run without live infra. Cloud Run
+  deployment notes exist but GCP credentials are not needed locally.
