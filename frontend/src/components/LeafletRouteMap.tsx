@@ -8,9 +8,20 @@ const routeColors: Record<RouteCandidate['status'], string> = {
 }
 
 export function LeafletRouteMap({ trace }: { trace: DecisionTrace }) {
+  // Compute the centre and zoom from the selected route's coordinates so the
+  // map re-frames whenever the trace changes (MapContainer ignores center/zoom
+  // prop updates after mount, so we key by trace id to force a full remount).
+  const coords = trace.selectedRoute.coordinates
+  const centre: [number, number] = coords.length > 0
+    ? [
+        coords.reduce((s, c) => s + c[0], 0) / coords.length,
+        coords.reduce((s, c) => s + c[1], 0) / coords.length,
+      ]
+    : [47.5, -28]
+
   return (
     <section className="panel map-panel">
-      <MapContainer center={[47.5, -28]} zoom={3} scrollWheelZoom={false} className="route-map">
+      <MapContainer key={trace.selectedRoute.id} center={centre} zoom={3} scrollWheelZoom={false} className="route-map">
         <TileLayer
           attribution="&copy; OpenStreetMap contributors"
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

@@ -215,17 +215,19 @@ function App() {
               )}
             </div>
 
-            <div className="step-action-row">
-              <button
-                type="button"
-                className="primary-btn"
-                onClick={handleAuthorise}
-                disabled={isAuthorising}
-              >
-                {isAuthorising ? 'Authorising...' : 'Authorise & Track'}
-                {!isAuthorising && <ArrowRight size={16} aria-hidden="true" />}
-              </button>
-            </div>
+            {step < 3 && (
+              <div className="step-action-row">
+                <button
+                  type="button"
+                  className="primary-btn"
+                  onClick={handleAuthorise}
+                  disabled={isAuthorising}
+                >
+                  {isAuthorising ? 'Authorising...' : 'Authorise & Track'}
+                  {!isAuthorising && <ArrowRight size={16} aria-hidden="true" />}
+                </button>
+              </div>
+            )}
           </section>
         )}
 
