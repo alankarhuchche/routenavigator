@@ -40,9 +40,13 @@ public class ExecutionSimulatorService {
     public PaymentExecutionSnapshot authorise(String traceId) {
         var trace = ensureTrace(traceId);
         activeRouteIds.putIfAbsent(traceId, trace.selectedRoute().routeId());
-        PaymentState nextState = paymentStateMachineService.authorise(states.getOrDefault(traceId, PaymentState.CREATED));
+        PaymentState currentState = states.getOrDefault(traceId, PaymentState.CREATED);
+        PaymentState nextState = paymentStateMachineService.authorise(currentState);
         states.put(traceId, nextState);
-        append(traceId, activeRouteIds.get(traceId), nextState.name(), "Simulated payment authorised by user.", false);
+        // only append an event when state actually changed — prevents duplicate events on retry
+        if (nextState != currentState) {
+            append(traceId, activeRouteIds.get(traceId), nextState.name(), "Simulated payment authorised by user.", false);
+        }
         return snapshot(traceId);
     }
 
