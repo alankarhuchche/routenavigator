@@ -158,6 +158,28 @@ h2 {
   padding-top: 4px;
 }
 
+.edit-intent-row {
+  display: flex;
+  align-items: center;
+  padding-bottom: 8px;
+}
+
+.ghost-btn {
+  background: none;
+  border: none;
+  color: #0f766e;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ghost-btn:hover {
+  color: #0d6460;
+}
+
 .primary-btn {
   display: inline-flex;
   align-items: center;

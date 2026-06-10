@@ -61,6 +61,16 @@ function App() {
     }
   }
 
+  function handleReset() {
+    setStep(1)
+    setLiveTrace(null)
+    setLiveTraceId(null)
+    setPaymentSnapshot(null)
+    setClassifyReason(null)
+    setAnalyseError(null)
+    setExplanationProvider(undefined)
+  }
+
   async function handleAnalyse() {
     setIsAnalysing(true)
     setAnalyseError(null)
@@ -156,7 +166,7 @@ function App() {
       </header>
 
       <div className="journey-wrapper">
-        <StepIndicator currentStep={step} onStepClick={handleStepClick} />
+        <StepIndicator currentStep={step} onStepClick={(s) => { if (s === 1) handleReset(); else handleStepClick(s) }} />
 
         {/* ── STEP 1: INTENT ── */}
         <section className="step-section" aria-label="Step 1: Intent">
@@ -205,6 +215,13 @@ function App() {
         {/* ── STEP 2: ROUTE ANALYSIS ── */}
         {step >= 2 && (
           <section className="step-section" aria-label="Step 2: Route Analysis">
+            {step === 2 && (
+              <div className="edit-intent-row">
+                <button type="button" className="ghost-btn" onClick={handleReset}>
+                  ← Edit intent
+                </button>
+              </div>
+            )}
             <div className="analysis-grid">
               <div>
                 <RouteComparison trace={displayTrace} />
