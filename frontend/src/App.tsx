@@ -76,16 +76,16 @@ function App() {
     setAnalyseError(null)
     setClassifyReason(null)
     try {
-      // Step 1: classify the intent text to pick the best scenario
-      let resolvedScenarioId = scenario.id
+      // Use the client-side matched scenario as authoritative source.
+      // The backend classifier only supplies the reason text — it predates
+      // the full corridor set and would override correct client matches.
+      const resolvedScenarioId = scenarioId
       if (intentText.trim()) {
         try {
           const classified = await classifyIntent(intentText)
-          resolvedScenarioId = classified.scenarioId
           setClassifyReason(classified.reason)
-          setScenarioId(classified.scenarioId)
         } catch {
-          // classification failed — use current scenario
+          // classification failed — reason text omitted, scenario unchanged
         }
       }
       // Step 2: run route decision + Gemini explanation
