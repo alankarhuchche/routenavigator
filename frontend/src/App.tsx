@@ -76,6 +76,7 @@ function App() {
     setIsAnalysing(true)
     setAnalyseError(null)
     setClassifyReason(null)
+    setPaymentSnapshot(null)
     try {
       // Use the client-side matched scenario as authoritative source.
       // The backend classifier only supplies the reason text — it predates
@@ -268,9 +269,13 @@ function App() {
         {/* ── STEP 3: EXECUTION ── */}
         {step >= 3 && (
           <section className="step-section execution-section" aria-label="Step 3: Execution">
-            {paymentSnapshot && (
+            {paymentSnapshot ? (
               <div className="payment-state-badge">
                 Payment state: <strong>{STATE_LABELS[paymentSnapshot.state] ?? paymentSnapshot.state}</strong>
+              </div>
+            ) : (
+              <div className="payment-state-badge" style={{ borderColor: '#fed7aa', background: '#fff7ed', color: '#92400e' }}>
+                Payment not yet authorised — click <strong>Authorise &amp; Track</strong> in step 2
               </div>
             )}
             <PaymentTracker trace={displayTrace} />
