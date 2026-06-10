@@ -4,6 +4,20 @@
   color: #18202f;
 }
 
+.sticky-action-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 12px 24px;
+  background: rgba(247, 248, 251, 0.92);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid #e2e8f0;
+}
+
 .disclaimer {
   display: flex;
   align-items: center;

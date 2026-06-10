@@ -175,9 +175,14 @@ function App() {
           </div>
 
           {step === 1 && (
-            <div className="step-action-row">
+            <div className="sticky-action-bar">
               {analyseError && (
                 <span className="analyse-error">{analyseError}</span>
+              )}
+              {classifyReason && (
+                <p className="classify-reason">
+                  <strong>AI matched:</strong> {classifyReason}
+                </p>
               )}
               <button
                 type="button"
@@ -188,11 +193,6 @@ function App() {
                 {isAnalysing ? 'Analysing...' : 'Analyse Route'}
                 {!isAnalysing && <ArrowRight size={16} aria-hidden="true" />}
               </button>
-              {classifyReason && (
-                <p className="classify-reason">
-                  <strong>AI matched:</strong> {classifyReason}
-                </p>
-              )}
             </div>
           )}
 
