@@ -20,7 +20,6 @@ export function RouteComparison({ trace }: { trace: DecisionTrace }) {
           <div className={`route-row status-${candidate.status.toLowerCase()}`} key={candidate.id}>
             <span>
               <strong>{candidate.label}</strong>
-              <small>{candidate.family}</small>
             </span>
             <span>{candidate.status}</span>
             <span>{candidate.eta}</span>

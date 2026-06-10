@@ -58,7 +58,7 @@ export function DecisionTracePanel({ trace, provider, isLoading }: Props) {
           <ScoreBreakdown dimensions={trace.scoreDimensions} />
           <dl className="trace-facts">
             <div>
-              <dt>PONR</dt>
+              <dt>Cancellation window</dt>
               <dd>{trace.pointOfNoReturn}</dd>
             </div>
             <div>

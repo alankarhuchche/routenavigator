@@ -30,10 +30,10 @@ export function GeminiExplanationPanel({ trace, provider, isLoading }: Props) {
     provider === 'GEMINI_FALLBACK' ||
     provider === 'TEMPLATE_FALLBACK_GEMINI_ENABLED'
   ) {
-    badgeLabel = 'Template fallback'
+    badgeLabel = 'Standard summary'
     badgeClass = 'gemini-badge-amber'
   } else {
-    badgeLabel = 'Template fallback'
+    badgeLabel = 'Standard summary'
     badgeClass = 'gemini-badge-grey'
   }
 

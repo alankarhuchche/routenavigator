@@ -34,7 +34,12 @@ export function adaptTrace(
 ): DecisionTrace {
   const staticCandidates = scenario.trace.candidates
 
-  const allApiRoutes = [...api.candidateRoutes, ...api.excludedRoutes]
+  const seen = new Set<string>()
+  const allApiRoutes = [...api.candidateRoutes, ...api.excludedRoutes].filter((r) => {
+    if (seen.has(r.routeId)) return false
+    seen.add(r.routeId)
+    return true
+  })
 
   const candidates: RouteCandidate[] = allApiRoutes.map((r) =>
     adaptRouteCandidate(r, staticCandidates),

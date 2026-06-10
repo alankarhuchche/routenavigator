@@ -18,6 +18,7 @@ import type { DecisionTrace } from './types'
 import type { ApiPaymentSnapshot } from './apiTypes'
 import { createRouteDecision, fetchExplanation, authorisePayment, simulateNext, simulateDegradation, classifyIntent } from './api'
 import { adaptTrace } from './traceAdapter'
+import type { LivePreferences } from './components/PaymentIntentIntake'
 
 function App() {
   const [scenarioId, setScenarioId] = useState(demoScenarios[0].id)
@@ -27,6 +28,7 @@ function App() {
   const [liveTrace, setLiveTrace] = useState<DecisionTrace | null>(null)
   const [explanationProvider, setExplanationProvider] = useState<string | undefined>(undefined)
   const [intentText, setIntentText] = useState('')
+  const [livePreferences, setLivePreferences] = useState<LivePreferences | null>(null)
   const [classifyReason, setClassifyReason] = useState<string | null>(null)
   const [isAnalysing, setIsAnalysing] = useState(false)
   const [analyseError, setAnalyseError] = useState<string | null>(null)
@@ -40,6 +42,17 @@ function App() {
   )
 
   const displayTrace = liveTrace ?? scenario.trace
+
+  const displayIntent = useMemo(() => {
+    const base = scenario.intent
+    if (!livePreferences) return base
+    return {
+      ...base,
+      objective: livePreferences.objective,
+      trackingRequired: livePreferences.trackingRequired,
+      digitalRoutesAllowed: livePreferences.digitalRoutesAllowed,
+    }
+  }, [scenario.intent, livePreferences])
 
   function handleStepClick(s: number) {
     if (s === 1 || s === 2 || s === 3) {
@@ -152,6 +165,7 @@ function App() {
               <PaymentIntentIntake
                 scenarios={demoScenarios}
                 onIntentTextChange={setIntentText}
+                onPreferencesChange={setLivePreferences}
               />
             </div>
             <div>
@@ -161,28 +175,30 @@ function App() {
 
           {/* Payment Intent summary card */}
           <div className="intent-summary-row">
-            <PaymentIntentView intent={scenario.intent} />
+            <PaymentIntentView intent={displayIntent} />
           </div>
 
-          <div className="step-action-row">
-            {analyseError && (
-              <span className="analyse-error">{analyseError}</span>
-            )}
-            <button
-              type="button"
-              className="primary-btn"
-              onClick={handleAnalyse}
-              disabled={isAnalysing}
-            >
-              {isAnalysing ? 'Analysing...' : 'Analyse Route'}
-              {!isAnalysing && <ArrowRight size={16} aria-hidden="true" />}
-            </button>
-            {classifyReason && (
-              <p className="classify-reason">
-                <strong>AI matched:</strong> {classifyReason}
-              </p>
-            )}
-          </div>
+          {step === 1 && (
+            <div className="step-action-row">
+              {analyseError && (
+                <span className="analyse-error">{analyseError}</span>
+              )}
+              <button
+                type="button"
+                className="primary-btn"
+                onClick={handleAnalyse}
+                disabled={isAnalysing}
+              >
+                {isAnalysing ? 'Analysing...' : 'Analyse Route'}
+                {!isAnalysing && <ArrowRight size={16} aria-hidden="true" />}
+              </button>
+              {classifyReason && (
+                <p className="classify-reason">
+                  <strong>AI matched:</strong> {classifyReason}
+                </p>
+              )}
+            </div>
+          )}
         </section>
 
         {/* ── STEP 2: ROUTE ANALYSIS ── */}
@@ -258,7 +274,7 @@ function App() {
                 </div>
               )}
             <div className="control-band">
-              <ControlRoom trace={displayTrace} />
+              <ControlRoom trace={displayTrace} paymentState={paymentSnapshot?.state} />
             </div>
           </section>
         )}

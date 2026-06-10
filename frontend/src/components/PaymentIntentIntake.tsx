@@ -2,9 +2,16 @@ import { Sparkles } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import type { DemoScenario } from '../types'
 
+export interface LivePreferences {
+  objective: ObjectivePreference
+  trackingRequired: boolean
+  digitalRoutesAllowed: boolean
+}
+
 interface PaymentIntentIntakeProps {
   scenarios: DemoScenario[]
   onIntentTextChange?: (text: string) => void
+  onPreferencesChange?: (prefs: LivePreferences) => void
 }
 
 type ObjectivePreference = 'FASTEST' | 'CHEAPEST' | 'MOST_TRANSPARENT'
@@ -16,17 +23,18 @@ const examplePrompts = [
   'Send USD 1,000 from GBP to a US bank account, cheapest route please.',
 ]
 
-export function PaymentIntentIntake({ scenarios, onIntentTextChange }: PaymentIntentIntakeProps) {
+export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferencesChange }: PaymentIntentIntakeProps) {
   const [naturalLanguageIntent, setNaturalLanguageIntent] = useState(examplePrompts[1])
-
-  useEffect(() => {
-    onIntentTextChange?.(naturalLanguageIntent)
-  }, [])
   const [objective, setObjective] = useState<ObjectivePreference>('FASTEST')
   const [trackingRequired, setTrackingRequired] = useState(true)
   const [digitalRoutesAllowed, setDigitalRoutesAllowed] = useState(true)
   const [traditionalOnly, setTraditionalOnly] = useState(false)
   const [simulateFallback, setSimulateFallback] = useState(false)
+
+  useEffect(() => {
+    onIntentTextChange?.(naturalLanguageIntent)
+    onPreferencesChange?.({ objective, trackingRequired, digitalRoutesAllowed })
+  }, [])
   const matchedScenario = useMemo(
     () => matchScenario(scenarios, naturalLanguageIntent, {
       objective,
@@ -46,7 +54,7 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange }: PaymentIn
       </div>
       <div className="intent-form">
         <label htmlFor="natural-language-intent">
-          Describe the payment — then click <strong>Analyse Route</strong> below
+          Describe the payment
         </label>
         <textarea
           id="natural-language-intent"
@@ -61,7 +69,11 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange }: PaymentIn
         <div className="preference-grid" aria-label="Payment preferences">
           <label>
             Objective
-            <select value={objective} onChange={(event) => setObjective(event.target.value as ObjectivePreference)}>
+            <select value={objective} onChange={(event) => {
+              const v = event.target.value as ObjectivePreference
+              setObjective(v)
+              onPreferencesChange?.({ objective: v, trackingRequired, digitalRoutesAllowed })
+            }}>
               <option value="FASTEST">Fastest</option>
               <option value="CHEAPEST">Cheapest</option>
               <option value="MOST_TRANSPARENT">Most transparent</option>
@@ -71,7 +83,10 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange }: PaymentIn
             <input
               type="checkbox"
               checked={trackingRequired}
-              onChange={(event) => setTrackingRequired(event.target.checked)}
+              onChange={(event) => {
+                setTrackingRequired(event.target.checked)
+                onPreferencesChange?.({ objective, trackingRequired: event.target.checked, digitalRoutesAllowed })
+              }}
             />
             Tracking required
           </label>
@@ -80,7 +95,10 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange }: PaymentIn
               type="checkbox"
               checked={digitalRoutesAllowed}
               disabled={traditionalOnly}
-              onChange={(event) => setDigitalRoutesAllowed(event.target.checked)}
+              onChange={(event) => {
+                setDigitalRoutesAllowed(event.target.checked)
+                onPreferencesChange?.({ objective, trackingRequired, digitalRoutesAllowed: event.target.checked })
+              }}
             />
             Digital routes allowed
           </label>
@@ -92,6 +110,9 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange }: PaymentIn
                 setTraditionalOnly(event.target.checked)
                 if (event.target.checked) {
                   setDigitalRoutesAllowed(false)
+                  onPreferencesChange?.({ objective, trackingRequired, digitalRoutesAllowed: false })
+                } else {
+                  onPreferencesChange?.({ objective, trackingRequired, digitalRoutesAllowed })
                 }
               }}
             />
@@ -103,14 +124,14 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange }: PaymentIn
               checked={simulateFallback}
               onChange={(event) => setSimulateFallback(event.target.checked)}
             />
-            Simulate pre-PONR degradation
+            Simulate a mid-payment failure
           </label>
         </div>
 
       </div>
 
       <div className="match-summary">
-        <dt>Preview match (AI will confirm when you click Analyse Route)</dt>
+        <dt>Preview match — AI will confirm when you click Analyse Route</dt>
         <dd>{matchedScenario.scenario.name}</dd>
         <p>{matchedScenario.reason}</p>
       </div>

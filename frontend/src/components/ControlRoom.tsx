@@ -2,11 +2,26 @@ import { BadgeCheck, BrainCircuit, CircleDot, Gauge, GitBranch, ShieldAlert } fr
 import type { ReactNode } from 'react'
 import type { DecisionTrace } from '../types'
 
-export function ControlRoom({ trace }: { trace: DecisionTrace }) {
+const STATE_LABELS: Record<string, string> = {
+  CREATED: 'Created',
+  AWAITING_AUTHORISATION: 'Awaiting authorisation',
+  AUTHORISED: 'Authorised',
+  PROCESSING: 'Processing',
+  COMPLETED: 'Completed',
+  FAILED: 'Failed',
+  INVESTIGATION_REQUIRED: 'Under investigation',
+}
+
+function humanState(raw: string) {
+  return STATE_LABELS[raw] ?? raw
+}
+
+export function ControlRoom({ trace, paymentState }: { trace: DecisionTrace; paymentState?: string }) {
   const passedGates = trace.gates.filter((gate) => gate.result === 'PASS').length
   const blockedGates = trace.gates.length - passedGates
   const activeRoute = trace.fallbackEvent?.activeRouteLabel ?? trace.selectedRoute.label
-  const currentState = trace.fallbackEvent?.state ?? 'AWAITING_AUTHORISATION'
+  const rawState = paymentState ?? trace.fallbackEvent?.state ?? 'AWAITING_AUTHORISATION'
+  const currentState = humanState(rawState)
   const score = trace.selectedRoute.score ?? Math.max(...Object.values(trace.scoreDimensions))
 
   return (
@@ -21,8 +36,8 @@ export function ControlRoom({ trace }: { trace: DecisionTrace }) {
         <ControlMetric icon={<GitBranch size={16} aria-hidden="true" />} label="Active" value={activeRoute} tone="teal" />
         <ControlMetric
           icon={<ShieldAlert size={16} aria-hidden="true" />}
-          label="PONR"
-          value={trace.fallbackEvent?.pointOfNoReturnReached ? 'Reached' : 'Not reached'}
+          label="Cancellation window"
+          value={trace.fallbackEvent?.pointOfNoReturnReached ? 'Closed' : 'Open'}
           tone={trace.fallbackEvent?.pointOfNoReturnReached ? 'amber' : 'green'}
         />
       </div>
@@ -33,16 +48,12 @@ export function ControlRoom({ trace }: { trace: DecisionTrace }) {
           <dd>{trace.fallbackEvent ? trace.fallbackEvent.message : trace.fallback}</dd>
         </div>
         <div>
-          <dt>Gate summary</dt>
-          <dd>{passedGates} pass / {blockedGates} excluded</dd>
+          <dt>Checks passed</dt>
+          <dd>{passedGates} passed, {blockedGates} blocked</dd>
         </div>
         <div>
           <dt>Score</dt>
-          <dd>{score.toFixed(1)}</dd>
-        </div>
-        <div>
-          <dt>Trace</dt>
-          <dd>{trace.traceId}</dd>
+          <dd>{score.toFixed(1)} / 100</dd>
         </div>
       </div>
 
@@ -51,11 +62,7 @@ export function ControlRoom({ trace }: { trace: DecisionTrace }) {
         <span>{trace.aiBoundary}</span>
       </div>
 
-      <ol className="control-events">
-        {trace.events.slice(-4).map((event) => (
-          <li key={event}>{event}</li>
-        ))}
-      </ol>
+
     </section>
   )
 }
