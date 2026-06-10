@@ -1,4 +1,5 @@
 import { MapContainer, Polyline, TileLayer, CircleMarker, Tooltip } from 'react-leaflet'
+import type { Polyline as LeafletPolyline } from 'leaflet'
 import type { DecisionTrace, RouteCandidate } from '../types'
 
 const routeColors: Record<RouteCandidate['status'], string> = {
@@ -29,6 +30,29 @@ function cityName(position: [number, number]): string | null {
   return match ? match[2] : null
 }
 
+function AnimatedPolyline({ candidate }: { candidate: RouteCandidate }) {
+  const isSelected = candidate.status === 'SELECTED'
+  return (
+    <Polyline
+      positions={candidate.coordinates}
+      pathOptions={{
+        color: routeColors[candidate.status],
+        weight: isSelected ? 5 : 3,
+        opacity: candidate.status === 'EXCLUDED' ? 0.45 : 0.82,
+        dashArray: candidate.status === 'EXCLUDED' ? '8 8' : isSelected ? '12 10' : undefined,
+      }}
+      eventHandlers={isSelected ? {
+        add: (e) => {
+          const el = (e.target as LeafletPolyline).getElement()
+          if (el) el.classList.add('route-flow-selected')
+        }
+      } : undefined}
+    >
+      <Tooltip sticky>{candidate.label} — {candidate.eta}</Tooltip>
+    </Polyline>
+  )
+}
+
 export function LeafletRouteMap({ trace }: { trace: DecisionTrace }) {
   // Compute the centre and zoom from the selected route's coordinates so the
   // map re-frames whenever the trace changes (MapContainer ignores center/zoom
@@ -49,19 +73,7 @@ export function LeafletRouteMap({ trace }: { trace: DecisionTrace }) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {trace.candidates.map((candidate) => (
-          <Polyline
-            key={candidate.id}
-            positions={candidate.coordinates}
-            pathOptions={{
-              color: routeColors[candidate.status],
-              weight: candidate.status === 'SELECTED' ? 5 : 3,
-              opacity: candidate.status === 'EXCLUDED' ? 0.45 : 0.82,
-              dashArray: candidate.status === 'EXCLUDED' ? '8 8' : candidate.status === 'SELECTED' ? '12 10' : undefined,
-              className: candidate.status === 'SELECTED' ? 'route-flow-selected' : undefined,
-            }}
-          >
-            <Tooltip sticky>{candidate.label} — {candidate.eta}</Tooltip>
-          </Polyline>
+          <AnimatedPolyline key={candidate.id} candidate={candidate} />
         ))}
         {trace.selectedRoute.coordinates.map((position, index, all) => {
           const name = cityName(position)

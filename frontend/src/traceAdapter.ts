@@ -41,11 +41,17 @@ export function adaptTrace(
     return true
   })
 
-  const candidates: RouteCandidate[] = allApiRoutes.map((r) =>
-    adaptRouteCandidate(r, staticCandidates),
-  )
+  const candidates: RouteCandidate[] = allApiRoutes.map((r) => {
+    const adapted = adaptRouteCandidate(r, staticCandidates)
+    return r.routeId === api.selectedRoute.routeId
+      ? { ...adapted, status: 'SELECTED' as RouteCandidate['status'] }
+      : adapted
+  })
 
-  const selectedRoute = adaptRouteCandidate(api.selectedRoute, staticCandidates)
+  const selectedRoute = {
+    ...adaptRouteCandidate(api.selectedRoute, staticCandidates),
+    status: 'SELECTED' as RouteCandidate['status'],
+  }
 
   // Build a lookup for routeLabel from routeId
   const routeLabelById = new Map<string, string>(
