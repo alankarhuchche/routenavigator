@@ -6,6 +6,10 @@ const newYork: [number, number] = [40.7128, -74.006]
 const chicago: [number, number] = [41.8781, -87.6298]
 const dublin: [number, number] = [53.3498, -6.2603]
 const tokenHub: [number, number] = [50.1109, 8.6821]
+const dubai: [number, number] = [25.2048, 55.2708]
+const mumbai: [number, number] = [19.0760, 72.8777]
+const singapore: [number, number] = [1.3521, 103.8198]
+const shanghai: [number, number] = [31.2304, 121.4737]
 
 function route(
   id: string,
@@ -197,6 +201,74 @@ export const demoScenarios: DemoScenario[] = [
         state: 'FALLBACK_SELECTED',
         message: 'Fallback selected before point-of-no-return; original decision retained and execution continues on International bank transfer.',
       },
+    ),
+  },
+  {
+    id: 'SCN-007',
+    name: 'GBP to India (INR)',
+    intent: {
+      amount: 'GBP 5,000',
+      source: 'GB bank account',
+      destination: 'Indian beneficiary bank (INR)',
+      objective: 'FASTEST',
+      trackingRequired: true,
+      digitalRoutesAllowed: false,
+      constraints: ['RBI FEMA compliance required', 'Purpose code mandatory', 'Digital routes ineligible for this corridor'],
+    },
+    trace: buildTrace(
+      'trace-demo-007',
+      route(
+        'route-correspondent-banking-india',
+        'SWIFT correspondent banking',
+        'CORRESPONDENT_BANKING',
+        'SELECTED',
+        '1-2 days',
+        'Medium',
+        78,
+        ['Only compliant route for GBP-to-INR under RBI FEMA regulations.'],
+        [london, dubai, mumbai],
+      ),
+      [
+        route('route-stablecoin-bridge-india', 'Fast digital-dollar route', 'STABLECOIN_BRIDGE_FIAT_PAYOUT', 'EXCLUDED', '38 min', 'Medium', undefined, ['Stablecoin payout to Indian bank accounts not permitted under current RBI guidelines.'], [london, tokenHub, mumbai]),
+        route('route-local-payout-india', 'Local payout route', 'LOCAL_PAYOUT_PARTNER', 'EXCLUDED', '4 hr', 'Low', undefined, ['No eligible local payout partner for INR corridor at this time.'], [london, dubai, mumbai]),
+      ],
+      'SWIFT payment instruction released with mandatory RBI purpose code attached.',
+      'Beneficiary usable value only after Indian beneficiary bank credits the INR account.',
+      'No pre-PONR fallback; investigation route applies if SWIFT instruction is rejected.',
+    ),
+  },
+  {
+    id: 'SCN-008',
+    name: 'GBP to China (CNY)',
+    intent: {
+      amount: 'GBP 20,000',
+      source: 'GB bank account',
+      destination: 'Chinese beneficiary bank (CNY)',
+      objective: 'MOST_TRANSPARENT',
+      trackingRequired: true,
+      digitalRoutesAllowed: false,
+      constraints: ['SAFE registration required', 'Capital control compliance', 'Digital routes ineligible for this corridor'],
+    },
+    trace: buildTrace(
+      'trace-demo-008',
+      route(
+        'route-correspondent-banking-china',
+        'SWIFT correspondent banking',
+        'CORRESPONDENT_BANKING',
+        'SELECTED',
+        '2-3 days',
+        'Medium',
+        72,
+        ['Only compliant route for GBP-to-CNY given Chinese capital control requirements.'],
+        [london, singapore, shanghai],
+      ),
+      [
+        route('route-stablecoin-bridge-china', 'Fast digital-dollar route', 'STABLECOIN_BRIDGE_FIAT_PAYOUT', 'EXCLUDED', '38 min', 'Medium', undefined, ['Cross-border stablecoin payments not permitted under PBOC regulations.'], [london, tokenHub, shanghai]),
+        route('route-local-payout-china', 'Local payout route', 'LOCAL_PAYOUT_PARTNER', 'EXCLUDED', '4 hr', 'Low', undefined, ['No eligible local payout partner holds PBOC cross-border licence for this value.'], [london, singapore, shanghai]),
+      ],
+      'SWIFT payment instruction released with SAFE registration reference attached.',
+      'Beneficiary usable value only after Chinese beneficiary bank credits the CNY account.',
+      'No pre-PONR fallback; SAFE compliance review required if instruction is rejected.',
     ),
   },
 ]

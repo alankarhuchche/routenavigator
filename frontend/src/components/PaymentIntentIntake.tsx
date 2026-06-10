@@ -162,6 +162,27 @@ function matchScenario(
   }
 
   if (
+    normalisedText.includes('india') ||
+    normalisedText.includes('mumbai') ||
+    normalisedText.includes('delhi') ||
+    normalisedText.includes('inr') ||
+    normalisedText.includes('rupee')
+  ) {
+    return withReason(scenarios, 'SCN-007', 'Matched to India corridor — SWIFT correspondent banking required under RBI FEMA regulations; digital routes not permitted for this corridor.')
+  }
+
+  if (
+    normalisedText.includes('china') ||
+    normalisedText.includes('beijing') ||
+    normalisedText.includes('shanghai') ||
+    normalisedText.includes('cny') ||
+    normalisedText.includes('renminbi') ||
+    normalisedText.includes('yuan')
+  ) {
+    return withReason(scenarios, 'SCN-008', 'Matched to China corridor — SWIFT correspondent banking required under PBOC capital control regulations; digital routes not permitted for this corridor.')
+  }
+
+  if (
     preferences.traditionalOnly ||
     normalisedText.includes('traditional') ||
     normalisedText.includes('bank transfer only') ||
