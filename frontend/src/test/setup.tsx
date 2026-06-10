@@ -1,4 +1,6 @@
+/// <reference types="vitest/globals" />
 import '@testing-library/jest-dom'
+import React from 'react'
 
 // Leaflet uses browser APIs not available in jsdom
 vi.mock('react-leaflet', () => ({
