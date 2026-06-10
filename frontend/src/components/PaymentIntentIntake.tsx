@@ -12,6 +12,7 @@ interface PaymentIntentIntakeProps {
   scenarios: DemoScenario[]
   onIntentTextChange?: (text: string) => void
   onPreferencesChange?: (prefs: LivePreferences) => void
+  onScenarioMatch?: (scenarioId: string) => void
 }
 
 type ObjectivePreference = 'FASTEST' | 'CHEAPEST' | 'MOST_TRANSPARENT'
@@ -23,7 +24,7 @@ const examplePrompts = [
   'Send USD 1,000 from GBP to a US bank account, cheapest route please.',
 ]
 
-export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferencesChange }: PaymentIntentIntakeProps) {
+export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferencesChange, onScenarioMatch }: PaymentIntentIntakeProps) {
   const [naturalLanguageIntent, setNaturalLanguageIntent] = useState(examplePrompts[1])
   const [objective, setObjective] = useState<ObjectivePreference>('FASTEST')
   const [trackingRequired, setTrackingRequired] = useState(true)
@@ -45,6 +46,10 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
     }),
     [digitalRoutesAllowed, naturalLanguageIntent, objective, scenarios, simulateFallback, trackingRequired, traditionalOnly],
   )
+
+  useEffect(() => {
+    onScenarioMatch?.(matchedScenario.scenario.id)
+  }, [matchedScenario.scenario.id])
 
   return (
     <section className="panel intent-intake">

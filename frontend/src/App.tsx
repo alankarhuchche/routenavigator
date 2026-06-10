@@ -150,8 +150,7 @@ function App() {
           <h1>Route Navigator</h1>
         </div>
         <div className="header-metrics" aria-label="Current selected route metrics">
-          <span>{displayTrace.selectedRoute.label}</span>
-          <strong>{displayTrace.selectedRoute.family}</strong>
+          <strong>{displayTrace.selectedRoute.label}</strong>
         </div>
       </header>
 
@@ -166,6 +165,7 @@ function App() {
                 scenarios={demoScenarios}
                 onIntentTextChange={setIntentText}
                 onPreferencesChange={setLivePreferences}
+                onScenarioMatch={setScenarioId}
               />
             </div>
             <div>

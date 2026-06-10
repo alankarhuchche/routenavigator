@@ -571,6 +571,12 @@ h2 {
   padding: 0 16px 16px;
 }
 
+.match-summary dt {
+  text-transform: none;
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .match-summary p {
   margin: 4px 0 0;
   color: #475569;
