@@ -1,4 +1,4 @@
-import { Route } from 'lucide-react'
+import { Route, Award } from 'lucide-react'
 import type { DecisionTrace } from '../types'
 
 export function RouteComparison({ trace }: { trace: DecisionTrace }) {
@@ -19,12 +19,32 @@ export function RouteComparison({ trace }: { trace: DecisionTrace }) {
         {trace.candidates.map((candidate) => (
           <div className={`route-row status-${candidate.status.toLowerCase()}`} key={candidate.id}>
             <span>
-              <strong>{candidate.label}</strong>
+              <strong>
+                {candidate.label}
+                {candidate.status === 'SELECTED' && (
+                  <em className="recommended-pill">
+                    <Award size={11} aria-hidden="true" />
+                    Recommended
+                  </em>
+                )}
+              </strong>
+              {candidate.reasons[0] && <small>{candidate.reasons[0]}</small>}
             </span>
-            <span>{candidate.status}</span>
+            <span className="status-pill">{candidate.status}</span>
             <span>{candidate.eta}</span>
             <span>{candidate.cost}</span>
-            <span>{candidate.score?.toFixed(1) ?? '-'}</span>
+            <span className="score-cell">
+              {candidate.score !== undefined ? (
+                <>
+                  <strong className="score-value">{candidate.score.toFixed(1)}</strong>
+                  <i className="score-bar" aria-hidden="true">
+                    <i className="score-bar-fill" style={{ width: `${Math.min(100, candidate.score)}%` }} />
+                  </i>
+                </>
+              ) : (
+                '-'
+              )}
+            </span>
           </div>
         ))}
       </div>

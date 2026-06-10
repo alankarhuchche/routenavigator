@@ -4,6 +4,7 @@ import './App.css'
 import { demoScenarios } from './data/demoData'
 import { ControlRoom } from './components/ControlRoom'
 import { DisclaimerBanner } from './components/DisclaimerBanner'
+import { DecisionImpactBanner } from './components/DecisionImpactBanner'
 import { DecisionTracePanel } from './components/DecisionTracePanel'
 import { FallbackEventView } from './components/FallbackEventView'
 import { LeafletRouteMap } from './components/LeafletRouteMap'
@@ -159,9 +160,14 @@ function App() {
         <div>
           <p className="eyebrow">Payment Route Orchestrator</p>
           <h1>Route Navigator</h1>
+          <p className="header-tagline">Every compliant route, scored and explained — before the money moves.</p>
         </div>
         <div className="header-metrics" aria-label="Current selected route metrics">
-          <strong>{displayTrace.selectedRoute.label}</strong>
+          <span className="header-chip header-chip-route">{displayTrace.selectedRoute.label}</span>
+          <span className="header-chip">ETA {displayTrace.selectedRoute.eta}</span>
+          {displayTrace.selectedRoute.score !== undefined && (
+            <span className="header-chip">Score {displayTrace.selectedRoute.score.toFixed(0)}/100</span>
+          )}
         </div>
       </header>
 
@@ -222,6 +228,7 @@ function App() {
                 </button>
               </div>
             )}
+            <DecisionImpactBanner trace={displayTrace} />
             <div className="analysis-grid">
               <div>
                 <RouteComparison trace={displayTrace} />

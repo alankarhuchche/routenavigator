@@ -7,7 +7,16 @@ export function ScoreBreakdown({ dimensions }: { dimensions: Record<string, numb
             <span>{label}</span>
             <strong>{value.toFixed(1)}</strong>
           </div>
-          <meter min="0" max="100" value={value} aria-label={`${label} score`} />
+          <div
+            className="score-track"
+            role="meter"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={value}
+            aria-label={`${label} score`}
+          >
+            <i className="score-track-fill" style={{ width: `${Math.min(100, Math.max(0, value))}%` }} />
+          </div>
         </div>
       ))}
     </div>
