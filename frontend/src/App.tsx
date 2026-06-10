@@ -41,11 +41,6 @@ function App() {
 
   const displayTrace = liveTrace ?? scenario.trace
 
-  function handleScenarioMatched(id: string) {
-    setScenarioId(id)
-    setStep(2)
-  }
-
   function handleStepClick(s: number) {
     if (s === 1 || s === 2 || s === 3) {
       setStep(s as 1 | 2 | 3)
@@ -156,8 +151,6 @@ function App() {
             <div>
               <PaymentIntentIntake
                 scenarios={demoScenarios}
-                selectedScenario={scenario}
-                onScenarioMatched={handleScenarioMatched}
                 onIntentTextChange={setIntentText}
               />
             </div>

@@ -45,13 +45,13 @@ describe('Authorise & Track button (bug fix: hide after step 3)', () => {
 
   it('appears on step 2 after analysing', async () => {
     render(<App />)
-    fireEvent.click(screen.getByText(/Analyse Route/i))
+    fireEvent.click(screen.getByRole('button', { name: /Analyse Route/i }))
     await waitFor(() => expect(screen.getByText(/Authorise & Track/i)).toBeInTheDocument())
   })
 
   it('hides after authorise moves to step 3', async () => {
     render(<App />)
-    fireEvent.click(screen.getByText(/Analyse Route/i))
+    fireEvent.click(screen.getByRole('button', { name: /Analyse Route/i }))
     await waitFor(() => screen.getByText(/Authorise & Track/i))
     fireEvent.click(screen.getByText(/Authorise & Track/i))
     await waitFor(() => expect(screen.queryByText(/Authorise & Track/i)).not.toBeInTheDocument())

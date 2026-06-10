@@ -1,12 +1,9 @@
-import { Send, Sparkles } from 'lucide-react'
-import type { FormEvent } from 'react'
+import { Sparkles } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import type { DemoScenario } from '../types'
 
 interface PaymentIntentIntakeProps {
   scenarios: DemoScenario[]
-  selectedScenario: DemoScenario
-  onScenarioMatched: (scenarioId: string) => void
   onIntentTextChange?: (text: string) => void
 }
 
@@ -19,7 +16,7 @@ const examplePrompts = [
   'Send USD 1,000 from GBP to a US bank account, cheapest route please.',
 ]
 
-export function PaymentIntentIntake({ scenarios, selectedScenario, onScenarioMatched, onIntentTextChange }: PaymentIntentIntakeProps) {
+export function PaymentIntentIntake({ scenarios, onIntentTextChange }: PaymentIntentIntakeProps) {
   const [naturalLanguageIntent, setNaturalLanguageIntent] = useState(examplePrompts[1])
 
   useEffect(() => {
@@ -30,8 +27,6 @@ export function PaymentIntentIntake({ scenarios, selectedScenario, onScenarioMat
   const [digitalRoutesAllowed, setDigitalRoutesAllowed] = useState(true)
   const [traditionalOnly, setTraditionalOnly] = useState(false)
   const [simulateFallback, setSimulateFallback] = useState(false)
-  const [matchReason, setMatchReason] = useState('Matched to fastest GBP-to-USD bank payout with tracking and digital routes allowed.')
-
   const matchedScenario = useMemo(
     () => matchScenario(scenarios, naturalLanguageIntent, {
       objective,
@@ -43,20 +38,16 @@ export function PaymentIntentIntake({ scenarios, selectedScenario, onScenarioMat
     [digitalRoutesAllowed, naturalLanguageIntent, objective, scenarios, simulateFallback, trackingRequired, traditionalOnly],
   )
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    onScenarioMatched(matchedScenario.scenario.id)
-    setMatchReason(matchedScenario.reason)
-  }
-
   return (
     <section className="panel intent-intake">
       <div className="panel-title">
         <Sparkles size={18} aria-hidden="true" />
         <h2>Customer Intent Intake</h2>
       </div>
-      <form className="intent-form" onSubmit={handleSubmit}>
-        <label htmlFor="natural-language-intent">Customer request</label>
+      <div className="intent-form">
+        <label htmlFor="natural-language-intent">
+          Describe the payment — then click <strong>Analyse Route</strong> below
+        </label>
         <textarea
           id="natural-language-intent"
           value={naturalLanguageIntent}
@@ -116,19 +107,12 @@ export function PaymentIntentIntake({ scenarios, selectedScenario, onScenarioMat
           </label>
         </div>
 
-        <div className="intent-actions">
-          <button type="submit">
-            <Send size={16} aria-hidden="true" />
-            Match route
-          </button>
-          <span>{matchedScenario.scenario.id}</span>
-        </div>
-      </form>
+      </div>
 
       <div className="match-summary">
-        <dt>Current match</dt>
-        <dd>{selectedScenario.name}</dd>
-        <p>{matchReason}</p>
+        <dt>Preview match (AI will confirm when you click Analyse Route)</dt>
+        <dd>{matchedScenario.scenario.name}</dd>
+        <p>{matchedScenario.reason}</p>
       </div>
     </section>
   )
