@@ -56,7 +56,7 @@ export function LeafletRouteMap({ trace }: { trace: DecisionTrace }) {
               color: routeColors[candidate.status],
               weight: candidate.status === 'SELECTED' ? 5 : 3,
               opacity: candidate.status === 'EXCLUDED' ? 0.45 : 0.82,
-              dashArray: candidate.status === 'EXCLUDED' ? '8 8' : undefined,
+              dashArray: candidate.status === 'EXCLUDED' ? '8 8' : candidate.status === 'SELECTED' ? '12 10' : undefined,
               className: candidate.status === 'SELECTED' ? 'route-flow-selected' : undefined,
             }}
           >
