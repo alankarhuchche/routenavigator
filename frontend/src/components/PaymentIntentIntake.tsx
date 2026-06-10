@@ -183,6 +183,45 @@ function matchScenario(
   }
 
   if (
+    normalisedText.includes('uae') ||
+    normalisedText.includes('dubai') ||
+    normalisedText.includes('abu dhabi') ||
+    normalisedText.includes('aed') ||
+    normalisedText.includes('dirham') ||
+    normalisedText.includes('emirates')
+  ) {
+    return withReason(scenarios, 'SCN-011', 'Matched to UAE corridor — SWIFT correspondent banking selected; CBUAE regulations restrict digital routes above GBP 10,000.')
+  }
+
+  if (
+    normalisedText.includes('australia') ||
+    normalisedText.includes('sydney') ||
+    normalisedText.includes('melbourne') ||
+    normalisedText.includes('aud') ||
+    normalisedText.includes('australian dollar')
+  ) {
+    return withReason(scenarios, 'SCN-010', 'Matched to Australia corridor — NPP local payout is fastest; SWIFT available as fallback.')
+  }
+
+  if (
+    normalisedText.includes('euro') ||
+    normalisedText.includes(' eur ') ||
+    normalisedText.includes('sepa') ||
+    normalisedText.includes('europe') ||
+    normalisedText.includes('germany') ||
+    normalisedText.includes('france') ||
+    normalisedText.includes('spain') ||
+    normalisedText.includes('italy') ||
+    normalisedText.includes('netherlands') ||
+    normalisedText.includes('amsterdam') ||
+    normalisedText.includes('paris') ||
+    normalisedText.includes('berlin') ||
+    normalisedText.includes('madrid')
+  ) {
+    return withReason(scenarios, 'SCN-009', 'Matched to EU corridor — SEPA credit transfer via correspondent is fastest and cheapest post-Brexit route.')
+  }
+
+  if (
     preferences.traditionalOnly ||
     normalisedText.includes('traditional') ||
     normalisedText.includes('bank transfer only') ||

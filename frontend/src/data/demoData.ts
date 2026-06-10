@@ -10,6 +10,8 @@ const dubai: [number, number] = [25.2048, 55.2708]
 const mumbai: [number, number] = [19.0760, 72.8777]
 const singapore: [number, number] = [1.3521, 103.8198]
 const shanghai: [number, number] = [31.2304, 121.4737]
+const amsterdam: [number, number] = [52.3676, 4.9041]
+const sydney: [number, number] = [-33.8688, 151.2093]
 
 function route(
   id: string,
@@ -172,7 +174,7 @@ export const demoScenarios: DemoScenario[] = [
   },
   {
     id: 'SCN-006',
-    name: 'Fallback before PONR',
+    name: 'Mid-payment route failure',
     intent: {
       amount: 'USD 10,000 from GBP',
       source: 'GB bank account',
@@ -269,6 +271,108 @@ export const demoScenarios: DemoScenario[] = [
       'SWIFT payment instruction released with SAFE registration reference attached.',
       'Beneficiary usable value only after Chinese beneficiary bank credits the CNY account.',
       'No pre-PONR fallback; SAFE compliance review required if instruction is rejected.',
+    ),
+  },
+  {
+    id: 'SCN-009',
+    name: 'GBP to EU (EUR)',
+    intent: {
+      amount: 'GBP 3,000',
+      source: 'GB bank account',
+      destination: 'EU beneficiary bank (EUR)',
+      objective: 'FASTEST',
+      trackingRequired: true,
+      digitalRoutesAllowed: true,
+      constraints: ['Post-Brexit SEPA access via correspondent', 'Tracking required'],
+    },
+    trace: buildTrace(
+      'trace-demo-009',
+      route(
+        'route-local-payout-eu',
+        'SEPA credit transfer',
+        'LOCAL_PAYOUT_PARTNER',
+        'SELECTED',
+        '4 hr',
+        'Low',
+        85,
+        ['Fastest and cheapest compliant route for GBP-to-EUR via SEPA-connected correspondent.'],
+        [london, amsterdam],
+      ),
+      [
+        route('route-correspondent-banking-eu', 'International bank transfer', 'CORRESPONDENT_BANKING', 'AVAILABLE', '1-2 days', 'Medium', 61, ['Passed all gates but slower and more expensive than SEPA payout route.'], [london, dublin, amsterdam]),
+        route('route-stablecoin-bridge-eu', 'Fast digital-dollar route', 'STABLECOIN_BRIDGE_FIAT_PAYOUT', 'EXCLUDED', '38 min', 'Medium', undefined, ['EUR payout via stablecoin bridge not supported for this beneficiary type.'], [london, tokenHub, amsterdam]),
+      ],
+      'SEPA credit transfer instruction accepted by the simulated payout partner.',
+      'Beneficiary usable value after SEPA credit settlement in EUR account.',
+      'International bank transfer available as fallback if SEPA partner is unavailable.',
+    ),
+  },
+  {
+    id: 'SCN-010',
+    name: 'GBP to Australia (AUD)',
+    intent: {
+      amount: 'GBP 8,000',
+      source: 'GB bank account',
+      destination: 'Australian beneficiary bank (AUD)',
+      objective: 'FASTEST',
+      trackingRequired: true,
+      digitalRoutesAllowed: true,
+      constraints: ['Tracking required', 'Digital routes allowed'],
+    },
+    trace: buildTrace(
+      'trace-demo-010',
+      route(
+        'route-local-payout-au',
+        'NPP local payout',
+        'LOCAL_PAYOUT_PARTNER',
+        'SELECTED',
+        '2-4 hr',
+        'Low',
+        81,
+        ['Australian NPP (New Payments Platform) via local payout partner offers fastest delivery.'],
+        [london, singapore, sydney],
+      ),
+      [
+        route('route-correspondent-banking-au', 'International bank transfer', 'CORRESPONDENT_BANKING', 'AVAILABLE', '1-2 days', 'Medium', 58, ['Passed gates but SWIFT settlement is significantly slower than NPP.'], [london, singapore, sydney]),
+        route('route-stablecoin-bridge-au', 'Fast digital-dollar route', 'STABLECOIN_BRIDGE_FIAT_PAYOUT', 'EXCLUDED', '38 min', 'Medium', undefined, ['AUD stablecoin redemption not available for this corridor.'], [london, tokenHub, sydney]),
+      ],
+      'NPP payment instruction accepted by the simulated Australian payout partner.',
+      'Beneficiary usable value after NPP credit to Australian bank account.',
+      'International bank transfer is the fallback if NPP partner is unavailable.',
+    ),
+  },
+  {
+    id: 'SCN-011',
+    name: 'GBP to UAE (AED)',
+    intent: {
+      amount: 'GBP 15,000',
+      source: 'GB bank account',
+      destination: 'UAE beneficiary bank (AED)',
+      objective: 'FASTEST',
+      trackingRequired: true,
+      digitalRoutesAllowed: false,
+      constraints: ['CBUAE compliance required', 'Digital routes ineligible for this value band'],
+    },
+    trace: buildTrace(
+      'trace-demo-011',
+      route(
+        'route-correspondent-banking-uae',
+        'SWIFT correspondent banking',
+        'CORRESPONDENT_BANKING',
+        'SELECTED',
+        '1 day',
+        'Medium',
+        74,
+        ['Most reliable compliant route for GBP-to-AED; UAE is a major SWIFT corridor with good correspondent coverage.'],
+        [london, dubai],
+      ),
+      [
+        route('route-local-payout-uae', 'Local payout route', 'LOCAL_PAYOUT_PARTNER', 'AVAILABLE', '4 hr', 'Low', 68, ['Passed gates but local partner not eligible above GBP 10,000 for this customer tier.'], [london, dubai]),
+        route('route-stablecoin-bridge-uae', 'Fast digital-dollar route', 'STABLECOIN_BRIDGE_FIAT_PAYOUT', 'EXCLUDED', '38 min', 'Medium', undefined, ['CBUAE virtual asset regulations restrict stablecoin cross-border payout for this value.'], [london, tokenHub, dubai]),
+      ],
+      'SWIFT payment instruction released to UAE correspondent with CBUAE-compliant purpose code.',
+      'Beneficiary usable value after UAE beneficiary bank credits the AED account.',
+      'No pre-PONR fallback at this value; compliance review applies if instruction is returned.',
     ),
   },
 ]

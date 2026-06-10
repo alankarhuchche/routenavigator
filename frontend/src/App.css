@@ -7,14 +7,13 @@
 .disclaimer {
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-height: 40px;
-  padding: 8px 24px;
-  background: #fff7ed;
-  border-bottom: 1px solid #fed7aa;
-  color: #7c2d12;
-  font-size: 13px;
-  font-weight: 650;
+  gap: 8px;
+  padding: 6px 24px;
+  background: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 400;
 }
 
 .app-header {

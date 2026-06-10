@@ -14,7 +14,7 @@ export function RouteComparison({ trace }: { trace: DecisionTrace }) {
           <span>Status</span>
           <span>ETA</span>
           <span>Cost</span>
-          <span>Score</span>
+          <span title="Composite score 0–100 based on speed, cost, certainty and transparency for your objective">Score</span>
         </div>
         {trace.candidates.map((candidate) => (
           <div className={`route-row status-${candidate.status.toLowerCase()}`} key={candidate.id}>
