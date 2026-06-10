@@ -19,6 +19,7 @@ import type { ApiPaymentSnapshot } from './apiTypes'
 import { createRouteDecision, fetchExplanation, authorisePayment, simulateNext, simulateDegradation, classifyIntent } from './api'
 import { adaptTrace } from './traceAdapter'
 import type { LivePreferences } from './components/PaymentIntentIntake'
+import { STATE_LABELS } from './components/ControlRoom'
 
 function App() {
   const [scenarioId, setScenarioId] = useState(demoScenarios[0].id)
@@ -173,11 +174,6 @@ function App() {
             </div>
           </div>
 
-          {/* Payment Intent summary card */}
-          <div className="intent-summary-row">
-            <PaymentIntentView intent={displayIntent} />
-          </div>
-
           {step === 1 && (
             <div className="step-action-row">
               {analyseError && (
@@ -199,6 +195,11 @@ function App() {
               )}
             </div>
           )}
+
+          {/* Payment Intent summary card */}
+          <div className="intent-summary-row">
+            <PaymentIntentView intent={displayIntent} />
+          </div>
         </section>
 
         {/* ── STEP 2: ROUTE ANALYSIS ── */}
@@ -245,7 +246,7 @@ function App() {
           <section className="step-section execution-section" aria-label="Step 3: Execution">
             {paymentSnapshot && (
               <div className="payment-state-badge">
-                Payment state: <strong>{paymentSnapshot.state}</strong>
+                Payment state: <strong>{STATE_LABELS[paymentSnapshot.state] ?? paymentSnapshot.state}</strong>
               </div>
             )}
             <PaymentTracker trace={displayTrace} />
