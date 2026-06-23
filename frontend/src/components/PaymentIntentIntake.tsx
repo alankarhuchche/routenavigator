@@ -1,6 +1,7 @@
 import { Mic, Sparkles } from 'lucide-react'
 import type { Dispatch, SetStateAction } from 'react'
 import { useEffect, useMemo, useState } from 'react'
+import { DEFAULT_PAYMENT_INTENT_TEXT } from '../defaultIntent'
 import type { DemoScenario } from '../types'
 import { IntentConfirmationCard } from './IntentConfirmationCard'
 
@@ -12,6 +13,7 @@ export interface LivePreferences {
 
 interface PaymentIntentIntakeProps {
   scenarios: DemoScenario[]
+  intentText?: string
   onIntentTextChange?: (text: string) => void
   onPreferencesChange?: (prefs: LivePreferences) => void
   onScenarioMatch?: (scenarioId: string) => void
@@ -44,15 +46,14 @@ interface SpeechRecognitionWindow extends Window {
   webkitSpeechRecognition?: new () => SpeechRecognitionLike
 }
 
-const examplePrompts = [
-  'Send GBP 500 to a UK beneficiary as quickly as possible.',
-  'Send USD 10,000 from my UK bank account to a US bank account. Fastest route, tracking required, digital routes allowed.',
-  'Send 10,000 USDC from my wallet to a beneficiary wallet.',
-  'Send USD 1,000 from GBP to a US bank account, cheapest route please.',
-]
-
-export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferencesChange, onScenarioMatch }: PaymentIntentIntakeProps) {
-  const [naturalLanguageIntent, setNaturalLanguageIntent] = useState(examplePrompts[1])
+export function PaymentIntentIntake({
+  scenarios,
+  intentText,
+  onIntentTextChange,
+  onPreferencesChange,
+  onScenarioMatch,
+}: PaymentIntentIntakeProps) {
+  const [internalIntent, setInternalIntent] = useState(DEFAULT_PAYMENT_INTENT_TEXT)
   const [objective, setObjective] = useState<ObjectivePreference>('FASTEST')
   const [trackingRequired, setTrackingRequired] = useState(true)
   const [digitalRoutesAllowed, setDigitalRoutesAllowed] = useState(true)
@@ -60,6 +61,14 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
   const [simulateFallback, setSimulateFallback] = useState(false)
   const [voiceStatus, setVoiceStatus] = useState<VoiceStatus>(() => getSpeechRecognitionConstructor() ? 'idle' : 'unsupported')
   const [voiceMessage, setVoiceMessage] = useState('Voice captures intent only. Passkey approval is still required before anything moves.')
+  const naturalLanguageIntent = intentText ?? internalIntent
+
+  function updateIntentText(text: string) {
+    if (intentText === undefined) {
+      setInternalIntent(text)
+    }
+    onIntentTextChange?.(text)
+  }
 
   useEffect(() => {
     onIntentTextChange?.(naturalLanguageIntent)
@@ -81,12 +90,17 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
   }, [matchedScenario.scenario.id, onScenarioMatch])
 
   return (
-    <section className="panel intent-intake">
-      <div className="panel-title">
-        <Sparkles size={18} aria-hidden="true" />
+    <section className="panel intent-intake secure-intent-composer">
+      <div className="intent-hero">
+        <div className="intent-hero-icon">
+          <Sparkles size={22} aria-hidden="true" />
+        </div>
         <div>
+          <p className="eyebrow">Secure Intent</p>
           <h2>What outcome do you need from this payment?</h2>
-          <p>Speak or type naturally. We will convert your request into a structured payment intent before analysing routes.</p>
+          <p>
+            Speak or type the payment outcome. The bank-owned route engine will analyse safe routes after you confirm.
+          </p>
         </div>
       </div>
       <div className="intent-form">
@@ -99,10 +113,10 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
           <textarea
             id="natural-language-intent"
             value={naturalLanguageIntent}
-            rows={5}
+            rows={7}
+            placeholder="Example: Send GBP 5,000 to a supplier in India in INR today, with tracking and strong certainty."
             onChange={(event) => {
-              setNaturalLanguageIntent(event.target.value)
-              onIntentTextChange?.(event.target.value)
+              updateIntentText(event.target.value)
             }}
           />
           <button
@@ -113,10 +127,7 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
             aria-label="Speak payment intent"
             onClick={() => startVoiceCapture({
               currentText: naturalLanguageIntent,
-              setText: (text) => {
-                setNaturalLanguageIntent(text)
-                onIntentTextChange?.(text)
-              },
+              setText: updateIntentText,
               setVoiceStatus,
               setVoiceMessage,
             })}
@@ -126,10 +137,13 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
           </button>
         </div>
         <p className={`voice-mock-note voice-status-${voiceStatus}`}>{voiceMessage}</p>
+        <p className="intent-helper-text">
+          {naturalLanguageIntent.trim().length} characters captured. Review and edit before analysis.
+        </p>
 
         <div className="preference-grid" aria-label="Payment preferences">
-          <label>
-            Objective
+          <label className="preference-card preference-select-card">
+            <span>Objective</span>
             <select value={objective} onChange={(event) => {
               const v = event.target.value as ObjectivePreference
               setObjective(v)
@@ -140,7 +154,7 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
               <option value="MOST_TRANSPARENT">Most transparent</option>
             </select>
           </label>
-          <label className="check-row">
+          <label className="check-row preference-card">
             <input
               type="checkbox"
               checked={trackingRequired}
@@ -149,9 +163,9 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
                 onPreferencesChange?.({ objective, trackingRequired: event.target.checked, digitalRoutesAllowed })
               }}
             />
-            Tracking required
+            <span>Tracking required</span>
           </label>
-          <label className="check-row">
+          <label className="check-row preference-card">
             <input
               type="checkbox"
               checked={digitalRoutesAllowed}
@@ -161,9 +175,9 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
                 onPreferencesChange?.({ objective, trackingRequired, digitalRoutesAllowed: event.target.checked })
               }}
             />
-            Digital routes allowed
+            <span>Digital routes allowed</span>
           </label>
-          <label className="check-row">
+          <label className="check-row preference-card">
             <input
               type="checkbox"
               checked={traditionalOnly}
@@ -177,16 +191,20 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
                 }
               }}
             />
-            Traditional bank transfer only
+            <span>Traditional bank transfer only</span>
           </label>
-          <label className="check-row">
+          <label className="check-row preference-card">
             <input
               type="checkbox"
               checked={simulateFallback}
               onChange={(event) => setSimulateFallback(event.target.checked)}
             />
-            Simulate a mid-payment failure
+            <span>Simulate a mid-payment failure</span>
           </label>
+        </div>
+
+        <div className="intent-safety-boundary">
+          Voice captures intent only. Passkey approval is required before anything moves.
         </div>
 
       </div>

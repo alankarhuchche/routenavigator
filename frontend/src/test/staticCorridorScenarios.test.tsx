@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import App from '../App'
 import { ScenarioSelector } from '../components/ScenarioSelector'
 import { demoScenarios } from '../data/demoData'
@@ -23,7 +22,6 @@ describe('static corridor demo scenarios', () => {
   })
 
   it('uses the static trace for corridor demos without calling backend route endpoints', async () => {
-    const user = userEvent.setup()
     const fetchMock = vi.mocked(globalThis.fetch)
 
     render(<App />)
@@ -35,7 +33,7 @@ describe('static corridor demo scenarios', () => {
       expect(screen.getAllByText('GBP to India (INR)').length).toBeGreaterThan(0)
     })
 
-    await user.click(screen.getByRole('button', { name: /confirm and analyse safe routes/i }))
+    fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
 
     await screen.findByText(/using static frontend route trace/i)
     expect(fetchMock).not.toHaveBeenCalled()

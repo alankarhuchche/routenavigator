@@ -11,6 +11,7 @@ import { FallbackEventView } from './components/FallbackEventView'
 import { FinalApprovalCard } from './components/FinalApprovalCard'
 import { LeafletRouteMap } from './components/LeafletRouteMap'
 import { PaymentIntentIntake } from './components/PaymentIntentIntake'
+import { DEFAULT_PAYMENT_INTENT_TEXT } from './defaultIntent'
 import { PaymentIntentView } from './components/PaymentIntentView'
 import { PaymentTracker } from './components/PaymentTracker'
 import { RecommendationHeroCard } from './components/RecommendationHeroCard'
@@ -38,7 +39,7 @@ function App() {
   const [liveTraceId, setLiveTraceId] = useState<string | null>(null)
   const [liveTrace, setLiveTrace] = useState<DecisionTrace | null>(null)
   const [explanationProvider, setExplanationProvider] = useState<string | undefined>(undefined)
-  const [intentText, setIntentText] = useState('')
+  const [intentText, setIntentText] = useState(DEFAULT_PAYMENT_INTENT_TEXT)
   const [livePreferences, setLivePreferences] = useState<LivePreferences | null>(null)
   const [classifyReason, setClassifyReason] = useState<string | null>(null)
   const [isAnalysing, setIsAnalysing] = useState(false)
@@ -101,6 +102,10 @@ function App() {
   }
 
   async function handleAnalyse() {
+    if (!intentText.trim()) {
+      setAnalyseError('Enter a payment outcome before analysing safe routes.')
+      return
+    }
     setIsAnalysing(true)
     setAnalyseError(null)
     setAnalysisNotice(null)
@@ -243,17 +248,18 @@ function App() {
                 <div>
                   <PaymentIntentIntake
                     scenarios={demoScenarios}
+                    intentText={intentText}
                     onIntentTextChange={setIntentText}
                     onPreferencesChange={setLivePreferences}
                     onScenarioMatch={setScenarioId}
                   />
                 </div>
                 <div>
-                  <ScenarioSelector scenarios={demoScenarios} selectedId={scenario.id} onSelect={setScenarioId} />
+                  <PaymentIntentView intent={displayIntent} />
                 </div>
               </div>
-              <div className="intent-summary-row">
-                <PaymentIntentView intent={displayIntent} />
+              <div className="demo-scenario-aside">
+                <ScenarioSelector scenarios={demoScenarios} selectedId={scenario.id} onSelect={setScenarioId} />
               </div>
             </div>
           )}
@@ -392,9 +398,9 @@ function App() {
                 type="button"
                 className="primary-btn"
                 onClick={handleAnalyse}
-                disabled={isAnalysing}
+                disabled={isAnalysing || !intentText.trim()}
               >
-                {isAnalysing ? 'Analysing...' : 'Confirm and analyse safe routes'}
+                {isAnalysing ? 'Analysing...' : 'Analyse safe routes'}
                 {!isAnalysing && <ArrowRight size={16} aria-hidden="true" />}
               </button>
             ) : step < 4 ? (

@@ -84,3 +84,8 @@
 - The UI labels "Gemini explanation" only when the backend provider is `GEMINI`; template and static paths are labelled as fallback/demo explanations.
 - Browser read-aloud uses `speechSynthesis` only and does not use the microphone or affect payment state.
 - Passkey/customer approval remains the only approval mechanism.
+- Phase 3B-fix was added after local demo review found Secure Intent visually weak and the intent/voice/progression path broken.
+- Payment intent text is now controlled by `App` so typed text persists across rerenders and route analysis uses the entered text.
+- Secure Intent now uses a premium composer layout with a prominent textarea, visible speech-capture affordance, preference cards and a safety boundary.
+- The voice boundary remains unchanged: voice captures intent only; passkey approval is required before anything moves.
+- Phase 3C remains the next phase after this fix.

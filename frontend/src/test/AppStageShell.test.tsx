@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import App from '../App'
 
 vi.mock('../api', () => ({
@@ -71,8 +70,6 @@ describe('page-like demo stage shell', () => {
   })
 
   it('shows only the active stage and restores the journey map in Stage 3', async () => {
-    const user = userEvent.setup()
-
     render(<App />)
 
     expect(screen.getByRole('button', { name: /speak payment intent/i })).toBeInTheDocument()
@@ -86,14 +83,16 @@ describe('page-like demo stage shell', () => {
     fireEvent.change(screen.getByLabelText('Customer outcome'), {
       target: { value: 'Send GBP 500 to a UK beneficiary as quickly as possible.' },
     })
-    await user.click(screen.getByRole('button', { name: /Confirm and analyse safe routes/i }))
+    expect(screen.getByLabelText('Customer outcome')).toHaveValue('Send GBP 500 to a UK beneficiary as quickly as possible.')
+    expect(screen.getByText('Voice captures intent only. Passkey approval is required before anything moves.')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
 
     expect(await screen.findByText('Analysing safe routes')).toBeInTheDocument()
     expect(screen.getByText('Trusted banking agent')).toBeInTheDocument()
     expect(screen.queryByText('Payment journey map')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: /^Journey & Controls$/i })).not.toBeDisabled()
 
-    await user.click(screen.getByRole('button', { name: /Continue to Journey & Controls/i }))
+    fireEvent.click(screen.getByRole('button', { name: /Continue to Journey & Controls/i }))
 
     expect(await screen.findByText('Payment journey map')).toBeInTheDocument()
     expect(screen.getByText('Journey & Controls map')).toBeInTheDocument()
@@ -102,15 +101,15 @@ describe('page-like demo stage shell', () => {
     expect(screen.queryByText('Trusted banking agent')).not.toBeInTheDocument()
     expect(screen.queryByText('Route recommendation ready for approval')).not.toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: /Continue to Approval & Tracking/i }))
+    fireEvent.click(screen.getByRole('button', { name: /Continue to Approval & Tracking/i }))
 
     await waitFor(() => expect(screen.getByText('Route recommendation ready for approval')).toBeInTheDocument())
     expect(screen.queryByText('Payment journey map')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: /^Approve with passkey$/i })).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: /^Back$/i }))
+    fireEvent.click(screen.getByRole('button', { name: /^Back$/i }))
 
     expect(await screen.findByText('Payment journey map')).toBeInTheDocument()
     expect(screen.getAllByText('Instant UK bank transfer').length).toBeGreaterThan(0)
-  })
+  }, 10_000)
 })

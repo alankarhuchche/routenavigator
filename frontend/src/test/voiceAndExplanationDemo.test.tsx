@@ -18,12 +18,54 @@ afterEach(() => {
 })
 
 describe('voice intent capture demo', () => {
+  it('keeps typed controlled intent text after rerender', () => {
+    const onIntentTextChange = vi.fn()
+    const { rerender } = render(
+      <PaymentIntentIntake
+        scenarios={demoScenarios}
+        intentText="Send GBP 1,000 to a supplier in Germany."
+        onIntentTextChange={onIntentTextChange}
+      />,
+    )
+
+    fireEvent.change(screen.getByLabelText('Customer outcome'), {
+      target: { value: 'Send GBP 2,500 to a supplier in Germany with tracking.' },
+    })
+
+    expect(onIntentTextChange).toHaveBeenCalledWith('Send GBP 2,500 to a supplier in Germany with tracking.')
+
+    rerender(
+      <PaymentIntentIntake
+        scenarios={demoScenarios}
+        intentText="Send GBP 2,500 to a supplier in Germany with tracking."
+        onIntentTextChange={onIntentTextChange}
+      />,
+    )
+
+    expect(screen.getByLabelText('Customer outcome')).toHaveValue('Send GBP 2,500 to a supplier in Germany with tracking.')
+  })
+
+  it('shows usable objective options and accessible preference cards', () => {
+    render(<PaymentIntentIntake scenarios={demoScenarios} />)
+
+    expect(screen.getByText('Secure Intent')).toBeInTheDocument()
+    expect(screen.getByRole('combobox', { name: /objective/i })).toHaveValue('FASTEST')
+    expect(screen.getByRole('option', { name: 'Fastest' })).toBeInTheDocument()
+    expect(screen.getByRole('option', { name: 'Cheapest' })).toBeInTheDocument()
+    expect(screen.getByRole('option', { name: 'Most transparent' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Tracking required')).toBeChecked()
+    expect(screen.getByLabelText('Digital routes allowed')).toBeChecked()
+    expect(screen.getByLabelText('Traditional bank transfer only')).not.toBeChecked()
+    expect(screen.getByText('Voice captures intent only. Passkey approval is required before anything moves.')).toBeInTheDocument()
+  })
+
   it('shows a safe unsupported fallback when speech recognition is unavailable', () => {
     render(<PaymentIntentIntake scenarios={demoScenarios} />)
 
     const voiceButton = screen.getByRole('button', { name: /speak payment intent/i })
     expect(voiceButton).toBeDisabled()
-    expect(screen.getByText(/Voice captures intent only/i)).toBeInTheDocument()
+    expect(screen.getByText('Voice captures intent only. Passkey approval is still required before anything moves.')).toBeInTheDocument()
+    expect(screen.getByText('Voice captures intent only. Passkey approval is required before anything moves.')).toBeInTheDocument()
   })
 
   it('captures mocked speech into the editable payment intent field only', () => {

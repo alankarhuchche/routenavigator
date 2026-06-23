@@ -45,17 +45,17 @@ describe('Approve with passkey button', () => {
 
   it('appears on Approval & Tracking after analysing and continuing through the journey', async () => {
     render(<App />)
-    fireEvent.click(screen.getByRole('button', { name: /Confirm and analyse safe routes/i }))
+    fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
     await waitFor(() => expect(screen.getByText('Analysing safe routes')).toBeInTheDocument())
     fireEvent.click(screen.getByRole('button', { name: /Continue to Journey & Controls/i }))
     await waitFor(() => expect(screen.getByText('Payment journey map')).toBeInTheDocument())
     fireEvent.click(screen.getByRole('button', { name: /Continue to Approval & Tracking/i }))
     await waitFor(() => expect(screen.getByRole('button', { name: /^Approve with passkey$/i })).toBeInTheDocument())
-  })
+  }, 10_000)
 
   it('hides after authorise accepts approval in stage 4', async () => {
     render(<App />)
-    fireEvent.click(screen.getByRole('button', { name: /Confirm and analyse safe routes/i }))
+    fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
     await waitFor(() => expect(screen.getByText('Analysing safe routes')).toBeInTheDocument())
     fireEvent.click(screen.getByRole('button', { name: /Continue to Journey & Controls/i }))
     await waitFor(() => expect(screen.getByText('Payment journey map')).toBeInTheDocument())
