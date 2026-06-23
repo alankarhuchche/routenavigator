@@ -16,3 +16,12 @@ Every task prompt must state explicit scope boundaries: frontend/backend/deploym
 
 Codex should use these files as source context before implementation. If a request conflicts with these files, Codex should stop and report the contradiction rather than guessing.
 
+## How To Use This Harness
+
+1. Run `bash scripts/ai-next-task.sh` to see the current phase, recommended context files and git warnings.
+2. Ask the AI assistant to read the relevant harness files before changing anything.
+3. Use one prompt from `ai-harness/12-next-prompts.md` or compose a scoped prompt from `ai-harness/06-codex-task-template.md`.
+4. Keep acceptance criteria inside the prompt and require a pass/fail report.
+5. Run `bash scripts/ai-precommit-check.sh` before committing.
+6. Human-review the diff before any commit, push or deployment.
+7. Treat `git push` as deployment-triggering for this repository unless proven otherwise.

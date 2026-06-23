@@ -1,52 +1,56 @@
 # Current Phase
 
-Phase 2A — Harness automation improvements
+Phase 2B — Extract payment journey adapter from LeafletRouteMap
 
 ## Objective
 
-Improve the lightweight AI engineering harness so future assistants can quickly discover the current phase, relevant context, task templates and acceptance criteria without relying on previous chat history.
+Extract the frontend-only payment journey adapter logic from `LeafletRouteMap.tsx` into a small typed helper module without changing visible map behavior.
 
 ## Expected Scope
 
-- Documentation and small helper scripts only.
-- Inspect `ai-harness` files and `scripts/ai-next-task.sh`.
-- Improve the workflow for finding the next task and loading required context.
-- Keep changes simple, readable and repo-local.
-- Do not change frontend app behavior.
+- Frontend refactor only.
+- Preserve current map behavior, copy and safety boundaries.
+- Keep the Payment Journey Map representative, not live telemetry.
 - Do not change backend code, route decision logic, deployment files or API contracts.
+- Do not add dependencies.
 - Do not deploy.
 
 ## Files Likely to Inspect
 
 - `ai-harness/README.md`
+- `ai-harness/09-handoff-to-ai.md`
 - `ai-harness/03-backlog.md`
 - `ai-harness/04-current-phase.md`
 - `ai-harness/05-acceptance-criteria-template.md`
 - `ai-harness/06-codex-task-template.md`
-- `ai-harness/09-handoff-to-ai.md`
 - `ai-harness/11-open-risks.md`
 - `ai-harness/12-next-prompts.md`
-- `scripts/ai-next-task.sh`
+- `ai-harness/13-ai-engineering-workflow.md`
+- `frontend/src/components/LeafletRouteMap.tsx`
+- frontend tests
 
 ## Key Risks
 
-- Over-engineering the harness with brittle automation.
-- Accidentally changing application code during a docs/scripts phase.
-- Letting current-phase/backlog docs drift apart.
-- Creating scripts that depend on local-only tools or credentials.
+- Changing visible map behavior during extraction.
+- Weakening safety copy around representative journey, finality or no-money-moved boundaries.
+- Creating an over-abstracted helper that is harder to maintain than the current component.
+- Missing focused tests for adapter behavior.
 
 ## Acceptance Criteria Summary
 
-- The next task/current phase can be discovered from repo-local files.
-- Any helper script remains simple, readable and safe.
-- Documentation clearly points future assistants to Phase 2A and beyond.
-- No application source behavior changes.
+- `LeafletRouteMap.tsx` is smaller and easier to read.
+- Extracted adapter logic is typed and readable.
+- Map still shows representative journey, numbered nodes, controls, finality/PONR and alternatives.
+- No unsafe wording is introduced.
 - No backend, route logic, deployment or API contract changes.
 - No dependencies are added.
-- Git status is reported.
+- Frontend lint/typecheck/build/test pass.
 
 ## Expected Outputs
 
-- Updated harness workflow docs if needed.
-- Updated next-task prompt or helper script if needed.
-- Clear report of files changed, commands run, acceptance criteria result and follow-up risks.
+- Files changed.
+- Refactor summary.
+- Behavior preservation notes.
+- Commands run and results.
+- Acceptance criteria result.
+- Risks/follow-up.

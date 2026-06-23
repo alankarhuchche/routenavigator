@@ -17,7 +17,7 @@ Phase 1 overall status: Complete. Payment Route Intelligence Phase 1 was deploye
 | 1J | Claude-ready handoff pack | Done | Docs | Repo-local context for Claude or another AI assistant to continue without chat history. |
 | 1K | Deployment readiness and Cloud Run deploy | Done | Git/deployment | Verified production build packaging; GitHub push triggered Cloud Build / Cloud Run deployment. |
 | 1M | Deployment close-out and Phase 1 completion record | Done | Docs | Recorded successful deployment and marked Phase 1 complete. |
-| 2A | Harness automation improvements | Next | Docs/scripts | Improve lightweight harness workflow without complex automation. |
-| 2B | Extract map journey adapter | Planned | Frontend refactor | Move journey adapter out of `LeafletRouteMap.tsx` when safe. |
+| 2A | Harness automation improvements | Done | Docs/scripts | Added workflow docs, checklist template, review rubric and safe helper scripts. |
+| 2B | Extract payment journey adapter from LeafletRouteMap | Next | Frontend refactor | Move journey adapter out of `LeafletRouteMap.tsx` when safe. |
 | 2C | Route data alignment frontend/backend | Planned | Frontend/backend data | Align scenario/route data once backend scope is approved. |
 | 2D | Approval step transition cleanup | Planned | Frontend | Make Approval & Tracking a cleaner dedicated step transition. |

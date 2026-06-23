@@ -30,3 +30,10 @@
 - Manual validation confirmed the deployed app is working.
 - Phase 1 is complete.
 - Next phase is Phase 2A — Harness automation improvements.
+
+## Harness Automation Decisions
+
+- Harness automation was added to make AI-assisted engineering repeatable across Codex, Claude and similar assistants.
+- The standard workflow is Plan -> Execute -> Verify -> Review -> Commit.
+- Push remains deployment-triggering and requires explicit intent.
+- `.claude/worktrees` local noise must not be staged unless explicitly requested.
