@@ -7,7 +7,10 @@ export function PaymentTracker({ trace }: { trace: DecisionTrace }) {
     <section className="panel payment-tracker">
       <div className="panel-title">
         <Activity size={18} aria-hidden="true" />
-        <h2>Payment Tracker</h2>
+        <div>
+          <h2>Tracking after approval</h2>
+          <p>Simulation status for the expected payment journey.</p>
+        </div>
       </div>
       <ol className="tracker-list">
         {trace.events.map((event, index) => {

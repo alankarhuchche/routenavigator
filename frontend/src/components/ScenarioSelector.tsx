@@ -9,11 +9,14 @@ interface ScenarioSelectorProps {
 
 export function ScenarioSelector({ scenarios, selectedId, onSelect }: ScenarioSelectorProps) {
   return (
-    <section className="panel">
-      <div className="panel-title">
+    <details className="panel demo-scenarios-panel">
+      <summary className="panel-title demo-scenarios-summary">
         <ListChecks size={18} aria-hidden="true" />
-        <h2>Scenarios</h2>
-      </div>
+        <span>
+          <h2>Demo scenarios</h2>
+          <p>Use these to load pre-built payment journeys for the executive demo.</p>
+        </span>
+      </summary>
       <div className="scenario-list">
         {scenarios.map((scenario) => (
           <button
@@ -27,6 +30,6 @@ export function ScenarioSelector({ scenarios, selectedId, onSelect }: ScenarioSe
           </button>
         ))}
       </div>
-    </section>
+    </details>
   )
 }

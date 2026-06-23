@@ -1,6 +1,7 @@
-import { Sparkles } from 'lucide-react'
+import { Mic, Sparkles } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import type { DemoScenario } from '../types'
+import { IntentConfirmationCard } from './IntentConfirmationCard'
 
 export interface LivePreferences {
   objective: ObjectivePreference
@@ -35,7 +36,7 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
   useEffect(() => {
     onIntentTextChange?.(naturalLanguageIntent)
     onPreferencesChange?.({ objective, trackingRequired, digitalRoutesAllowed })
-  }, [])
+  }, [digitalRoutesAllowed, naturalLanguageIntent, objective, onIntentTextChange, onPreferencesChange, trackingRequired])
   const matchedScenario = useMemo(
     () => matchScenario(scenarios, naturalLanguageIntent, {
       objective,
@@ -49,27 +50,45 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
 
   useEffect(() => {
     onScenarioMatch?.(matchedScenario.scenario.id)
-  }, [matchedScenario.scenario.id])
+  }, [matchedScenario.scenario.id, onScenarioMatch])
 
   return (
     <section className="panel intent-intake">
       <div className="panel-title">
         <Sparkles size={18} aria-hidden="true" />
-        <h2>Customer Intent Intake</h2>
+        <div>
+          <h2>What outcome do you need from this payment?</h2>
+          <p>Speak or type naturally. We will convert your request into a structured payment intent before analysing routes.</p>
+        </div>
       </div>
       <div className="intent-form">
-        <label htmlFor="natural-language-intent">
-          Describe the payment
-        </label>
-        <textarea
-          id="natural-language-intent"
-          value={naturalLanguageIntent}
-          rows={5}
-          onChange={(event) => {
-            setNaturalLanguageIntent(event.target.value)
-            onIntentTextChange?.(event.target.value)
-          }}
-        />
+        <div className="intent-principle">
+          <strong>Conversational in. Deterministic out.</strong>
+          <span>GenAI structures and explains the intent. The bank-owned route engine decides the route.</span>
+        </div>
+        <label htmlFor="natural-language-intent">Customer outcome</label>
+        <div className="outcome-input-row">
+          <textarea
+            id="natural-language-intent"
+            value={naturalLanguageIntent}
+            rows={5}
+            onChange={(event) => {
+              setNaturalLanguageIntent(event.target.value)
+              onIntentTextChange?.(event.target.value)
+            }}
+          />
+          <button
+            type="button"
+            className="mic-button"
+            disabled
+            title="Voice capture mocked for demo"
+            aria-label="Speak - voice capture mocked for demo"
+          >
+            <Mic size={17} aria-hidden="true" />
+            <span>Speak</span>
+          </button>
+        </div>
+        <p className="voice-mock-note">Voice capture mocked for demo.</p>
 
         <div className="preference-grid" aria-label="Payment preferences">
           <label>
@@ -136,10 +155,11 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
       </div>
 
       <div className="match-summary">
-        <dt>Preview match — AI will confirm when you click Analyse Route</dt>
+        <dt>Structured intent preview</dt>
         <dd>{matchedScenario.scenario.name}</dd>
         <p>{matchedScenario.reason}</p>
       </div>
+      <IntentConfirmationCard intent={matchedScenario.scenario.intent} />
     </section>
   )
 }

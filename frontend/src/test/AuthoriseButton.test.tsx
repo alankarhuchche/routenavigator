@@ -35,25 +35,25 @@ vi.mock('../api', () => ({
   getPaymentState: vi.fn(),
 }))
 
-describe('Authorise & Track button (bug fix: hide after step 3)', () => {
+describe('Approve with passkey button (bug fix: hide after step 3)', () => {
   beforeEach(() => { vi.clearAllMocks() })
 
   it('is not visible on step 1', () => {
     render(<App />)
-    expect(screen.queryByText(/Authorise & Track/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Approve with passkey/i)).not.toBeInTheDocument()
   })
 
   it('appears on step 2 after analysing', async () => {
     render(<App />)
-    fireEvent.click(screen.getByRole('button', { name: /Analyse Route/i }))
-    await waitFor(() => expect(screen.getByText(/Authorise & Track/i)).toBeInTheDocument())
+    fireEvent.click(screen.getByRole('button', { name: /Confirm and analyse safe routes/i }))
+    await waitFor(() => expect(screen.getByText(/Approve with passkey/i)).toBeInTheDocument())
   })
 
   it('hides after authorise moves to step 3', async () => {
     render(<App />)
-    fireEvent.click(screen.getByRole('button', { name: /Analyse Route/i }))
-    await waitFor(() => screen.getByText(/Authorise & Track/i))
-    fireEvent.click(screen.getByText(/Authorise & Track/i))
-    await waitFor(() => expect(screen.queryByText(/Authorise & Track/i)).not.toBeInTheDocument())
+    fireEvent.click(screen.getByRole('button', { name: /Confirm and analyse safe routes/i }))
+    await waitFor(() => screen.getByText(/Approve with passkey/i))
+    fireEvent.click(screen.getByText(/Approve with passkey/i))
+    await waitFor(() => expect(screen.queryByText(/Approve with passkey/i)).not.toBeInTheDocument())
   })
 })

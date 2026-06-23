@@ -6,9 +6,21 @@ interface StepIndicatorProps {
 }
 
 const steps = [
-  { number: 1, label: 'Intent' },
-  { number: 2, label: 'Route Analysis' },
-  { number: 3, label: 'Execution' },
+  {
+    number: 1,
+    label: 'Secure Intent',
+    description: 'Authenticate, express outcome, confirm structured intent',
+  },
+  {
+    number: 2,
+    label: 'Route Intelligence',
+    description: 'Analyse rails, controls, cut-offs and settlement quality',
+  },
+  {
+    number: 3,
+    label: 'Approval & Tracking',
+    description: 'Approve execution and monitor payment progress',
+  },
 ]
 
 export function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) {
@@ -30,7 +42,10 @@ export function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) 
               <span className="step-circle" aria-hidden="true">
                 {isCompleted ? <Check size={14} strokeWidth={3} /> : step.number}
               </span>
-              <span className="step-label">{step.label}</span>
+              <span className="step-copy">
+                <span className="step-label">{step.label}</span>
+                <span className="step-description">{step.description}</span>
+              </span>
             </button>
             {index < steps.length - 1 && (
               <span className={`step-connector${isCompleted ? ' step-connector-done' : ''}`} aria-hidden="true" />

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
 import { demoScenarios } from './data/demoData'
@@ -7,20 +7,24 @@ import { DisclaimerBanner } from './components/DisclaimerBanner'
 import { DecisionImpactBanner } from './components/DecisionImpactBanner'
 import { DecisionTracePanel } from './components/DecisionTracePanel'
 import { FallbackEventView } from './components/FallbackEventView'
+import { FinalApprovalCard } from './components/FinalApprovalCard'
 import { LeafletRouteMap } from './components/LeafletRouteMap'
 import { PaymentIntentIntake } from './components/PaymentIntentIntake'
 import { PaymentIntentView } from './components/PaymentIntentView'
 import { PaymentTracker } from './components/PaymentTracker'
+import { RecommendationHeroCard } from './components/RecommendationHeroCard'
 import { RouteComparison } from './components/RouteComparison'
+import { RouteIntelligencePanel } from './components/RouteIntelligencePanel'
 import { ScenarioSelector } from './components/ScenarioSelector'
 import { StepIndicator } from './components/StepIndicator'
+import { TrustedSessionBanner } from './components/TrustedSessionBanner'
 import { ArrowRight } from 'lucide-react'
 import type { DecisionTrace } from './types'
 import type { ApiPaymentSnapshot } from './apiTypes'
 import { createRouteDecision, fetchExplanation, authorisePayment, simulateNext, simulateDegradation, classifyIntent } from './api'
 import { adaptTrace } from './traceAdapter'
 import type { LivePreferences } from './components/PaymentIntentIntake'
-import { STATE_LABELS } from './components/ControlRoom'
+import { STATE_LABELS } from './stateLabels'
 
 function App() {
   const [scenarioId, setScenarioId] = useState(demoScenarios[0].id)
@@ -43,7 +47,18 @@ function App() {
     [scenarioId],
   )
 
-  const displayTrace = liveTrace ?? scenario.trace
+  const baseTrace = liveTrace ?? scenario.trace
+  const displayTrace = useMemo(() => {
+    if (!paymentSnapshot || !liveTrace) {
+      return baseTrace
+    }
+    return {
+      ...liveTrace,
+      events: paymentSnapshot.events.length > 0
+        ? paymentSnapshot.events.map(e => e.message)
+        : liveTrace.events,
+    }
+  }, [baseTrace, liveTrace, paymentSnapshot])
 
   const displayIntent = useMemo(() => {
     const base = scenario.intent
@@ -143,25 +158,17 @@ function App() {
     }
   }
 
-  useEffect(() => {
-    if (paymentSnapshot && liveTrace) {
-      setLiveTrace(prev => prev ? {
-        ...prev,
-        events: paymentSnapshot.events.length > 0
-          ? paymentSnapshot.events.map(e => e.message)
-          : prev.events
-      } : prev)
-    }
-  }, [paymentSnapshot])
-
   return (
     <main className="app-shell">
       <DisclaimerBanner />
       <header className="app-header">
         <div>
-          <p className="eyebrow">Payment Route Orchestrator</p>
-          <h1>Route Navigator</h1>
-          <p className="header-tagline">Every compliant route, scored and explained — before the money moves.</p>
+          <p className="eyebrow">Payment Route Intelligence</p>
+          <h1>Payment Route Intelligence</h1>
+          <p className="header-tagline">Express the outcome. Let the bank recommend the safest executable route.</p>
+          <p className="journey-narrative">
+            Customers no longer need to choose rails. They confirm the outcome; the bank evaluates safe routes.
+          </p>
         </div>
         <div className="header-metrics" aria-label="Current selected route metrics">
           <span className="header-chip header-chip-route">{displayTrace.selectedRoute.label}</span>
@@ -177,6 +184,7 @@ function App() {
 
         {/* ── STEP 1: INTENT ── */}
         <section className="step-section" aria-label="Step 1: Intent">
+          {step === 1 && <TrustedSessionBanner />}
           <div className="intent-grid-layout">
             <div>
               <PaymentIntentIntake
@@ -198,7 +206,7 @@ function App() {
               )}
               {classifyReason && (
                 <p className="classify-reason">
-                  <strong>AI matched:</strong> {classifyReason}
+                  <strong>Intent matched:</strong> {classifyReason}
                 </p>
               )}
               <button
@@ -207,7 +215,7 @@ function App() {
                 onClick={handleAnalyse}
                 disabled={isAnalysing}
               >
-                {isAnalysing ? 'Analysing...' : 'Analyse Route'}
+                {isAnalysing ? 'Analysing...' : 'Confirm and analyse safe routes'}
                 {!isAnalysing && <ArrowRight size={16} aria-hidden="true" />}
               </button>
             </div>
@@ -229,6 +237,8 @@ function App() {
                 </button>
               </div>
             )}
+            <RouteIntelligencePanel trace={displayTrace} />
+            <RecommendationHeroCard trace={displayTrace} />
             <DecisionImpactBanner trace={displayTrace} />
             <div className="analysis-grid">
               <div>
@@ -251,14 +261,16 @@ function App() {
             </div>
 
             {step < 3 && (
-              <div className="step-action-row">
+              <div className="approval-handoff">
+                <FinalApprovalCard trace={displayTrace} intent={displayIntent} />
+                <p className="approval-mock-note">Passkey approval mocked for demo.</p>
                 <button
                   type="button"
                   className="primary-btn"
                   onClick={handleAuthorise}
                   disabled={isAuthorising}
                 >
-                  {isAuthorising ? 'Authorising...' : 'Authorise & Track'}
+                  {isAuthorising ? 'Approving...' : 'Approve with passkey'}
                   {!isAuthorising && <ArrowRight size={16} aria-hidden="true" />}
                 </button>
               </div>
@@ -268,28 +280,37 @@ function App() {
 
         {/* ── STEP 3: EXECUTION ── */}
         {step >= 3 && (
-          <section className="step-section execution-section" aria-label="Step 3: Execution">
+          <section className="step-section execution-section" aria-label="Step 3: Approval & Tracking">
+            <FinalApprovalCard
+              trace={displayTrace}
+              intent={displayIntent}
+              paymentState={paymentSnapshot?.state}
+            />
             {paymentSnapshot ? (
               <div className="payment-state-badge">
                 Payment state: <strong>{STATE_LABELS[paymentSnapshot.state] ?? paymentSnapshot.state}</strong>
               </div>
             ) : (
               <div className="payment-state-badge" style={{ borderColor: '#fed7aa', background: '#fff7ed', color: '#92400e' }}>
-                Payment not yet authorised — click <strong>Authorise &amp; Track</strong> in step 2
+                Payment not yet approved — click <strong>Approve with passkey</strong> in step 2
               </div>
             )}
             <PaymentTracker trace={displayTrace} />
             {liveTraceId && paymentSnapshot &&
               paymentSnapshot.state !== 'COMPLETED' &&
               paymentSnapshot.state !== 'INVESTIGATION_REQUIRED' && (
-                <div className="step-action-row">
+                <div className="simulation-controls">
+                  <div className="simulation-controls-head">
+                    <strong>Simulation controls</strong>
+                    <span>Demo-only progression after customer approval.</span>
+                  </div>
                   <button
                     type="button"
-                    className="primary-btn"
+                    className="secondary-btn"
                     onClick={handleSimulateNext}
                     disabled={isSimulating}
                   >
-                    {isSimulating ? 'Simulating...' : 'Simulate Next Step'}
+                    {isSimulating ? 'Simulating...' : 'Simulate next step'}
                   </button>
                   {!paymentSnapshot.pointOfNoReturnReached && (
                     <button
@@ -298,12 +319,16 @@ function App() {
                       onClick={handleSimulateDegradation}
                       disabled={isSimulating}
                     >
-                      Simulate Degradation
+                      Simulate degradation
                     </button>
                   )}
                 </div>
               )}
-            <div className="control-band">
+            <div className="control-band simulation-panel">
+              <div className="simulation-controls-head">
+                <strong>Demo control room</strong>
+                <span>Internal simulation evidence, not a customer execution action.</span>
+              </div>
               <ControlRoom trace={displayTrace} paymentState={paymentSnapshot?.state} />
             </div>
           </section>

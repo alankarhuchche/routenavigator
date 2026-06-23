@@ -1,17 +1,7 @@
 import { BadgeCheck, BrainCircuit, CircleDot, Gauge, GitBranch, ShieldAlert } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { STATE_LABELS } from '../stateLabels'
 import type { DecisionTrace } from '../types'
-
-export const STATE_LABELS: Record<string, string> = {
-  CREATED: 'Created',
-  AWAITING_AUTHORISATION: 'Awaiting authorisation',
-  AUTHORISED: 'Authorised',
-  PROCESSING: 'Processing',
-  IN_PROGRESS: 'In progress',
-  COMPLETED: 'Completed',
-  FAILED: 'Failed',
-  INVESTIGATION_REQUIRED: 'Under investigation',
-}
 
 function humanState(raw: string) {
   return STATE_LABELS[raw] ?? raw

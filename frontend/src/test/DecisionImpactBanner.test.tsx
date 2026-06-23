@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { DecisionImpactBanner, etaToMinutes } from '../components/DecisionImpactBanner'
+import { DecisionImpactBanner } from '../components/DecisionImpactBanner'
+import { etaToMinutes } from '../eta'
 import type { DecisionTrace, RouteCandidate } from '../types'
 
 function makeCandidate(id: string, label: string, status: RouteCandidate['status'], eta: string): RouteCandidate {
