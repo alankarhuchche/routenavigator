@@ -1,17 +1,18 @@
 # Current Phase
 
-Phase 2B — Extract payment journey adapter from LeafletRouteMap
+Phase 2C — Route data alignment frontend/backend
 
 ## Objective
 
-Extract the frontend-only payment journey adapter logic from `LeafletRouteMap.tsx` into a small typed helper module without changing visible map behavior.
+Review and align frontend scenario/demo data with backend mock route data so route names, IDs, currencies, ETA, fees, finality, rejected reasons and safety copy stay consistent without changing deterministic route decision logic.
 
 ## Expected Scope
 
-- Frontend refactor only.
-- Preserve current map behavior, copy and safety boundaries.
-- Keep the Payment Journey Map representative, not live telemetry.
-- Do not change backend code, route decision logic, deployment files or API contracts.
+- Data/copy alignment only unless a specific mismatch requires a carefully reviewed code change.
+- Inspect both frontend demo data and backend mock data before editing.
+- Preserve deterministic route engine behavior.
+- Do not connect to live systems.
+- Do not change deployment files or API contracts.
 - Do not add dependencies.
 - Do not deploy.
 
@@ -26,31 +27,34 @@ Extract the frontend-only payment journey adapter logic from `LeafletRouteMap.ts
 - `ai-harness/11-open-risks.md`
 - `ai-harness/12-next-prompts.md`
 - `ai-harness/13-ai-engineering-workflow.md`
-- `frontend/src/components/LeafletRouteMap.tsx`
+- `frontend/src/data/demoData.ts`
+- `backend/src/main/resources/data`
+- `backend/src/main/java`
 - frontend tests
+- backend tests
 
 ## Key Risks
 
-- Changing visible map behavior during extraction.
-- Weakening safety copy around representative journey, finality or no-money-moved boundaries.
-- Creating an over-abstracted helper that is harder to maintain than the current component.
-- Missing focused tests for adapter behavior.
+- Accidentally changing route decision behavior during data alignment.
+- Introducing unsafe or over-specific payment/finality claims.
+- Creating frontend/backend drift by fixing one side without documenting the other.
+- Touching backend contracts when only data/copy alignment is needed.
 
 ## Acceptance Criteria Summary
 
-- `LeafletRouteMap.tsx` is smaller and easier to read.
-- Extracted adapter logic is typed and readable.
-- Map still shows representative journey, numbered nodes, controls, finality/PONR and alternatives.
-- No unsafe wording is introduced.
-- No backend, route logic, deployment or API contract changes.
+- Frontend/backend data mismatches are inventoried.
+- Any implemented changes are limited to safe data/copy alignment unless explicitly justified.
+- Route engine behavior remains deterministic.
+- No unsafe claims are introduced.
+- Frontend and backend checks pass for touched areas.
+- No deployment or API contract changes.
 - No dependencies are added.
-- Frontend lint/typecheck/build/test pass.
 
 ## Expected Outputs
 
-- Files changed.
-- Refactor summary.
-- Behavior preservation notes.
+- Files inspected.
+- Mismatches found.
+- Files changed, if any.
 - Commands run and results.
 - Acceptance criteria result.
 - Risks/follow-up.

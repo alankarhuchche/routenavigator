@@ -37,3 +37,11 @@
 - The standard workflow is Plan -> Execute -> Verify -> Review -> Commit.
 - Push remains deployment-triggering and requires explicit intent.
 - `.claude/worktrees` local noise must not be staged unless explicitly requested.
+
+## Frontend Refactor Decisions
+
+- Payment journey derivation was extracted from `LeafletRouteMap.tsx` into a pure frontend adapter.
+- The adapter has no React, Leaflet or DOM dependency.
+- The map component remains responsible for rendering, Leaflet components, node selection and visual styling.
+- Representative journey and no-money-moved safety wording were preserved.
+- Next phase is Phase 2C — Route data alignment frontend/backend.
