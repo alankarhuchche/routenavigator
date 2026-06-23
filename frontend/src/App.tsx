@@ -3,6 +3,7 @@ import 'leaflet/dist/leaflet.css'
 import './App.css'
 import { demoScenarios } from './data/demoData'
 import { ControlRoom } from './components/ControlRoom'
+import { ApprovalTransitionPanel } from './components/ApprovalTransitionPanel'
 import { DisclaimerBanner } from './components/DisclaimerBanner'
 import { DecisionImpactBanner } from './components/DecisionImpactBanner'
 import { DecisionTracePanel } from './components/DecisionTracePanel'
@@ -279,6 +280,7 @@ function App() {
 
             {step < 3 && (
               <div className="approval-handoff">
+                <ApprovalTransitionPanel trace={displayTrace} mode="handoff" />
                 <FinalApprovalCard trace={displayTrace} intent={displayIntent} />
                 <p className="approval-mock-note">Passkey approval mocked for demo.</p>
                 <button
@@ -298,6 +300,7 @@ function App() {
         {/* ── STEP 3: EXECUTION ── */}
         {step >= 3 && (
           <section className="step-section execution-section" aria-label="Step 3: Approval & Tracking">
+            <ApprovalTransitionPanel trace={displayTrace} mode="tracking" />
             <FinalApprovalCard
               trace={displayTrace}
               intent={displayIntent}

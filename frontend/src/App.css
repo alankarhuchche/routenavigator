@@ -506,11 +506,107 @@ h2 {
 .approval-handoff {
   display: grid;
   justify-items: end;
-  gap: 10px;
+  gap: 12px;
 }
 
 .approval-handoff .final-approval-card {
   justify-self: stretch;
+}
+
+.approval-handoff .approval-transition-panel {
+  justify-self: stretch;
+}
+
+.approval-transition-panel {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+  box-shadow: 0 12px 26px rgba(30, 64, 175, 0.07);
+}
+
+.approval-transition-panel.tracking-mode {
+  border-color: #99f6e4;
+  background: linear-gradient(180deg, #ffffff 0%, #f0fdfa 100%);
+}
+
+.approval-transition-main {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.approval-transition-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  background: #1e3a8a;
+  color: #ffffff;
+}
+
+.approval-transition-panel.tracking-mode .approval-transition-icon {
+  background: #0f766e;
+}
+
+.approval-transition-main h2 {
+  color: #111827;
+  font-size: 20px;
+  letter-spacing: 0;
+}
+
+.approval-transition-main p:last-child {
+  margin: 6px 0 0;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.approval-transition-steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #dbeafe;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.approval-transition-steps strong {
+  color: #1e3a8a;
+}
+
+.approval-transition-panel.tracking-mode .approval-transition-steps strong {
+  color: #0f766e;
+}
+
+.approval-transition-boundary,
+.approval-transition-route {
+  margin: 0;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.approval-transition-boundary {
+  padding: 9px 10px;
+  border-radius: 6px;
+  background: #f8fafc;
+  color: #334155;
+}
+
+.approval-transition-route {
+  color: #64748b;
 }
 
 .approval-mock-note {
