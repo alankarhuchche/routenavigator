@@ -1,31 +1,29 @@
 # Current Phase
 
-Phase 3B — Voice intent and Gemini route explanation demo
+Phase 3C — Demo launch pack and walkthrough
 
-Execution mode: do not start Phase 3B unless explicitly instructed. Use `ai-harness/program/execution-state.md` and `bash scripts/ai-program-next.sh` to confirm state before any further work.
+Execution mode: do not start Phase 3C unless explicitly instructed. Use `ai-harness/program/execution-state.md` and `bash scripts/ai-program-next.sh` to confirm state before any further work.
 
 ## Objective
 
-Add a future-facing voice intent and bounded Gemini explanation demo layer while preserving deterministic route selection and payment safety boundaries.
+Prepare the demo launch pack, walkthrough script and handoff checklist for Payment Route Intelligence.
 
 ## Current Status
 
 - Phase 3A demo journey shell is complete.
-- The frontend now presents four page-like stages:
-  - Secure Intent
-  - Route Intelligence
-  - Journey & Controls
-  - Approval & Tracking
-- Frontend route engine, map, approval, tracking and simulation behavior are preserved.
-- No backend, API, deployment, dependency or route decision logic changes were made in Phase 3A.
+- Phase 3B voice intent and trusted agent explanation demo is complete.
+- Browser voice capture is used only to populate/edit the payment intent field.
+- Trusted agent/Gemini explanation remains explanation-only.
+- Browser read-aloud uses text-to-speech only.
+- Passkey/customer approval remains the only approval mechanism.
 
-## Expected Phase 3B Scope
+## Expected Phase 3C Scope
 
-- Frontend/demo framing only unless explicitly approved otherwise.
-- Keep voice capture mocked; do not implement real audio.
-- Keep Gemini bounded to explanation of redacted route traces only.
-- Do not allow Gemini to select, score, approve, execute, amend, cancel or move money.
-- Preserve static corridor demo labelling.
+- Demo walkthrough documentation.
+- Launch checklist.
+- Safety talking points.
+- GCP/GitHub/Cloud Run verification guidance.
+- No product feature work unless explicitly approved.
 
 ## Constraints
 
@@ -37,11 +35,11 @@ Add a future-facing voice intent and bounded Gemini explanation demo layer while
 - Do not add dependencies.
 - Do not touch `.claude/worktrees`.
 
-## Expected Outputs For Phase 3B
+## Expected Outputs For Phase 3C
 
 - Files inspected.
 - Files changed.
-- Copy/safety summary.
+- Demo script/walkthrough summary.
 - Commands run and results.
 - Acceptance criteria result.
 - Local commit only if checks pass.

@@ -1,4 +1,5 @@
 import { Mic, Sparkles } from 'lucide-react'
+import type { Dispatch, SetStateAction } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import type { DemoScenario } from '../types'
 import { IntentConfirmationCard } from './IntentConfirmationCard'
@@ -17,6 +18,31 @@ interface PaymentIntentIntakeProps {
 }
 
 type ObjectivePreference = 'FASTEST' | 'CHEAPEST' | 'MOST_TRANSPARENT'
+type VoiceStatus = 'idle' | 'listening' | 'captured' | 'unsupported' | 'error'
+
+interface SpeechRecognitionResultLike {
+  transcript: string
+}
+
+interface SpeechRecognitionEventLike {
+  results: ArrayLike<ArrayLike<SpeechRecognitionResultLike>>
+}
+
+interface SpeechRecognitionLike {
+  continuous: boolean
+  interimResults: boolean
+  lang: string
+  onstart: (() => void) | null
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null
+  onerror: (() => void) | null
+  onend: (() => void) | null
+  start: () => void
+}
+
+interface SpeechRecognitionWindow extends Window {
+  SpeechRecognition?: new () => SpeechRecognitionLike
+  webkitSpeechRecognition?: new () => SpeechRecognitionLike
+}
 
 const examplePrompts = [
   'Send GBP 500 to a UK beneficiary as quickly as possible.',
@@ -32,6 +58,8 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
   const [digitalRoutesAllowed, setDigitalRoutesAllowed] = useState(true)
   const [traditionalOnly, setTraditionalOnly] = useState(false)
   const [simulateFallback, setSimulateFallback] = useState(false)
+  const [voiceStatus, setVoiceStatus] = useState<VoiceStatus>(() => getSpeechRecognitionConstructor() ? 'idle' : 'unsupported')
+  const [voiceMessage, setVoiceMessage] = useState('Voice captures intent only. Passkey approval is still required before anything moves.')
 
   useEffect(() => {
     onIntentTextChange?.(naturalLanguageIntent)
@@ -80,15 +108,24 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
           <button
             type="button"
             className="mic-button"
-            disabled
-            title="Voice capture mocked for demo"
-            aria-label="Speak - voice capture mocked for demo"
+            disabled={voiceStatus === 'unsupported' || voiceStatus === 'listening'}
+            title={voiceStatus === 'unsupported' ? 'Speech recognition is not supported in this browser' : 'Speak payment intent for demo capture'}
+            aria-label="Speak payment intent"
+            onClick={() => startVoiceCapture({
+              currentText: naturalLanguageIntent,
+              setText: (text) => {
+                setNaturalLanguageIntent(text)
+                onIntentTextChange?.(text)
+              },
+              setVoiceStatus,
+              setVoiceMessage,
+            })}
           >
             <Mic size={17} aria-hidden="true" />
-            <span>Speak</span>
+            <span>{voiceStatus === 'listening' ? 'Listening' : 'Speak payment intent'}</span>
           </button>
         </div>
-        <p className="voice-mock-note">Voice capture mocked for demo.</p>
+        <p className={`voice-mock-note voice-status-${voiceStatus}`}>{voiceMessage}</p>
 
         <div className="preference-grid" aria-label="Payment preferences">
           <label>
@@ -167,6 +204,62 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
       <IntentConfirmationCard intent={matchedScenario.scenario.intent} />
     </section>
   )
+}
+
+function getSpeechRecognitionConstructor() {
+  if (typeof window === 'undefined') return undefined
+  const speechWindow = window as SpeechRecognitionWindow
+  return speechWindow.SpeechRecognition ?? speechWindow.webkitSpeechRecognition
+}
+
+function startVoiceCapture({
+  currentText,
+  setText,
+  setVoiceStatus,
+  setVoiceMessage,
+}: {
+  currentText: string
+  setText: (text: string) => void
+  setVoiceStatus: Dispatch<SetStateAction<VoiceStatus>>
+  setVoiceMessage: (message: string) => void
+}) {
+  const SpeechRecognitionCtor = getSpeechRecognitionConstructor()
+  if (!SpeechRecognitionCtor) {
+    setVoiceStatus('unsupported')
+    setVoiceMessage('Voice capture is not supported in this browser. Type the payment intent instead.')
+    return
+  }
+
+  const recognition = new SpeechRecognitionCtor()
+  recognition.continuous = false
+  recognition.interimResults = false
+  recognition.lang = 'en-GB'
+  recognition.onstart = () => {
+    setVoiceStatus('listening')
+    setVoiceMessage('Listening for payment intent. Speech only fills this field; passkey approval is still required.')
+  }
+  recognition.onresult = (event) => {
+    const transcript = Array.from(event.results)
+      .map(result => result[0]?.transcript ?? '')
+      .join(' ')
+      .trim()
+    if (transcript) {
+      const nextText = currentText.trim()
+        ? `${currentText.trim()} ${transcript}`
+        : transcript
+      setText(nextText)
+      setVoiceStatus('captured')
+      setVoiceMessage('Voice intent captured. Review and edit before route analysis; voice cannot approve or execute payments.')
+    }
+  }
+  recognition.onerror = () => {
+    setVoiceStatus('error')
+    setVoiceMessage('Voice capture failed. Type or edit the payment intent manually; passkey approval remains required.')
+  }
+  recognition.onend = () => {
+    setVoiceStatus((current) => current === 'listening' ? 'idle' : current)
+  }
+  recognition.start()
 }
 
 function matchScenario(

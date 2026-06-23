@@ -166,9 +166,37 @@ Disallowed files:
 
 Acceptance criteria summary:
 
-- voice remains clearly mocked
+- browser voice capture is demo intent entry only
 - Gemini remains explanation-only
 - deterministic route engine boundary remains visible
+- passkey approval remains the only approval mechanism
 - checks pass
+
+Stop condition: stop after local commit and human review. Do not push or deploy without explicit approval.
+
+## 3C — Demo Launch Pack and Walkthrough
+
+Objective: Prepare launch-ready demo documentation and verification guidance.
+
+Allowed files:
+
+- `ai-harness/`
+- docs/demo walkthrough files
+- README updates if explicitly scoped
+
+Disallowed files:
+
+- product feature code
+- backend route logic
+- API contracts
+- deployment files unless explicitly approved
+- dependencies
+
+Acceptance criteria summary:
+
+- demo walkthrough is clear for an executive audience
+- safety talking points are documented
+- GCP/GitHub/Cloud Run verification guidance is included
+- no push or deploy is run without explicit approval
 
 Stop condition: stop after local commit and human review. Do not push or deploy without explicit approval.

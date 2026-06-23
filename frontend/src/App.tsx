@@ -19,6 +19,7 @@ import { RouteIntelligencePanel } from './components/RouteIntelligencePanel'
 import { ScenarioSelector } from './components/ScenarioSelector'
 import { StepIndicator } from './components/StepIndicator'
 import { TrustedSessionBanner } from './components/TrustedSessionBanner'
+import { TrustedAgentExplanationPanel } from './components/TrustedAgentExplanationPanel'
 import { ArrowRight } from 'lucide-react'
 import type { DecisionTrace } from './types'
 import type { ApiPaymentSnapshot } from './apiTypes'
@@ -267,6 +268,11 @@ function App() {
               )}
               <RouteIntelligencePanel trace={displayTrace} />
               <RecommendationHeroCard trace={displayTrace} />
+              <TrustedAgentExplanationPanel
+                trace={displayTrace}
+                provider={explanationProvider}
+                isLoading={isAnalysing}
+              />
               <DecisionImpactBanner trace={displayTrace} />
               <div className="analysis-grid">
                 <div>

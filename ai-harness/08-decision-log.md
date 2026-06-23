@@ -70,3 +70,13 @@
 - Journey & Controls now separates the payment journey map and control evidence from route scoring and approval.
 - Approval & Tracking now owns final approval, mocked passkey approval, tracker and secondary simulation controls.
 - No backend route logic, API contracts, deployment files or dependencies were changed.
+
+## Voice Intent and Explanation Decisions
+
+- Phase 3B added browser speech recognition for demo intent capture only.
+- Voice capture may fill or append to the editable payment intent field, but cannot approve, execute, amend, cancel or move money.
+- Browser speech recognition safely degrades when unsupported.
+- The trusted banking agent explanation panel uses the existing route explanation path and provider status where available.
+- The UI labels "Gemini explanation" only when the backend provider is `GEMINI`; template and static paths are labelled as fallback/demo explanations.
+- Browser read-aloud uses `speechSynthesis` only and does not use the microphone or affect payment state.
+- Passkey/customer approval remains the only approval mechanism.
