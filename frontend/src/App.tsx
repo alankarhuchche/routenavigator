@@ -224,7 +224,7 @@ function App() {
       <div className="journey-wrapper">
         <StepIndicator currentStep={step} maxUnlockedStep={maxUnlockedStep} onStepClick={handleStepClick} />
 
-        <section className="stage-shell" aria-label={`Stage ${step}: ${stageTitle(step)}`}>
+        <section className="stage-shell" aria-label={`Stage ${step}: ${stageTitle(step)}`} key={step}>
           <div className="stage-shell-head">
             <div>
               <p className="eyebrow">Stage {step} of 4</p>
@@ -297,6 +297,13 @@ function App() {
                   <span>{analysisNotice}</span>
                 </div>
               )}
+              <div className="stage-focus-card">
+                <strong>Journey & Controls map</strong>
+                <span>
+                  Review the representative journey, control checkpoints and settlement boundaries for the recommended route.
+                  Expected journey only — no money has moved.
+                </span>
+              </div>
               <div className="map-fallback-row">
                 <LeafletRouteMap trace={displayTrace} />
                 {displayTrace.fallbackEvent && (
@@ -392,7 +399,7 @@ function App() {
               </button>
             ) : step < 4 ? (
               <button type="button" className="primary-btn" onClick={handleContinue}>
-                Continue
+                {continueLabel(step)}
                 <ArrowRight size={16} aria-hidden="true" />
               </button>
             ) : (
@@ -434,13 +441,26 @@ function stageTitle(step: JourneyStep) {
 function stageDescription(step: JourneyStep) {
   switch (step) {
     case 1:
-      return 'Authenticate the session, express the payment outcome and confirm the structured intent.'
+      return 'Capture and confirm the payment outcome before route analysis.'
     case 2:
-      return 'Review the bank-owned route recommendation, scoring evidence and deterministic decision trace.'
+      return 'Review the deterministic route recommendation and explanation.'
     case 3:
-      return 'Inspect the expected payment journey, control checkpoints, PONR and finality boundary.'
+      return 'Inspect the representative journey, controls and settlement boundaries.'
     case 4:
-      return 'Approve with a mocked passkey boundary and track the simulated payment journey.'
+      return 'Approve with passkey, then track the simulated payment journey.'
+  }
+}
+
+function continueLabel(step: JourneyStep) {
+  switch (step) {
+    case 1:
+      return 'Continue'
+    case 2:
+      return 'Continue to Journey & Controls'
+    case 3:
+      return 'Continue to Approval & Tracking'
+    case 4:
+      return 'Continue'
   }
 }
 

@@ -2,7 +2,8 @@
 
 | Risk | Severity | Blocks Phase 1 deployment? | Recommended phase | Notes |
 | --- | --- | --- | --- | --- |
-| Single-page journey may need wizard cleanup | Reduced | No | 3A | Phase 3A split the frontend into four page-like demo stages. Further polish can happen after user review. |
+| Single-page journey may need wizard cleanup | Resolved locally | No | 3A-fix | Phase 3A-fix made active-stage content exclusive/page-like, strengthened Back/Continue navigation and kept locked stages explicit. |
+| Journey map visibility regression | Resolved locally | No | 3A-fix | Local review found the map was not visible enough after the page-like shell. Journey & Controls now restores the map path, adds a visible map intro and invalidates Leaflet size on mount. |
 | `LeafletRouteMap.tsx` is chunky | Reduced | No | 2B | Journey derivation was extracted into a pure adapter. Further UI simplification can be considered later if needed. |
 | Frontend/backend scenario data drift | Reduced | No | Gate before backend corridor support | Phase 2C-fix labels scenarios 7-11 as illustrative frontend-only corridor demos. Backend corridor support remains deferred behind route-logic/product-scope approval. |
 | `.claude/worktrees` git noise | Low | No | 1K | Local worktree metadata appears modified. Do not touch it casually; exclude from deployment commits if unrelated. |

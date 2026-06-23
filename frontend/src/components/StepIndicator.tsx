@@ -44,6 +44,8 @@ export function StepIndicator({ currentStep, maxUnlockedStep, onStepClick }: Ste
               disabled={isLocked}
               onClick={() => !isLocked && onStepClick(step.number)}
               aria-current={isActive ? 'step' : undefined}
+              aria-label={`${step.label}${isLocked ? ' locked until route analysis' : ''}`}
+              title={isLocked ? 'Locked until route analysis is complete' : `Go to ${step.label}`}
             >
               <span className="step-circle" aria-hidden="true">
                 {isCompleted ? <Check size={14} strokeWidth={3} /> : step.number}
@@ -51,6 +53,7 @@ export function StepIndicator({ currentStep, maxUnlockedStep, onStepClick }: Ste
               <span className="step-copy">
                 <span className="step-label">{step.label}</span>
                 <span className="step-description">{step.description}</span>
+                {isLocked && <span className="step-lock-label">Locked until route analysis</span>}
               </span>
             </button>
             {index < steps.length - 1 && (

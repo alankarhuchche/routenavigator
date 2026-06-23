@@ -4,9 +4,22 @@ import React from 'react'
 
 // Leaflet uses browser APIs not available in jsdom
 vi.mock('react-leaflet', () => ({
-  MapContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="map">{children}</div>,
+  MapContainer: ({
+    children,
+    className,
+    ...props
+  }: {
+    children: React.ReactNode
+    className?: string
+    'aria-label'?: string
+  }) => (
+    <div data-testid="map" className={className} aria-label={props['aria-label']}>
+      {children}
+    </div>
+  ),
   TileLayer: () => null,
   Polyline: () => null,
   CircleMarker: () => null,
   Tooltip: () => null,
+  useMap: () => ({ invalidateSize: vi.fn() }),
 }))

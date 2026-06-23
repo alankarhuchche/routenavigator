@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { MapContainer, Polyline, TileLayer, CircleMarker, Tooltip } from 'react-leaflet'
+import { useEffect, useMemo, useState } from 'react'
+import { MapContainer, Polyline, TileLayer, CircleMarker, Tooltip, useMap } from 'react-leaflet'
 import type { Polyline as LeafletPolyline } from 'leaflet'
 import { BadgeCheck, Ban, Landmark, ShieldCheck } from 'lucide-react'
 import type { DecisionTrace, RouteCandidate } from '../types'
@@ -39,6 +39,22 @@ function AnimatedPolyline({ candidate }: { candidate: RouteCandidate }) {
   )
 }
 
+function MapResizeHandler({ traceId }: { traceId: string }) {
+  const map = useMap()
+
+  useEffect(() => {
+    const animationFrame = window.requestAnimationFrame(() => map.invalidateSize())
+    const timer = window.setTimeout(() => map.invalidateSize(), 250)
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame)
+      window.clearTimeout(timer)
+    }
+  }, [map, traceId])
+
+  return null
+}
+
 export function LeafletRouteMap({ trace }: { trace: DecisionTrace }) {
   // Compute the centre and zoom from the selected route's coordinates so the
   // map re-frames whenever the trace changes (MapContainer ignores center/zoom
@@ -64,7 +80,15 @@ export function LeafletRouteMap({ trace }: { trace: DecisionTrace }) {
 
       <div className="payment-journey-layout">
         <div className="payment-map-wrap">
-          <MapContainer key={trace.selectedRoute.id} center={journey.centre} zoom={3} scrollWheelZoom={false} className="route-map">
+          <MapContainer
+            key={trace.selectedRoute.id}
+            center={journey.centre}
+            zoom={3}
+            scrollWheelZoom={false}
+            className="route-map"
+            aria-label="Representative payment journey map"
+          >
+            <MapResizeHandler traceId={trace.traceId} />
             <TileLayer
               attribution="&copy; OpenStreetMap contributors"
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

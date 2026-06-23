@@ -70,6 +70,10 @@
 - Journey & Controls now separates the payment journey map and control evidence from route scoring and approval.
 - Approval & Tracking now owns final approval, mocked passkey approval, tracker and secondary simulation controls.
 - No backend route logic, API contracts, deployment files or dependencies were changed.
+- Phase 3A-fix was added after local demo review found the shell still felt too much like a long page and the map was not visible enough in the journey.
+- The active stage remains exclusive, Back/Continue labels now read like page transitions, locked stages are explicitly labelled, and Journey & Controls has a visible map-focused entry card.
+- Leaflet map visibility is protected by an invalidate-size pass after the map mounts in the active stage.
+- The map regression is treated as resolved locally; Phase 3C remains the next phase after this fix.
 
 ## Voice Intent and Explanation Decisions
 

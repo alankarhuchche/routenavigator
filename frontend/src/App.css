@@ -214,7 +214,7 @@ h2 {
 .stage-shell {
   display: grid;
   gap: 18px;
-  min-height: 620px;
+  min-height: calc(100vh - 230px);
   padding: 18px;
   border: 1px solid #d9dee8;
   border-radius: 8px;
@@ -263,6 +263,7 @@ h2 {
   display: grid;
   gap: 16px;
   align-content: start;
+  min-height: 0;
 }
 
 .stage-nav {
@@ -272,6 +273,7 @@ h2 {
   gap: 12px;
   padding-top: 14px;
   border-top: 1px solid #e2e8f0;
+  align-self: end;
 }
 
 .stage-nav .secondary-btn,
@@ -313,13 +315,35 @@ h2 {
 
 .map-fallback-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
   gap: 16px;
   align-items: start;
 }
 
 .map-fallback-row > *:only-child {
   grid-column: 1 / -1;
+}
+
+.stage-focus-card {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #1e3a8a;
+}
+
+.stage-focus-card strong {
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.stage-focus-card span {
+  color: #334155;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.45;
 }
 
 .route-intelligence-panel {
@@ -1124,6 +1148,8 @@ h2 {
 
 .step-btn.step-future {
   cursor: default;
+  background: #f8fafc;
+  color: #64748b;
 }
 
 .step-btn.step-active {
@@ -1185,6 +1211,18 @@ h2 {
   font-size: 11px;
   font-weight: 650;
   line-height: 1.35;
+}
+
+.step-lock-label {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 2px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #475569;
+  font-size: 10px;
+  font-weight: 850;
 }
 
 .step-btn.step-active .step-label {
@@ -2156,6 +2194,7 @@ dd {
 
 .map-panel {
   overflow: hidden;
+  min-height: 520px;
 }
 
 .map-title {
@@ -2183,6 +2222,7 @@ dd {
 
 .payment-map-wrap {
   min-width: 0;
+  min-height: 430px;
   overflow: hidden;
   border: 1px solid #d9dee8;
   border-radius: 8px;
@@ -2190,7 +2230,9 @@ dd {
 }
 
 .route-map {
-  height: 360px;
+  display: block;
+  min-height: 360px;
+  height: 420px;
   width: 100%;
 }
 
