@@ -1,20 +1,21 @@
 # Current Phase
 
-Phase 2C — Route data alignment frontend/backend
+Phase 2D — Approval step transition cleanup
 
 Execution mode: use `ai-harness/program/execution-state.md` and run `bash scripts/ai-program-next.sh` before starting this phase.
 
 ## Objective
 
-Review and align frontend scenario/demo data with backend mock route data so route names, IDs, currencies, ETA, fees, finality, rejected reasons and safety copy stay consistent without changing deterministic route decision logic.
+Make Approval & Tracking feel like a clearer customer step without changing backend behavior, route decision logic, deployment files or API contracts.
 
 ## Expected Scope
 
-- Data/copy alignment only unless a specific mismatch requires a carefully reviewed code change.
-- Inspect both frontend demo data and backend mock data before editing.
-- Preserve deterministic route engine behavior.
-- Do not connect to live systems.
-- Do not change deployment files or API contracts.
+- Frontend approval/tracking components and styling only.
+- Preserve final approval boundary: no money moves until customer approval.
+- Keep agent unable to approve or move money.
+- Keep internal simulator controls secondary.
+- Do not add real passkeys, biometrics, execution rails or payment integrations.
+- Do not change backend, route decision logic, deployment files or API contracts.
 - Do not add dependencies.
 - Do not deploy.
 
@@ -29,34 +30,35 @@ Review and align frontend scenario/demo data with backend mock route data so rou
 - `ai-harness/11-open-risks.md`
 - `ai-harness/12-next-prompts.md`
 - `ai-harness/13-ai-engineering-workflow.md`
-- `frontend/src/data/demoData.ts`
-- `backend/src/main/resources/data`
-- `backend/src/main/java`
+- `frontend/src/App.tsx`
+- `frontend/src/components/FinalApprovalCard.tsx`
+- `frontend/src/components/PaymentTracker.tsx`
+- `frontend/src/components/ControlRoom.tsx`
+- `frontend/src/App.css`
 - frontend tests
-- backend tests
 
 ## Key Risks
 
-- Accidentally changing route decision behavior during data alignment.
-- Introducing unsafe or over-specific payment/finality claims.
-- Creating frontend/backend drift by fixing one side without documenting the other.
-- Touching backend contracts when only data/copy alignment is needed.
+- Making the approval step look like autonomous execution.
+- Making internal simulator controls look like customer actions.
+- Weakening agent/payment safety wording.
+- Accidentally changing route analysis or backend behavior.
 
 ## Acceptance Criteria Summary
 
-- Frontend/backend data mismatches are inventoried.
-- Any implemented changes are limited to safe data/copy alignment unless explicitly justified.
-- Route engine behavior remains deterministic.
-- No unsafe claims are introduced.
-- Frontend and backend checks pass for touched areas.
-- No deployment or API contract changes.
+- Approval & Tracking is visually and narratively distinct.
+- Customer approval remains explicit and mocked where appropriate.
+- Agent cannot approve or move money.
+- Existing simulator/tracker behavior remains available.
+- Frontend checks pass.
+- No backend, deployment or API contract changes.
 - No dependencies are added.
 
 ## Expected Outputs
 
 - Files inspected.
-- Mismatches found.
-- Files changed, if any.
+- Files changed.
+- Journey transition summary.
 - Commands run and results.
 - Acceptance criteria result.
 - Risks/follow-up.

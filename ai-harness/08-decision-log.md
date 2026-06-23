@@ -51,3 +51,10 @@
 - Program execution harness added to reduce chat copy/paste and allow controlled iterative AI execution from repo-owned phase files.
 - Autonomy is allowed within a phase when acceptance criteria are clear.
 - Human gates remain required for push, deploy, product scope, contract, dependency and route decision logic changes.
+
+## Route Data Alignment Decisions
+
+- Phase 2C found that frontend scenarios `SCN-007` through `SCN-011` are not represented in backend scenario data.
+- Backend route catalogue and gates currently support generic UK/US routes, not the frontend's India, China, EU, Australia and UAE corridor-specific route IDs.
+- No backend data changes were made because true alignment requires a human-approved route decision logic / product scope decision.
+- Phase 2C result is recorded in `ai-harness/program/results/2C-route-data-alignment.md`.

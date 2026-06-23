@@ -20,5 +20,5 @@ Phase 1 overall status: Complete. Payment Route Intelligence Phase 1 was deploye
 | 2A | Harness automation improvements | Done | Docs/scripts | Added workflow docs, checklist template, review rubric and safe helper scripts. |
 | 2A.1 | Program execution harness | Done | Docs/scripts | Added repo-owned brief, phase plan, execution state, gates and phase files for controlled AI execution. |
 | 2B | Extract payment journey adapter from LeafletRouteMap | Done | Frontend refactor | Moved journey derivation into a pure adapter with focused tests. |
-| 2C | Route data alignment frontend/backend | Next | Frontend/backend data | Align scenario/route data once backend scope is approved. |
-| 2D | Approval step transition cleanup | Planned | Frontend | Make Approval & Tracking a cleaner dedicated step transition. |
+| 2C | Route data alignment frontend/backend | Done | Frontend/backend data | Inventory found frontend scenarios 7-11 need route-logic/product-scope approval before backend alignment. |
+| 2D | Approval step transition cleanup | Next | Frontend | Make Approval & Tracking a cleaner dedicated step transition. |
