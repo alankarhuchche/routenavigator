@@ -1515,6 +1515,18 @@ h2 {
   line-height: 1.45;
 }
 
+.match-summary .static-demo-note {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 6px 8px;
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+  background: #fffbeb;
+  color: #92400e;
+  font-weight: 750;
+}
+
 .intent-confirmation-card {
   display: grid;
   gap: 12px;
@@ -1645,8 +1657,43 @@ h2 {
 }
 
 .scenario-button strong {
+  display: grid;
+  gap: 4px;
   font-size: 13px;
   font-weight: 750;
+}
+
+.scenario-button em {
+  width: fit-content;
+  padding: 3px 6px;
+  border: 1px solid #fde68a;
+  border-radius: 999px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 850;
+  line-height: 1.1;
+}
+
+.static-demo-banner {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.static-demo-banner strong {
+  font-size: 12px;
+}
+
+.static-demo-banner span {
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .intent-grid,

@@ -58,3 +58,6 @@
 - Backend route catalogue and gates currently support generic UK/US routes, not the frontend's India, China, EU, Australia and UAE corridor-specific route IDs.
 - No backend data changes were made because true alignment requires a human-approved route decision logic / product scope decision.
 - Phase 2C result is recorded in `ai-harness/program/results/2C-route-data-alignment.md`.
+- Phase 2C-fix applied the approved hybrid decision: keep `SCN-007` through `SCN-011` as labelled static frontend corridor demos.
+- Static corridor demos use frontend traces only and do not call backend route-decision, classifier or explanation endpoints.
+- Backend corridor route support remains deferred behind the route decision logic / product scope gate.

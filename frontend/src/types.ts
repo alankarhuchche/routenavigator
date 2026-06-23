@@ -57,6 +57,9 @@ export interface FallbackEvent {
 export interface DemoScenario {
   id: string
   name: string
+  executionMode?: 'BACKEND_BACKED' | 'STATIC_DEMO'
+  executionLabel?: string
+  executionNote?: string
   intent: PaymentIntent
   trace: DecisionTrace
 }

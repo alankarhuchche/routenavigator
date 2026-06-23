@@ -8,7 +8,9 @@ Current phase file: `ai-harness/program/phases/2D-approval-step-cleanup.md`
 
 Next phase: Phase 2E — Regression QA and release decision
 
-Last local commit: `pending Phase 2C commit`
+Last completed local commit before this run: `17529b8` (`Record route data alignment gate`)
+
+Latest gate resolution: Phase 2C-fix kept scenarios `SCN-007` through `SCN-011` as labelled static frontend corridor demos. Backend corridor route support remains deferred behind the route decision logic / product scope gate.
 
 Push status: not pushed
 

@@ -38,6 +38,7 @@ function App() {
   const [classifyReason, setClassifyReason] = useState<string | null>(null)
   const [isAnalysing, setIsAnalysing] = useState(false)
   const [analyseError, setAnalyseError] = useState<string | null>(null)
+  const [analysisNotice, setAnalysisNotice] = useState<string | null>(null)
   const [paymentSnapshot, setPaymentSnapshot] = useState<ApiPaymentSnapshot | null>(null)
   const [isAuthorising, setIsAuthorising] = useState(false)
   const [isSimulating, setIsSimulating] = useState(false)
@@ -84,12 +85,14 @@ function App() {
     setPaymentSnapshot(null)
     setClassifyReason(null)
     setAnalyseError(null)
+    setAnalysisNotice(null)
     setExplanationProvider(undefined)
   }
 
   async function handleAnalyse() {
     setIsAnalysing(true)
     setAnalyseError(null)
+    setAnalysisNotice(null)
     setClassifyReason(null)
     setPaymentSnapshot(null)
     try {
@@ -97,6 +100,14 @@ function App() {
       // The backend classifier only supplies the reason text — it predates
       // the full corridor set and would override correct client matches.
       const resolvedScenarioId = scenarioId
+      if (scenario.executionMode === 'STATIC_DEMO') {
+        setLiveTrace(null)
+        setLiveTraceId(null)
+        setExplanationProvider(undefined)
+        setAnalysisNotice(`${scenario.executionLabel ?? 'Illustrative corridor demo'} — using static frontend route trace. Backend corridor support is deferred.`)
+        setStep(2)
+        return
+      }
       if (intentText.trim()) {
         try {
           const classified = await classifyIntent(intentText)
@@ -235,6 +246,12 @@ function App() {
                 <button type="button" className="ghost-btn" onClick={handleReset}>
                   ← Edit intent
                 </button>
+              </div>
+            )}
+            {analysisNotice && (
+              <div className="static-demo-banner">
+                <strong>Static corridor demo</strong>
+                <span>{analysisNotice}</span>
               </div>
             )}
             <RouteIntelligencePanel trace={displayTrace} />

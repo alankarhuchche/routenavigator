@@ -30,6 +30,12 @@ function route(
 const baseAiBoundary =
   'Gemini explains a redacted Decision Trace only. Deterministic services select, score and simulate routes.'
 
+const staticCorridorDemo = {
+  executionMode: 'STATIC_DEMO' as const,
+  executionLabel: 'Illustrative corridor demo',
+  executionNote: 'Static frontend scenario; backend corridor route support is deferred.',
+}
+
 export const demoScenarios: DemoScenario[] = [
   {
     id: 'SCN-001',
@@ -208,6 +214,7 @@ export const demoScenarios: DemoScenario[] = [
   {
     id: 'SCN-007',
     name: 'GBP to India (INR)',
+    ...staticCorridorDemo,
     intent: {
       amount: 'GBP 5,000',
       source: 'GB bank account',
@@ -242,6 +249,7 @@ export const demoScenarios: DemoScenario[] = [
   {
     id: 'SCN-008',
     name: 'GBP to China (CNY)',
+    ...staticCorridorDemo,
     intent: {
       amount: 'GBP 20,000',
       source: 'GB bank account',
@@ -276,6 +284,7 @@ export const demoScenarios: DemoScenario[] = [
   {
     id: 'SCN-009',
     name: 'GBP to EU (EUR)',
+    ...staticCorridorDemo,
     intent: {
       amount: 'GBP 3,000',
       source: 'GB bank account',
@@ -310,6 +319,7 @@ export const demoScenarios: DemoScenario[] = [
   {
     id: 'SCN-010',
     name: 'GBP to Australia (AUD)',
+    ...staticCorridorDemo,
     intent: {
       amount: 'GBP 8,000',
       source: 'GB bank account',
@@ -344,6 +354,7 @@ export const demoScenarios: DemoScenario[] = [
   {
     id: 'SCN-011',
     name: 'GBP to UAE (AED)',
+    ...staticCorridorDemo,
     intent: {
       amount: 'GBP 15,000',
       source: 'GB bank account',

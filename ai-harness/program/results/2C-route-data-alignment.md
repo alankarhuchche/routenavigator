@@ -42,13 +42,23 @@ No frontend/backend data changes were made in this phase because true alignment 
 
 This crosses the human gate for route decision logic / product scope because the backend currently does not model non-US international payout corridors.
 
+## 2C-fix Resolution
+
+The approved hybrid option was applied as a frontend-only fix.
+
+Scenarios `SCN-007` through `SCN-011` remain available as illustrative corridor demos, but are now explicitly labelled as static frontend scenarios. They do not imply backend deterministic route-engine support.
+
+When one of these corridor scenarios is analysed, the frontend uses the existing static trace directly and shows a clear notice that backend corridor route support is deferred. Backend route-decision, classifier and explanation endpoints are not called for those static corridor demos.
+
+No backend route support was added. No backend route decision logic, API contracts or deployment files were changed.
+
 ## Recommended Next Decision
 
 Choose one of these before implementing alignment:
 
 1. **Backend corridor support:** explicitly approve adding corridor-aware backend route/data support for India, China, EU, Australia and UAE.
 2. **Frontend scenario reduction:** remove or hide scenarios 7-11 from API-backed flows and keep them as static demo-only examples.
-3. **Hybrid:** keep scenarios 7-11 frontend-only but label them as static corridor demos until backend support is approved.
+3. **Hybrid:** keep scenarios 7-11 frontend-only but label them as static corridor demos until backend support is approved. Applied by Phase 2C-fix.
 
 ## Safety Result
 

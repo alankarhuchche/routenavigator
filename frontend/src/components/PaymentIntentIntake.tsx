@@ -158,6 +158,11 @@ export function PaymentIntentIntake({ scenarios, onIntentTextChange, onPreferenc
         <dt>Structured intent preview</dt>
         <dd>{matchedScenario.scenario.name}</dd>
         <p>{matchedScenario.reason}</p>
+        {matchedScenario.scenario.executionMode === 'STATIC_DEMO' && (
+          <p className="static-demo-note">
+            {matchedScenario.scenario.executionLabel ?? 'Illustrative corridor demo'} — {matchedScenario.scenario.executionNote ?? 'Static frontend scenario; backend corridor route support is deferred.'}
+          </p>
+        )}
       </div>
       <IntentConfirmationCard intent={matchedScenario.scenario.intent} />
     </section>

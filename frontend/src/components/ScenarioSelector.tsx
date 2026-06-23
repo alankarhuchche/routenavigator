@@ -26,7 +26,12 @@ export function ScenarioSelector({ scenarios, selectedId, onSelect }: ScenarioSe
             onClick={() => onSelect(scenario.id)}
           >
             <span>{scenario.id}</span>
-            <strong>{scenario.name}</strong>
+            <strong>
+              {scenario.name}
+              {scenario.executionMode === 'STATIC_DEMO' && (
+                <em>{scenario.executionLabel ?? 'Illustrative corridor demo'}</em>
+              )}
+            </strong>
           </button>
         ))}
       </div>
