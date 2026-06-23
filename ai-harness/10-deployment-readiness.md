@@ -2,6 +2,14 @@
 
 This file captures the next deployment-readiness pass for Payment Route Intelligence.
 
+## Last Successful Deployment
+
+- Date: 2026-06-23
+- Commit: `053f9ce`
+- Status: successful
+- Deployment path: GitHub -> Cloud Build -> Cloud Run
+- Validation: manually confirmed working
+
 ## Current Deployment Concern
 
 The UI was viewed via the local Vite development server during Phase 1 work. Cloud Run must serve production-built frontend assets from the deployed container.

@@ -2,6 +2,8 @@
 
 This file is the repo-local handoff for Claude, Codex, or another AI coding assistant. It is intended to let a new assistant continue without prior chat history.
 
+Status: Phase 1 deployed successfully and complete. Continue from Phase 2A — Harness automation improvements.
+
 ## Product
 
 Product name: Payment Route Intelligence
@@ -30,6 +32,8 @@ Current layout note: the app is currently a single-page guided journey. This is 
 - 1H Final approval polish: final approval boundary and secondary simulation controls.
 - 1I End-to-end QA: copy safety pass and build/test verification.
 - 1J Claude-ready handoff pack: this documentation pack.
+- 1K Deployment readiness and Cloud Run deploy: deployed successfully via GitHub -> Cloud Build -> Cloud Run.
+- 1M Deployment close-out: Phase 1 completion recorded.
 
 ## Product Boundaries
 
@@ -80,8 +84,7 @@ Approval action may still be structurally close to Route Intelligence because th
 
 ## Recommended Next Phases
 
-1. Phase 1K: Deployment readiness and Cloud Run deploy, only after explicit user confirmation to deploy.
-2. Phase 2A: Improve harness automation so the next task and required context are easier to load.
-3. Phase 2B: Extract the map journey adapter from `LeafletRouteMap.tsx`.
-4. Phase 2C: Align frontend scenario fixtures with backend route data.
-5. Phase 2D: Clean up the approval step transition into a clearer dedicated customer moment.
+1. Phase 2A: Improve harness automation so the next task and required context are easier to load.
+2. Phase 2B: Extract the map journey adapter from `LeafletRouteMap.tsx`.
+3. Phase 2C: Align frontend scenario fixtures with backend route data.
+4. Phase 2D: Clean up the approval step transition into a clearer dedicated customer moment.

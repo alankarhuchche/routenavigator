@@ -21,3 +21,12 @@
 - Keep critical project context inside repo-local `ai-harness` files so another AI assistant can continue without chat history.
 - Treat the single-page guided journey as acceptable for Phase 1.
 - Defer multi-page/wizard restructuring to Phase 2 unless it becomes a deployment or demo blocker.
+
+## Deployment Decisions
+
+- Phase 1 deployed successfully.
+- Commit: `053f9ce` (`Upgrade payment route prototype to Payment Route Intelligence`).
+- Deployment path: GitHub -> Cloud Build -> Cloud Run.
+- Manual validation confirmed the deployed app is working.
+- Phase 1 is complete.
+- Next phase is Phase 2A — Harness automation improvements.

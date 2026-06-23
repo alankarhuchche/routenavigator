@@ -1,5 +1,7 @@
 # Backlog
 
+Phase 1 overall status: Complete. Payment Route Intelligence Phase 1 was deployed successfully from commit `053f9ce`.
+
 | Phase | Title | Status | Scope | Notes |
 | --- | --- | --- | --- | --- |
 | 1A | Trusted session | Done | Frontend | Trusted session banner, outcome-led input, mocked Speak button, demo scenarios demoted. |
@@ -13,8 +15,9 @@
 | 1H | Final approval screen polish | Done | Frontend | Final approval card, approval boundary, secondary simulation controls. |
 | 1I | End-to-end QA and copy safety pass | Done | Frontend/docs QA | Verified journey framing, safety copy and build/test status. |
 | 1J | Claude-ready handoff pack | Done | Docs | Repo-local context for Claude or another AI assistant to continue without chat history. |
-| 1K | Deployment readiness and Cloud Run deploy | Next | Git/deployment | Verify production build packaging, commit/push if requested, and deploy only with explicit confirmation. |
-| 2A | Harness automation improvements | Planned | Docs/scripts | Improve lightweight harness workflow without complex automation. |
+| 1K | Deployment readiness and Cloud Run deploy | Done | Git/deployment | Verified production build packaging; GitHub push triggered Cloud Build / Cloud Run deployment. |
+| 1M | Deployment close-out and Phase 1 completion record | Done | Docs | Recorded successful deployment and marked Phase 1 complete. |
+| 2A | Harness automation improvements | Next | Docs/scripts | Improve lightweight harness workflow without complex automation. |
 | 2B | Extract map journey adapter | Planned | Frontend refactor | Move journey adapter out of `LeafletRouteMap.tsx` when safe. |
 | 2C | Route data alignment frontend/backend | Planned | Frontend/backend data | Align scenario/route data once backend scope is approved. |
 | 2D | Approval step transition cleanup | Planned | Frontend | Make Approval & Tracking a cleaner dedicated step transition. |
