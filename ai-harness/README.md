@@ -25,3 +25,13 @@ Codex should use these files as source context before implementation. If a reque
 5. Run `bash scripts/ai-precommit-check.sh` before committing.
 6. Human-review the diff before any commit, push or deployment.
 7. Treat `git push` as deployment-triggering for this repository unless proven otherwise.
+
+## Program Execution Mode
+
+Use program execution mode after a brief is agreed and the phase plan lives in the repo.
+
+1. Run `bash scripts/ai-program-status.sh` to see the current program phase and git state.
+2. Run `bash scripts/ai-program-next.sh` to print the current phase file.
+3. Ask the AI assistant to execute only that current phase file.
+4. Let the AI use controlled autonomy inside the phase only.
+5. Human-review gates in `ai-harness/program/gates.md` before push, deploy, dependency, contract, route-logic or scope changes.

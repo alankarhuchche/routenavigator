@@ -2,6 +2,8 @@
 
 Phase 2C — Route data alignment frontend/backend
 
+Execution mode: use `ai-harness/program/execution-state.md` and run `bash scripts/ai-program-next.sh` before starting this phase.
+
 ## Objective
 
 Review and align frontend scenario/demo data with backend mock route data so route names, IDs, currencies, ETA, fees, finality, rejected reasons and safety copy stay consistent without changing deterministic route decision logic.

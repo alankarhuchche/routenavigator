@@ -45,3 +45,9 @@
 - The map component remains responsible for rendering, Leaflet components, node selection and visual styling.
 - Representative journey and no-money-moved safety wording were preserved.
 - Next phase is Phase 2C — Route data alignment frontend/backend.
+
+## Program Execution Decisions
+
+- Program execution harness added to reduce chat copy/paste and allow controlled iterative AI execution from repo-owned phase files.
+- Autonomy is allowed within a phase when acceptance criteria are clear.
+- Human gates remain required for push, deploy, product scope, contract, dependency and route decision logic changes.

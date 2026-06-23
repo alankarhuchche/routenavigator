@@ -18,6 +18,7 @@ Phase 1 overall status: Complete. Payment Route Intelligence Phase 1 was deploye
 | 1K | Deployment readiness and Cloud Run deploy | Done | Git/deployment | Verified production build packaging; GitHub push triggered Cloud Build / Cloud Run deployment. |
 | 1M | Deployment close-out and Phase 1 completion record | Done | Docs | Recorded successful deployment and marked Phase 1 complete. |
 | 2A | Harness automation improvements | Done | Docs/scripts | Added workflow docs, checklist template, review rubric and safe helper scripts. |
+| 2A.1 | Program execution harness | Done | Docs/scripts | Added repo-owned brief, phase plan, execution state, gates and phase files for controlled AI execution. |
 | 2B | Extract payment journey adapter from LeafletRouteMap | Done | Frontend refactor | Moved journey derivation into a pure adapter with focused tests. |
 | 2C | Route data alignment frontend/backend | Next | Frontend/backend data | Align scenario/route data once backend scope is approved. |
 | 2D | Approval step transition cleanup | Planned | Frontend | Make Approval & Tracking a cleaner dedicated step transition. |
