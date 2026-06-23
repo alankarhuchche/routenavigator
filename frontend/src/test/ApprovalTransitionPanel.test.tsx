@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '../App'
 
@@ -18,8 +18,7 @@ describe('Approval step transition', () => {
     render(<App />)
 
     const outcomeInput = screen.getByLabelText('Customer outcome')
-    await user.clear(outcomeInput)
-    await user.type(outcomeInput, 'Send GBP 5,000 to India in INR with tracking.')
+    fireEvent.change(outcomeInput, { target: { value: 'Send GBP 5,000 to India in INR with tracking.' } })
     await user.click(screen.getByRole('button', { name: /confirm and analyse safe routes/i }))
 
     expect(await screen.findByRole('region', { name: /approval handoff/i })).toBeInTheDocument()

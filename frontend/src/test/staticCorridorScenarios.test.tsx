@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '../App'
 import { ScenarioSelector } from '../components/ScenarioSelector'
@@ -29,8 +29,7 @@ describe('static corridor demo scenarios', () => {
     render(<App />)
 
     const outcomeInput = screen.getByLabelText('Customer outcome')
-    await user.clear(outcomeInput)
-    await user.type(outcomeInput, 'Send GBP 5,000 to India in INR with tracking.')
+    fireEvent.change(outcomeInput, { target: { value: 'Send GBP 5,000 to India in INR with tracking.' } })
 
     await waitFor(() => {
       expect(screen.getAllByText('GBP to India (INR)').length).toBeGreaterThan(0)

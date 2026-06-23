@@ -22,4 +22,6 @@ Phase 1 overall status: Complete. Payment Route Intelligence Phase 1 was deploye
 | 2B | Extract payment journey adapter from LeafletRouteMap | Done | Frontend refactor | Moved journey derivation into a pure adapter with focused tests. |
 | 2C | Route data alignment frontend/backend | Done | Frontend/backend data | Inventory found frontend scenarios 7-11 need route-logic/product-scope approval before backend alignment. |
 | 2C-fix | Static corridor demo labelling | Done | Frontend/docs | Kept scenarios 7-11 as illustrative frontend-only corridor demos; backend corridor support remains deferred. |
-| 2D | Approval step transition cleanup | Next | Frontend | Make Approval & Tracking a cleaner dedicated step transition. |
+| 2D | Approval step transition cleanup | Done | Frontend | Added a clearer approval handoff and Approval & Tracking framing. |
+| 2E | Regression QA and release decision | Done | QA | Frontend and backend checks pass; ready for human-approved push/release gate. |
+| Release gate | Human-approved push/deploy decision | Next | Git/deployment | Push may trigger GitHub -> Cloud Build -> Cloud Run. Requires explicit approval. |

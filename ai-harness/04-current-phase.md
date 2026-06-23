@@ -1,64 +1,39 @@
 # Current Phase
 
-Phase 2D — Approval step transition cleanup
+Release decision gate — awaiting human approval before push/deploy
 
-Execution mode: use `ai-harness/program/execution-state.md` and run `bash scripts/ai-program-next.sh` before starting this phase.
+Execution mode: do not run another implementation phase unless explicitly instructed. Use `ai-harness/program/execution-state.md` and `bash scripts/ai-program-next.sh` to confirm state before any further work.
 
 ## Objective
 
-Make Approval & Tracking feel like a clearer customer step without changing backend behavior, route decision logic, deployment files or API contracts.
+Hold at the release gate after Phase 2E regression QA.
 
-## Expected Scope
+## Current Status
 
-- Frontend approval/tracking components and styling only.
-- Preserve final approval boundary: no money moves until customer approval.
-- Keep agent unable to approve or move money.
-- Keep internal simulator controls secondary.
-- Do not add real passkeys, biometrics, execution rails or payment integrations.
-- Do not change backend, route decision logic, deployment files or API contracts.
+- Phase 2D approval transition cleanup is complete.
+- Phase 2E regression QA is complete.
+- Frontend checks passed.
+- Backend checks passed.
+- No push or deploy has been run after Phase 2 local commits.
+
+## Release Recommendation
+
+Ready for human-approved push.
+
+Pushing `main` may trigger GitHub -> Cloud Build -> Cloud Run deployment, so the next step requires explicit user approval.
+
+## Constraints
+
+- Do not push without explicit approval.
+- Do not deploy without explicit approval.
+- Do not change backend route logic.
+- Do not change API contracts.
+- Do not change deployment files.
 - Do not add dependencies.
-- Do not deploy.
+- Do not touch `.claude/worktrees`.
 
-## Files Likely to Inspect
+## Expected Next Action
 
-- `ai-harness/README.md`
-- `ai-harness/09-handoff-to-ai.md`
-- `ai-harness/03-backlog.md`
-- `ai-harness/04-current-phase.md`
-- `ai-harness/05-acceptance-criteria-template.md`
-- `ai-harness/06-codex-task-template.md`
-- `ai-harness/11-open-risks.md`
-- `ai-harness/12-next-prompts.md`
-- `ai-harness/13-ai-engineering-workflow.md`
-- `frontend/src/App.tsx`
-- `frontend/src/components/FinalApprovalCard.tsx`
-- `frontend/src/components/PaymentTracker.tsx`
-- `frontend/src/components/ControlRoom.tsx`
-- `frontend/src/App.css`
-- frontend tests
+If the user approves release, push the local commits to GitHub and monitor the deployment trigger if requested.
 
-## Key Risks
-
-- Making the approval step look like autonomous execution.
-- Making internal simulator controls look like customer actions.
-- Weakening agent/payment safety wording.
-- Accidentally changing route analysis or backend behavior.
-
-## Acceptance Criteria Summary
-
-- Approval & Tracking is visually and narratively distinct.
-- Customer approval remains explicit and mocked where appropriate.
-- Agent cannot approve or move money.
-- Existing simulator/tracker behavior remains available.
-- Frontend checks pass.
-- No backend, deployment or API contract changes.
-- No dependencies are added.
-
-## Expected Outputs
-
-- Files inspected.
-- Files changed.
-- Journey transition summary.
-- Commands run and results.
-- Acceptance criteria result.
-- Risks/follow-up.
+If the user does not approve release, leave the branch local and continue only with explicitly scoped follow-up work.
