@@ -1,20 +1,20 @@
 # Program Execution State
 
-Previous completed phase: Phase 2E — Regression QA and release decision
+Previous completed phase: Phase 3A — Demo journey shell / page-like wizard
 
-Current program phase: Release decision gate — awaiting human approval before push/deploy
+Current program phase: Phase 3B — Voice intent and Gemini route explanation demo
 
-Current phase file: `ai-harness/program/phases/2E-regression-qa.md` (completed)
+Current phase file: not created yet
 
-Next phase: Human-approved push/deploy decision
+Next phase: Phase 3B — Voice intent and Gemini route explanation demo
 
-Last completed local commit before this run: `d4f25c1` (`Clarify approval step transition`)
+Last completed local commit before this run: `2b93a61` (`Record Phase 2 regression QA`)
 
 Latest gate resolution: Phase 2C-fix kept scenarios `SCN-007` through `SCN-011` as labelled static frontend corridor demos. Backend corridor route support remains deferred behind the route decision logic / product scope gate.
 
-Latest phase result: Phase 2E regression QA passed after a minor frontend test robustness fix. Release recommendation is ready for human-approved push. No push or deploy has been run.
+Latest phase result: Phase 3A split the frontend demo into four page-like stages while preserving route analysis, map, approval, tracking, simulation and safety boundaries.
 
-Push status: not pushed
+Push status: Phase 2 release candidate was pushed. Phase 3A local changes are not pushed.
 
 Deployment trigger warning: pushing to GitHub may trigger Cloud Build and Cloud Run deployment.
 

@@ -24,4 +24,6 @@ Phase 1 overall status: Complete. Payment Route Intelligence Phase 1 was deploye
 | 2C-fix | Static corridor demo labelling | Done | Frontend/docs | Kept scenarios 7-11 as illustrative frontend-only corridor demos; backend corridor support remains deferred. |
 | 2D | Approval step transition cleanup | Done | Frontend | Added a clearer approval handoff and Approval & Tracking framing. |
 | 2E | Regression QA and release decision | Done | QA | Frontend and backend checks pass; ready for human-approved push/release gate. |
-| Release gate | Human-approved push/deploy decision | Next | Git/deployment | Push may trigger GitHub -> Cloud Build -> Cloud Run. Requires explicit approval. |
+| Release gate | Human-approved push/deploy decision | Done | Git/deployment | Phase 2 release candidate was pushed to GitHub. |
+| 3A | Demo journey shell / page-like wizard | Done | Frontend/docs | Split the demo into Secure Intent, Route Intelligence, Journey & Controls, and Approval & Tracking stages. |
+| 3B | Voice intent and Gemini route explanation demo | Next | Frontend/demo | Add mocked voice-intent framing and bounded Gemini explanation demo without changing route decisions. |

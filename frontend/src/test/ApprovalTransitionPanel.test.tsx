@@ -17,9 +17,24 @@ describe('Approval step transition', () => {
 
     render(<App />)
 
+    expect(screen.getAllByText('Secure Intent').length).toBeGreaterThan(0)
+    expect(screen.getByRole('button', { name: /Route Intelligence/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /Journey & Controls/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /Approval & Tracking/i })).toBeDisabled()
+
     const outcomeInput = screen.getByLabelText('Customer outcome')
     fireEvent.change(outcomeInput, { target: { value: 'Send GBP 5,000 to India in INR with tracking.' } })
     await user.click(screen.getByRole('button', { name: /confirm and analyse safe routes/i }))
+
+    expect(await screen.findByText('Analysing safe routes')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Journey & Controls/i })).not.toBeDisabled()
+
+    await user.click(screen.getByRole('button', { name: /^Continue/i }))
+
+    expect(await screen.findByText('Payment journey map')).toBeInTheDocument()
+    expect(screen.getByText(/Expected journey only/i)).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /^Continue/i }))
 
     expect(await screen.findByRole('region', { name: /approval handoff/i })).toBeInTheDocument()
     expect(screen.getByText('Route recommendation ready for approval')).toBeInTheDocument()
@@ -33,5 +48,27 @@ describe('Approval step transition', () => {
     })
     expect(screen.getByText('Approval accepted in simulation')).toBeInTheDocument()
     expect(screen.getAllByText('Tracking after approval').length).toBeGreaterThan(0)
+  })
+
+  it('preserves route state when navigating back and forward between stages', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    fireEvent.change(screen.getByLabelText('Customer outcome'), {
+      target: { value: 'Send GBP 5,000 to India in INR with tracking.' },
+    })
+    await user.click(screen.getByRole('button', { name: /confirm and analyse safe routes/i }))
+
+    await screen.findByText(/using static frontend route trace/i)
+    await user.click(screen.getByRole('button', { name: /^Continue/i }))
+    await screen.findByText('Payment journey map')
+
+    await user.click(screen.getByRole('button', { name: /^Back$/i }))
+    expect(await screen.findByText('Analysing safe routes')).toBeInTheDocument()
+    expect(screen.getByText(/using static frontend route trace/i)).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /^Continue/i }))
+    expect(await screen.findByText('Payment journey map')).toBeInTheDocument()
   })
 })

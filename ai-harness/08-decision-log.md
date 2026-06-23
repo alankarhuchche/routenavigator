@@ -61,3 +61,12 @@
 - Phase 2C-fix applied the approved hybrid decision: keep `SCN-007` through `SCN-011` as labelled static frontend corridor demos.
 - Static corridor demos use frontend traces only and do not call backend route-decision, classifier or explanation endpoints.
 - Backend corridor route support remains deferred behind the route decision logic / product scope gate.
+
+## Demo Journey Shell Decisions
+
+- Phase 3A refactored the frontend presentation into four page-like stages: Secure Intent, Route Intelligence, Journey & Controls, and Approval & Tracking.
+- The app remains a single React app with internal state navigation; no URL routing was added.
+- Route analysis state is preserved across Back/Continue navigation after analysis completes.
+- Journey & Controls now separates the payment journey map and control evidence from route scoring and approval.
+- Approval & Tracking now owns final approval, mocked passkey approval, tracker and secondary simulation controls.
+- No backend route logic, API contracts, deployment files or dependencies were changed.

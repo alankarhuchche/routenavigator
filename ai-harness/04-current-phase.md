@@ -1,26 +1,31 @@
 # Current Phase
 
-Release decision gate — awaiting human approval before push/deploy
+Phase 3B — Voice intent and Gemini route explanation demo
 
-Execution mode: do not run another implementation phase unless explicitly instructed. Use `ai-harness/program/execution-state.md` and `bash scripts/ai-program-next.sh` to confirm state before any further work.
+Execution mode: do not start Phase 3B unless explicitly instructed. Use `ai-harness/program/execution-state.md` and `bash scripts/ai-program-next.sh` to confirm state before any further work.
 
 ## Objective
 
-Hold at the release gate after Phase 2E regression QA.
+Add a future-facing voice intent and bounded Gemini explanation demo layer while preserving deterministic route selection and payment safety boundaries.
 
 ## Current Status
 
-- Phase 2D approval transition cleanup is complete.
-- Phase 2E regression QA is complete.
-- Frontend checks passed.
-- Backend checks passed.
-- No push or deploy has been run after Phase 2 local commits.
+- Phase 3A demo journey shell is complete.
+- The frontend now presents four page-like stages:
+  - Secure Intent
+  - Route Intelligence
+  - Journey & Controls
+  - Approval & Tracking
+- Frontend route engine, map, approval, tracking and simulation behavior are preserved.
+- No backend, API, deployment, dependency or route decision logic changes were made in Phase 3A.
 
-## Release Recommendation
+## Expected Phase 3B Scope
 
-Ready for human-approved push.
-
-Pushing `main` may trigger GitHub -> Cloud Build -> Cloud Run deployment, so the next step requires explicit user approval.
+- Frontend/demo framing only unless explicitly approved otherwise.
+- Keep voice capture mocked; do not implement real audio.
+- Keep Gemini bounded to explanation of redacted route traces only.
+- Do not allow Gemini to select, score, approve, execute, amend, cancel or move money.
+- Preserve static corridor demo labelling.
 
 ## Constraints
 
@@ -32,8 +37,11 @@ Pushing `main` may trigger GitHub -> Cloud Build -> Cloud Run deployment, so the
 - Do not add dependencies.
 - Do not touch `.claude/worktrees`.
 
-## Expected Next Action
+## Expected Outputs For Phase 3B
 
-If the user approves release, push the local commits to GitHub and monitor the deployment trigger if requested.
-
-If the user does not approve release, leave the branch local and continue only with explicitly scoped follow-up work.
+- Files inspected.
+- Files changed.
+- Copy/safety summary.
+- Commands run and results.
+- Acceptance criteria result.
+- Local commit only if checks pass.

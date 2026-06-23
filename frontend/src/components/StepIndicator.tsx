@@ -1,7 +1,8 @@
 import { Check } from 'lucide-react'
 
 interface StepIndicatorProps {
-  currentStep: 1 | 2 | 3
+  currentStep: 1 | 2 | 3 | 4
+  maxUnlockedStep: 1 | 2 | 3 | 4
   onStepClick: (step: number) => void
 }
 
@@ -18,25 +19,30 @@ const steps = [
   },
   {
     number: 3,
+    label: 'Journey & Controls',
+    description: 'Inspect route path, controls, PONR and finality',
+  },
+  {
+    number: 4,
     label: 'Approval & Tracking',
     description: 'Approve execution and monitor payment progress',
   },
 ]
 
-export function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) {
+export function StepIndicator({ currentStep, maxUnlockedStep, onStepClick }: StepIndicatorProps) {
   return (
     <nav className="step-indicator" aria-label="Demo journey steps">
       {steps.map((step, index) => {
         const isCompleted = step.number < currentStep
         const isActive = step.number === currentStep
-        const isFuture = step.number > currentStep
+        const isLocked = step.number > maxUnlockedStep
         return (
           <span key={step.number} className="step-indicator-item">
             <button
               type="button"
-              className={`step-btn${isActive ? ' step-active' : ''}${isCompleted ? ' step-completed' : ''}${isFuture ? ' step-future' : ''}`}
-              disabled={isFuture}
-              onClick={() => !isFuture && onStepClick(step.number)}
+              className={`step-btn${isActive ? ' step-active' : ''}${isCompleted ? ' step-completed' : ''}${isLocked ? ' step-future' : ''}`}
+              disabled={isLocked}
+              onClick={() => !isLocked && onStepClick(step.number)}
               aria-current={isActive ? 'step' : undefined}
             >
               <span className="step-circle" aria-hidden="true">

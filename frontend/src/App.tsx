@@ -27,9 +27,12 @@ import { adaptTrace } from './traceAdapter'
 import type { LivePreferences } from './components/PaymentIntentIntake'
 import { STATE_LABELS } from './stateLabels'
 
+type JourneyStep = 1 | 2 | 3 | 4
+
 function App() {
   const [scenarioId, setScenarioId] = useState(demoScenarios[0].id)
-  const [step, setStep] = useState<1 | 2 | 3>(1)
+  const [step, setStep] = useState<JourneyStep>(1)
+  const [analysisComplete, setAnalysisComplete] = useState(false)
 
   const [liveTraceId, setLiveTraceId] = useState<string | null>(null)
   const [liveTrace, setLiveTrace] = useState<DecisionTrace | null>(null)
@@ -41,6 +44,7 @@ function App() {
   const [analyseError, setAnalyseError] = useState<string | null>(null)
   const [analysisNotice, setAnalysisNotice] = useState<string | null>(null)
   const [paymentSnapshot, setPaymentSnapshot] = useState<ApiPaymentSnapshot | null>(null)
+  const [staticApprovalAcknowledged, setStaticApprovalAcknowledged] = useState(false)
   const [isAuthorising, setIsAuthorising] = useState(false)
   const [isSimulating, setIsSimulating] = useState(false)
 
@@ -73,17 +77,22 @@ function App() {
     }
   }, [scenario.intent, livePreferences])
 
+  const maxUnlockedStep: JourneyStep = analysisComplete ? 4 : 1
+  const approvalAccepted = Boolean(paymentSnapshot) || staticApprovalAcknowledged
+
   function handleStepClick(s: number) {
-    if (s === 1 || s === 2 || s === 3) {
-      setStep(s as 1 | 2 | 3)
+    if ((s === 1 || s === 2 || s === 3 || s === 4) && s <= maxUnlockedStep) {
+      setStep(s as JourneyStep)
     }
   }
 
   function handleReset() {
     setStep(1)
+    setAnalysisComplete(false)
     setLiveTrace(null)
     setLiveTraceId(null)
     setPaymentSnapshot(null)
+    setStaticApprovalAcknowledged(false)
     setClassifyReason(null)
     setAnalyseError(null)
     setAnalysisNotice(null)
@@ -96,6 +105,7 @@ function App() {
     setAnalysisNotice(null)
     setClassifyReason(null)
     setPaymentSnapshot(null)
+    setStaticApprovalAcknowledged(false)
     try {
       // Use the client-side matched scenario as authoritative source.
       // The backend classifier only supplies the reason text — it predates
@@ -106,6 +116,7 @@ function App() {
         setLiveTraceId(null)
         setExplanationProvider(undefined)
         setAnalysisNotice(`${scenario.executionLabel ?? 'Illustrative corridor demo'} — using static frontend route trace. Backend corridor support is deferred.`)
+        setAnalysisComplete(true)
         setStep(2)
         return
       }
@@ -125,9 +136,11 @@ function App() {
       setLiveTraceId(apiTrace.traceId)
       setLiveTrace(adapted)
       setExplanationProvider(explanationResp.provider)
+      setAnalysisComplete(true)
       setStep(2)
     } catch {
       setAnalyseError('Analysis failed — using demo data')
+      setAnalysisComplete(true)
       setStep(2)
     } finally {
       setIsAnalysing(false)
@@ -135,14 +148,18 @@ function App() {
   }
 
   async function handleAuthorise() {
-    if (!liveTraceId) { setStep(3); return }
+    if (!liveTraceId) {
+      setStaticApprovalAcknowledged(true)
+      setStep(4)
+      return
+    }
     setIsAuthorising(true)
     try {
       const snapshot = await authorisePayment(liveTraceId)
       setPaymentSnapshot(snapshot)
-      setStep(3)
+      setStep(4)
     } catch {
-      setStep(3)
+      setStep(4)
     } finally {
       setIsAuthorising(false)
     }
@@ -170,6 +187,18 @@ function App() {
     }
   }
 
+  function handleBack() {
+    if (step > 1) {
+      setStep((step - 1) as JourneyStep)
+    }
+  }
+
+  function handleContinue() {
+    if (step < maxUnlockedStep) {
+      setStep((step + 1) as JourneyStep)
+    }
+  }
+
   return (
     <main className="app-shell">
       <DisclaimerBanner />
@@ -192,35 +221,160 @@ function App() {
       </header>
 
       <div className="journey-wrapper">
-        <StepIndicator currentStep={step} onStepClick={(s) => { if (s === 1) handleReset(); else handleStepClick(s) }} />
+        <StepIndicator currentStep={step} maxUnlockedStep={maxUnlockedStep} onStepClick={handleStepClick} />
 
-        {/* ── STEP 1: INTENT ── */}
-        <section className="step-section" aria-label="Step 1: Intent">
-          {step === 1 && <TrustedSessionBanner />}
-          <div className="intent-grid-layout">
+        <section className="stage-shell" aria-label={`Stage ${step}: ${stageTitle(step)}`}>
+          <div className="stage-shell-head">
             <div>
-              <PaymentIntentIntake
-                scenarios={demoScenarios}
-                onIntentTextChange={setIntentText}
-                onPreferencesChange={setLivePreferences}
-                onScenarioMatch={setScenarioId}
-              />
+              <p className="eyebrow">Stage {step} of 4</p>
+              <h2>{stageTitle(step)}</h2>
+              <p>{stageDescription(step)}</p>
             </div>
-            <div>
-              <ScenarioSelector scenarios={demoScenarios} selectedId={scenario.id} onSelect={setScenarioId} />
-            </div>
+            {analysisComplete && (
+              <span className="stage-status">Route recommendation ready</span>
+            )}
           </div>
 
           {step === 1 && (
-            <div className="sticky-action-bar">
-              {analyseError && (
-                <span className="analyse-error">{analyseError}</span>
+            <div className="stage-content">
+              <TrustedSessionBanner />
+              <div className="intent-grid-layout">
+                <div>
+                  <PaymentIntentIntake
+                    scenarios={demoScenarios}
+                    onIntentTextChange={setIntentText}
+                    onPreferencesChange={setLivePreferences}
+                    onScenarioMatch={setScenarioId}
+                  />
+                </div>
+                <div>
+                  <ScenarioSelector scenarios={demoScenarios} selectedId={scenario.id} onSelect={setScenarioId} />
+                </div>
+              </div>
+              <div className="intent-summary-row">
+                <PaymentIntentView intent={displayIntent} />
+              </div>
+            </div>
+          )}
+
+          {step === 2 && (
+            <div className="stage-content">
+              {analysisNotice && (
+                <div className="static-demo-banner">
+                  <strong>Static corridor demo</strong>
+                  <span>{analysisNotice}</span>
+                </div>
               )}
-              {classifyReason && (
-                <p className="classify-reason">
-                  <strong>Intent matched:</strong> {classifyReason}
-                </p>
+              <RouteIntelligencePanel trace={displayTrace} />
+              <RecommendationHeroCard trace={displayTrace} />
+              <DecisionImpactBanner trace={displayTrace} />
+              <div className="analysis-grid">
+                <div>
+                  <RouteComparison trace={displayTrace} />
+                </div>
+                <div>
+                  <DecisionTracePanel
+                    trace={displayTrace}
+                    provider={explanationProvider}
+                    isLoading={isAnalysing}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="stage-content">
+              {analysisNotice && (
+                <div className="static-demo-banner">
+                  <strong>Static corridor demo</strong>
+                  <span>{analysisNotice}</span>
+                </div>
               )}
+              <div className="map-fallback-row">
+                <LeafletRouteMap trace={displayTrace} />
+                {displayTrace.fallbackEvent && (
+                  <FallbackEventView trace={displayTrace} />
+                )}
+              </div>
+              <div className="control-band simulation-panel">
+                <div className="simulation-controls-head">
+                  <strong>Control evidence</strong>
+                  <span>Internal simulation evidence, not a customer execution action.</span>
+                </div>
+                <ControlRoom trace={displayTrace} paymentState={paymentSnapshot?.state} />
+              </div>
+            </div>
+          )}
+
+          {step === 4 && (
+            <div className="stage-content execution-section">
+              <ApprovalTransitionPanel trace={displayTrace} mode={approvalAccepted ? 'tracking' : 'handoff'} />
+              <FinalApprovalCard
+                trace={displayTrace}
+                intent={displayIntent}
+                paymentState={approvalAccepted ? paymentSnapshot?.state ?? 'STATIC_DEMO_APPROVED' : undefined}
+              />
+              {approvalAccepted ? (
+                <div className="payment-state-badge">
+                  Payment state: <strong>{paymentSnapshot ? STATE_LABELS[paymentSnapshot.state] ?? paymentSnapshot.state : 'Static demo approval acknowledged'}</strong>
+                </div>
+              ) : (
+                <div className="payment-state-badge" style={{ borderColor: '#fed7aa', background: '#fff7ed', color: '#92400e' }}>
+                  Payment not yet approved — customer passkey approval is required
+                </div>
+              )}
+              {!approvalAccepted && (
+                <div className="stage-action-row">
+                  <p className="approval-mock-note">Passkey approval mocked for demo.</p>
+                  <button
+                    type="button"
+                    className="primary-btn"
+                    onClick={handleAuthorise}
+                    disabled={isAuthorising}
+                  >
+                    {isAuthorising ? 'Approving...' : 'Approve with passkey'}
+                    {!isAuthorising && <ArrowRight size={16} aria-hidden="true" />}
+                  </button>
+                </div>
+              )}
+              <PaymentTracker trace={displayTrace} />
+              {liveTraceId && paymentSnapshot &&
+                paymentSnapshot.state !== 'COMPLETED' &&
+                paymentSnapshot.state !== 'INVESTIGATION_REQUIRED' && (
+                  <div className="simulation-controls">
+                    <div className="simulation-controls-head">
+                      <strong>Simulation controls</strong>
+                      <span>Demo-only progression after customer approval.</span>
+                    </div>
+                    <button
+                      type="button"
+                      className="secondary-btn"
+                      onClick={handleSimulateNext}
+                      disabled={isSimulating}
+                    >
+                      {isSimulating ? 'Simulating...' : 'Simulate next step'}
+                    </button>
+                    {!paymentSnapshot.pointOfNoReturnReached && (
+                      <button
+                        type="button"
+                        className="secondary-btn"
+                        onClick={handleSimulateDegradation}
+                        disabled={isSimulating}
+                      >
+                        Simulate degradation
+                      </button>
+                    )}
+                  </div>
+                )}
+            </div>
+          )}
+
+          <div className="stage-nav">
+            <button type="button" className="secondary-btn" onClick={handleBack} disabled={step === 1}>
+              Back
+            </button>
+            {step === 1 ? (
               <button
                 type="button"
                 className="primary-btn"
@@ -230,132 +384,58 @@ function App() {
                 {isAnalysing ? 'Analysing...' : 'Confirm and analyse safe routes'}
                 {!isAnalysing && <ArrowRight size={16} aria-hidden="true" />}
               </button>
+            ) : step < 4 ? (
+              <button type="button" className="primary-btn" onClick={handleContinue}>
+                Continue
+                <ArrowRight size={16} aria-hidden="true" />
+              </button>
+            ) : (
+              <button type="button" className="secondary-btn" onClick={handleReset}>
+                Start new intent
+              </button>
+            )}
+          </div>
+
+          {(analyseError || classifyReason) && (
+            <div className="stage-messages">
+              {analyseError && <span className="analyse-error">{analyseError}</span>}
+              {classifyReason && (
+                <p className="classify-reason">
+                  <strong>Intent matched:</strong> {classifyReason}
+                </p>
+              )}
             </div>
           )}
-
-          {/* Payment Intent summary card */}
-          <div className="intent-summary-row">
-            <PaymentIntentView intent={displayIntent} />
-          </div>
         </section>
-
-        {/* ── STEP 2: ROUTE ANALYSIS ── */}
-        {step >= 2 && (
-          <section className="step-section" aria-label="Step 2: Route Analysis">
-            {step === 2 && (
-              <div className="edit-intent-row">
-                <button type="button" className="ghost-btn" onClick={handleReset}>
-                  ← Edit intent
-                </button>
-              </div>
-            )}
-            {analysisNotice && (
-              <div className="static-demo-banner">
-                <strong>Static corridor demo</strong>
-                <span>{analysisNotice}</span>
-              </div>
-            )}
-            <RouteIntelligencePanel trace={displayTrace} />
-            <RecommendationHeroCard trace={displayTrace} />
-            <DecisionImpactBanner trace={displayTrace} />
-            <div className="analysis-grid">
-              <div>
-                <RouteComparison trace={displayTrace} />
-              </div>
-              <div>
-                <DecisionTracePanel
-                  trace={displayTrace}
-                  provider={explanationProvider}
-                  isLoading={isAnalysing}
-                />
-              </div>
-            </div>
-
-            <div className="map-fallback-row">
-              <LeafletRouteMap trace={displayTrace} />
-              {displayTrace.fallbackEvent && (
-                <FallbackEventView trace={displayTrace} />
-              )}
-            </div>
-
-            {step < 3 && (
-              <div className="approval-handoff">
-                <ApprovalTransitionPanel trace={displayTrace} mode="handoff" />
-                <FinalApprovalCard trace={displayTrace} intent={displayIntent} />
-                <p className="approval-mock-note">Passkey approval mocked for demo.</p>
-                <button
-                  type="button"
-                  className="primary-btn"
-                  onClick={handleAuthorise}
-                  disabled={isAuthorising}
-                >
-                  {isAuthorising ? 'Approving...' : 'Approve with passkey'}
-                  {!isAuthorising && <ArrowRight size={16} aria-hidden="true" />}
-                </button>
-              </div>
-            )}
-          </section>
-        )}
-
-        {/* ── STEP 3: EXECUTION ── */}
-        {step >= 3 && (
-          <section className="step-section execution-section" aria-label="Step 3: Approval & Tracking">
-            <ApprovalTransitionPanel trace={displayTrace} mode="tracking" />
-            <FinalApprovalCard
-              trace={displayTrace}
-              intent={displayIntent}
-              paymentState={paymentSnapshot?.state}
-            />
-            {paymentSnapshot ? (
-              <div className="payment-state-badge">
-                Payment state: <strong>{STATE_LABELS[paymentSnapshot.state] ?? paymentSnapshot.state}</strong>
-              </div>
-            ) : (
-              <div className="payment-state-badge" style={{ borderColor: '#fed7aa', background: '#fff7ed', color: '#92400e' }}>
-                Payment not yet approved — click <strong>Approve with passkey</strong> in step 2
-              </div>
-            )}
-            <PaymentTracker trace={displayTrace} />
-            {liveTraceId && paymentSnapshot &&
-              paymentSnapshot.state !== 'COMPLETED' &&
-              paymentSnapshot.state !== 'INVESTIGATION_REQUIRED' && (
-                <div className="simulation-controls">
-                  <div className="simulation-controls-head">
-                    <strong>Simulation controls</strong>
-                    <span>Demo-only progression after customer approval.</span>
-                  </div>
-                  <button
-                    type="button"
-                    className="secondary-btn"
-                    onClick={handleSimulateNext}
-                    disabled={isSimulating}
-                  >
-                    {isSimulating ? 'Simulating...' : 'Simulate next step'}
-                  </button>
-                  {!paymentSnapshot.pointOfNoReturnReached && (
-                    <button
-                      type="button"
-                      className="secondary-btn"
-                      onClick={handleSimulateDegradation}
-                      disabled={isSimulating}
-                    >
-                      Simulate degradation
-                    </button>
-                  )}
-                </div>
-              )}
-            <div className="control-band simulation-panel">
-              <div className="simulation-controls-head">
-                <strong>Demo control room</strong>
-                <span>Internal simulation evidence, not a customer execution action.</span>
-              </div>
-              <ControlRoom trace={displayTrace} paymentState={paymentSnapshot?.state} />
-            </div>
-          </section>
-        )}
       </div>
     </main>
   )
+}
+
+function stageTitle(step: JourneyStep) {
+  switch (step) {
+    case 1:
+      return 'Secure Intent'
+    case 2:
+      return 'Route Intelligence'
+    case 3:
+      return 'Journey & Controls'
+    case 4:
+      return 'Approval & Tracking'
+  }
+}
+
+function stageDescription(step: JourneyStep) {
+  switch (step) {
+    case 1:
+      return 'Authenticate the session, express the payment outcome and confirm the structured intent.'
+    case 2:
+      return 'Review the bank-owned route recommendation, scoring evidence and deterministic decision trace.'
+    case 3:
+      return 'Inspect the expected payment journey, control checkpoints, PONR and finality boundary.'
+    case 4:
+      return 'Approve with a mocked passkey boundary and track the simulated payment journey.'
+  }
 }
 
 export default App

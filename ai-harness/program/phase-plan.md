@@ -106,3 +106,69 @@ Required commands:
 - `cd backend && ./mvnw test`
 
 Stop condition: stop at release decision. Do not push/deploy without explicit approval.
+
+## 3A — Demo Journey Shell / Page-Like Wizard
+
+Objective: Make the executive demo feel like a cleaner page-like guided journey without changing backend behavior.
+
+Allowed files:
+
+- frontend presentation components and CSS
+- focused frontend tests
+- `ai-harness/`
+
+Disallowed files:
+
+- backend files
+- deployment files
+- dependencies
+- route decision logic
+- API contracts
+- real voice/audio, real Gemini behavior or new integrations
+
+Acceptance criteria summary:
+
+- four stages exist: Secure Intent, Route Intelligence, Journey & Controls, Approval & Tracking
+- navigation between stages exists
+- route analysis, map, approval, tracking and simulation behavior remain available
+- safety language is preserved
+- frontend and backend checks pass
+
+Required commands:
+
+- `cd frontend && npm run lint`
+- `cd frontend && npm run typecheck`
+- `cd frontend && npm run build`
+- `cd frontend && npm run test`
+- `cd backend && ./mvnw test`
+
+Stop condition: stop after local commit. Do not push or deploy.
+
+## 3B — Voice Intent and Gemini Route Explanation Demo
+
+Objective: Add a demo-safe voice intent and bounded Gemini explanation layer without giving GenAI route decision authority.
+
+Allowed files:
+
+- frontend/demo presentation files
+- focused frontend tests
+- `ai-harness/`
+
+Disallowed files:
+
+- backend route logic
+- API contracts unless explicitly approved
+- deployment files
+- dependencies
+- real audio capture
+- live payment integrations
+- Gemini route selection, scoring, approval or state mutation
+
+Acceptance criteria summary:
+
+- voice remains clearly mocked
+- Gemini remains explanation-only
+- deterministic route engine boundary remains visible
+- checks pass
+
+Stop condition: stop after local commit and human review. Do not push or deploy without explicit approval.
