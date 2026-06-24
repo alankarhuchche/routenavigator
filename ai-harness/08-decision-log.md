@@ -109,3 +109,12 @@
 - Safety boundaries remain visible: the trusted agent can structure/explain intent only, cannot approve/execute/amend/cancel/move money, and final approval remains passkey-protected.
 - No backend route logic, API contracts, deployment files, dependencies, Gemini/voice behaviour or payment execution logic were changed.
 - Phase 3C remains the next phase after this UX fix.
+
+## Secure Session Blank Render Recovery Decisions
+
+- Phase 3 UX-fix 3 was added after local inspection reported a completely blank first page after the premium Secure Session polish.
+- Fresh runtime smoke checks against `http://127.0.0.1:5173/` showed Secure Session content present in the DOM and visible in a browser screenshot, with no page-level JavaScript errors.
+- A root app error boundary was added so a future local render/HMR error shows a visible recovery screen instead of leaving an empty root.
+- Focused Secure Session visibility coverage now asserts that Stage 1 renders, the Continue to Intent Capture CTA is present, Stage 1 keeps intent capture hidden, and Continue opens Stage 2.
+- Backend route logic, API contracts, deployment files, dependencies, Gemini/voice behaviour and payment execution logic remain unchanged.
+- Phase 3C remains the next phase only after visual verification of the local app.
