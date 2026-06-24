@@ -19,9 +19,9 @@ import { RouteComparison } from './components/RouteComparison'
 import { RouteIntelligencePanel } from './components/RouteIntelligencePanel'
 import { ScenarioSelector } from './components/ScenarioSelector'
 import { StepIndicator } from './components/StepIndicator'
-import { TrustedSessionBanner } from './components/TrustedSessionBanner'
+import { AgentContextGateway } from './components/AgentContextGateway'
 import { TrustedAgentExplanationPanel } from './components/TrustedAgentExplanationPanel'
-import { ArrowRight, BadgeCheck, Fingerprint, LockKeyhole, ShieldCheck } from 'lucide-react'
+import { ArrowRight, BadgeCheck, Bot, CheckCircle2, Fingerprint, LockKeyhole, ShieldCheck } from 'lucide-react'
 import type { DecisionTrace } from './types'
 import type { ApiPaymentSnapshot } from './apiTypes'
 import { createRouteDecision, fetchExplanation, authorisePayment, simulateNext, simulateDegradation, classifyIntent } from './api'
@@ -30,6 +30,14 @@ import type { LivePreferences } from './components/PaymentIntentIntake'
 import { STATE_LABELS } from './stateLabels'
 
 type JourneyStep = 1 | 2 | 3 | 4 | 5
+
+const secureReadinessItems = [
+  { label: 'Passkey verified', detail: 'Device-bound authentication confirmed', icon: BadgeCheck },
+  { label: 'Device trust confirmed', detail: 'Session bound to this browser demo', icon: Fingerprint },
+  { label: 'Trusted banking agent active', detail: 'Advice-only mode', icon: Bot },
+  { label: 'Consent scoped', detail: 'Route advice only', icon: ShieldCheck },
+  { label: 'Execution locked', detail: 'Final approval required', icon: LockKeyhole },
+]
 
 function App() {
   const [scenarioId, setScenarioId] = useState(demoScenarios[0].id)
@@ -217,13 +225,21 @@ function App() {
             Customers no longer need to choose rails. They confirm the outcome; the bank evaluates safe routes.
           </p>
         </div>
-        <div className="header-metrics" aria-label="Current selected route metrics">
-          <span className="header-chip header-chip-route">{displayTrace.selectedRoute.label}</span>
-          <span className="header-chip">ETA {displayTrace.selectedRoute.eta}</span>
-          {displayTrace.selectedRoute.score !== undefined && (
-            <span className="header-chip">Score {displayTrace.selectedRoute.score.toFixed(0)}/100</span>
-          )}
-        </div>
+        {analysisComplete ? (
+          <div className="header-metrics" aria-label="Current selected route metrics">
+            <span className="header-chip header-chip-route">{displayTrace.selectedRoute.label}</span>
+            <span className="header-chip">ETA {displayTrace.selectedRoute.eta}</span>
+            {displayTrace.selectedRoute.score !== undefined && (
+              <span className="header-chip">Score {displayTrace.selectedRoute.score.toFixed(0)}/100</span>
+            )}
+          </div>
+        ) : (
+          <div className="header-metrics header-session-strip" aria-label="Secure session boundaries">
+            <span className="header-chip">Demo environment</span>
+            <span className="header-chip">No money moved</span>
+            <span className="header-chip">Route engine decides</span>
+          </div>
+        )}
       </header>
 
       <div className="journey-wrapper">
@@ -242,37 +258,59 @@ function App() {
           </div>
 
           {step === 1 && (
-            <div className="stage-content">
-              <div className="secure-session-hero" aria-label="Secure session readiness">
-                <div className="secure-session-emblem" aria-hidden="true">
-                  <Fingerprint size={30} />
+            <div className="stage-content secure-session-stage">
+              <section className="secure-session-landing" aria-label="Secure session landing">
+                <div className="secure-session-product-card">
+                  <div className="secure-session-visual" aria-hidden="true">
+                    <span className="secure-session-ring">
+                      <Fingerprint size={38} />
+                    </span>
+                    <span className="secure-session-scan-line" />
+                  </div>
+                  <div className="secure-session-copy-block">
+                    <p className="eyebrow">Secure banking session</p>
+                    <h3>Customer verified. Agent scoped. Execution locked.</h3>
+                    <p>
+                      Verify the customer, scope the trusted banking agent and lock execution before payment intent capture.
+                      The route engine will decide routes only after the customer confirms the intent.
+                    </p>
+                    <div className="secure-session-boundary">
+                      <Bot size={17} aria-hidden="true" />
+                      <span>
+                        The agent can help structure and explain intent. It cannot approve, execute, amend, cancel, or move money.
+                        Final approval remains passkey-protected.
+                      </span>
+                    </div>
+                    <div className="secure-session-actions">
+                      <button type="button" className="primary-btn secure-session-primary" onClick={handleContinue}>
+                        Continue to Intent Capture
+                        <ArrowRight size={16} aria-hidden="true" />
+                      </button>
+                      <span>Next: speak or type the payment outcome.</span>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="eyebrow">Passkey session ready</p>
-                  <h3>Customer verified. Agent scoped. Execution locked.</h3>
-                  <p>
-                    Verify the customer, scope the agent and lock execution before payment intent capture.
-                    The agent can help structure and explain intent. It cannot approve, execute, amend, cancel, or move money.
-                  </p>
-                </div>
-              </div>
-              <TrustedSessionBanner />
-              <div className="secure-readiness-grid" aria-label="Session verification sequence">
-                <div>
-                  <BadgeCheck size={18} aria-hidden="true" />
-                  <strong>Passkey verified</strong>
-                  <span>Device-bound authentication confirmed</span>
-                </div>
-                <div>
-                  <ShieldCheck size={18} aria-hidden="true" />
-                  <strong>Consent scoped</strong>
-                  <span>Route advice only</span>
-                </div>
-                <div>
-                  <LockKeyhole size={18} aria-hidden="true" />
-                  <strong>Execution locked</strong>
-                  <span>Final approval required</span>
-                </div>
+                <aside className="secure-readiness-panel" aria-label="Session readiness sequence">
+                  <div>
+                    <p className="eyebrow">Readiness sequence</p>
+                    <h3>Session ready for intent capture</h3>
+                  </div>
+                  <ol className="secure-readiness-list">
+                    {secureReadinessItems.map(({ label, detail, icon: Icon }) => (
+                      <li key={label}>
+                        <span className="readiness-check"><CheckCircle2 size={15} aria-hidden="true" /></span>
+                        <span>
+                          <strong>{label}</strong>
+                          <small>{detail}</small>
+                        </span>
+                        <Icon size={17} aria-hidden="true" />
+                      </li>
+                    ))}
+                  </ol>
+                </aside>
+              </section>
+              <div className="secure-agent-controls">
+                <AgentContextGateway />
               </div>
             </div>
           )}

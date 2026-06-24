@@ -20,7 +20,7 @@ describe('Approval step transition', () => {
     expect(screen.getByRole('button', { name: /Journey & Controls locked until route analysis/i })).toBeDisabled()
     expect(screen.getByRole('button', { name: /Approval & Tracking locked until route analysis/i })).toBeDisabled()
 
-    fireEvent.click(screen.getByRole('button', { name: /Continue to Intent Capture/i }))
+    fireEvent.click(screen.getAllByRole('button', { name: /Continue to Intent Capture/i })[0])
     const outcomeInput = screen.getByLabelText('Customer outcome')
     fireEvent.change(outcomeInput, { target: { value: 'Send GBP 5,000 to India in INR with tracking.' } })
     fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
@@ -52,7 +52,7 @@ describe('Approval step transition', () => {
   it('preserves route state when navigating back and forward between stages', async () => {
     render(<App />)
 
-    fireEvent.click(screen.getByRole('button', { name: /Continue to Intent Capture/i }))
+    fireEvent.click(screen.getAllByRole('button', { name: /Continue to Intent Capture/i })[0])
     fireEvent.change(screen.getByLabelText('Customer outcome'), {
       target: { value: 'Send GBP 5,000 to India in INR with tracking.' },
     })

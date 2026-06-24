@@ -26,7 +26,7 @@ describe('static corridor demo scenarios', () => {
 
     render(<App />)
 
-    fireEvent.click(screen.getByRole('button', { name: /Continue to Intent Capture/i }))
+    fireEvent.click(screen.getAllByRole('button', { name: /Continue to Intent Capture/i })[0])
     const outcomeInput = screen.getByLabelText('Customer outcome')
     fireEvent.change(outcomeInput, { target: { value: 'Send GBP 5,000 to India in INR with tracking.' } })
 

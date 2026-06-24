@@ -99,3 +99,13 @@
 - The agent and Gemini authority boundaries remain unchanged: they may structure/explain intent but cannot select routes, approve, execute, amend, cancel or move money.
 - Passkey remains an approval boundary in Approval & Tracking, not an intent-capture shortcut.
 - Phase 3C remains the next phase after this UX fix.
+
+## Premium Secure Session Landing Decisions
+
+- Phase 3 UX-fix 2 was added after local UI review found the first Secure Session screen too plain and debug-like for an executive demo.
+- Stage 1 now uses a premium secure-session landing layout with a central passkey/authentication visual, visible readiness sequence and in-card Continue to Intent Capture CTA.
+- Initial route metrics are hidden until route analysis is complete so route labels, ETA and score do not dominate or concatenate on first load.
+- Agent controls remain available as a collapsed secondary panel below the Secure Session landing, not as the primary first-screen content.
+- Safety boundaries remain visible: the trusted agent can structure/explain intent only, cannot approve/execute/amend/cancel/move money, and final approval remains passkey-protected.
+- No backend route logic, API contracts, deployment files, dependencies, Gemini/voice behaviour or payment execution logic were changed.
+- Phase 3C remains the next phase after this UX fix.

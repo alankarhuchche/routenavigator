@@ -30,4 +30,5 @@ Phase 1 overall status: Complete. Payment Route Intelligence Phase 1 was deploye
 | 3B | Voice intent and Gemini route explanation demo | Done | Frontend/demo | Added browser voice intent capture, trusted agent explanation panel and read-aloud without changing route decisions. |
 | 3B-fix | Secure Intent repair and premium polish | Done | Frontend/docs | Fixed typed intent persistence/progression, restored visible voice affordance and reworked Secure Intent into a premium composer layout. |
 | 3 UX-fix | Split Secure Session and Intent Capture | Done | Frontend/docs | Split the opening experience into Secure Session and Intent Capture stages while preserving route intelligence, journey controls and approval behaviour. |
+| 3 UX-fix 2 | Premium Secure Session landing screen | Done | Frontend/docs | Redesigned Stage 1 as a premium secure-session opening with visible CTA, readiness sequence and no initial route/debug summary. |
 | 3C | Demo launch pack and walkthrough | Next | Docs/demo | Prepare demo script, walkthrough checklist and launch handoff. |
