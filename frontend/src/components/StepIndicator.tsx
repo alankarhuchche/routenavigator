@@ -1,29 +1,34 @@
 import { Check } from 'lucide-react'
 
 interface StepIndicatorProps {
-  currentStep: 1 | 2 | 3 | 4
-  maxUnlockedStep: 1 | 2 | 3 | 4
+  currentStep: 1 | 2 | 3 | 4 | 5
+  maxUnlockedStep: 1 | 2 | 3 | 4 | 5
   onStepClick: (step: number) => void
 }
 
 const steps = [
   {
     number: 1,
-    label: 'Secure Intent',
-    description: 'Authenticate, express outcome, confirm structured intent',
+    label: 'Secure Session',
+    description: 'Verify customer, scope agent, lock execution',
   },
   {
     number: 2,
+    label: 'Intent Capture',
+    description: 'Speak or type outcome, review structured intent',
+  },
+  {
+    number: 3,
     label: 'Route Intelligence',
     description: 'Analyse rails, controls, cut-offs and settlement quality',
   },
   {
-    number: 3,
+    number: 4,
     label: 'Journey & Controls',
     description: 'Inspect route path, controls, PONR and finality',
   },
   {
-    number: 4,
+    number: 5,
     label: 'Approval & Tracking',
     description: 'Approve execution and monitor payment progress',
   },

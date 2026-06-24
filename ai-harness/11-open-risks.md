@@ -5,6 +5,7 @@
 | Single-page journey may need wizard cleanup | Resolved locally | No | 3A-fix | Phase 3A-fix made active-stage content exclusive/page-like, strengthened Back/Continue navigation and kept locked stages explicit. |
 | Journey map visibility regression | Resolved locally | No | 3A-fix | Local review found the map was not visible enough after the page-like shell. Journey & Controls now restores the map path, adds a visible map intro and invalidates Leaflet size on mount. |
 | Secure Intent composer was too raw and could lose typed text | Resolved locally | No | 3B-fix | Secure Intent now has controlled input persistence, visible voice capture, preference cards and a clear analyse progression path. |
+| Secure Session and intent capture were overloaded | Resolved locally | No | 3 UX-fix | Opening journey is now split into Secure Session first and Intent Capture second, keeping passkey/session readiness separate from voice/text payment outcome capture. |
 | `LeafletRouteMap.tsx` is chunky | Reduced | No | 2B | Journey derivation was extracted into a pure adapter. Further UI simplification can be considered later if needed. |
 | Frontend/backend scenario data drift | Reduced | No | Gate before backend corridor support | Phase 2C-fix labels scenarios 7-11 as illustrative frontend-only corridor demos. Backend corridor support remains deferred behind route-logic/product-scope approval. |
 | `.claude/worktrees` git noise | Low | No | 1K | Local worktree metadata appears modified. Do not touch it casually; exclude from deployment commits if unrelated. |

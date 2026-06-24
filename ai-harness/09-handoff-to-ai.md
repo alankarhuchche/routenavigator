@@ -12,9 +12,11 @@ One-line proposition: A future-facing banking demo where a customer expresses a 
 
 ## Current Journey
 
-1. Secure Intent
-2. Route Intelligence
-3. Approval & Tracking
+1. Secure Session
+2. Intent Capture
+3. Route Intelligence
+4. Journey & Controls
+5. Approval & Tracking
 
 Current layout note: the app is currently a single-page guided journey. This is expected for Phase 1. Do not convert to multi-page unless explicitly tasked in Phase 2.
 
@@ -26,6 +28,7 @@ Current layout note: the app is currently a single-page guided journey. This is 
 - 1C Route intelligence panel: deterministic analysis lanes and route metrics.
 - 1D Recommendation hero: customer-readable recommendation before technical details.
 - 1E Journey shell: product header and Secure Intent / Route Intelligence / Approval & Tracking framing.
+- 3 UX-fix: opening journey now splits Secure Session from Intent Capture before Route Intelligence.
 - 1F Payment journey map: representative journey map with nodes, controls, finality/PONR and alternatives.
 - 1F-fix Map clarity: numbered nodes, clearer recommended route dominance and safety copy.
 - 1G Agent context gateway: mocked advice-only agent governance drawer.
@@ -62,9 +65,9 @@ Current layout note: the app is currently a single-page guided journey. This is 
 - `ai-harness/10-deployment-readiness.md`: deployment readiness checklist and placeholders.
 - `ai-harness/11-open-risks.md`: known risks and recommended phases.
 - `ai-harness/12-next-prompts.md`: ready-to-use prompts for likely next tasks.
-- `frontend/src/App.tsx`: single-page journey composition and step flow.
+- `frontend/src/App.tsx`: single-page journey composition and five-stage flow.
 - `frontend/src/App.css`: primary styling for the Phase 1 UI.
-- `frontend/src/components/StepIndicator.tsx`: Secure Intent / Route Intelligence / Approval & Tracking step labels.
+- `frontend/src/components/StepIndicator.tsx`: Secure Session / Intent Capture / Route Intelligence / Journey & Controls / Approval & Tracking step labels.
 - `frontend/src/components/PaymentIntentIntake.tsx`: outcome prompt, mocked Speak button and intent copy.
 - `frontend/src/components/TrustedSessionBanner.tsx`: secure session banner and collapsed agent controls entry.
 - `frontend/src/components/AgentContextGateway.tsx`: mocked agent/context governance drawer.

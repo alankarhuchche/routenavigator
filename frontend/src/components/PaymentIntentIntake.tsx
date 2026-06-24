@@ -96,7 +96,7 @@ export function PaymentIntentIntake({
           <Sparkles size={22} aria-hidden="true" />
         </div>
         <div>
-          <p className="eyebrow">Secure Intent</p>
+          <p className="eyebrow">Intent Capture</p>
           <h2>What outcome do you need from this payment?</h2>
           <p>
             Speak or type the payment outcome. The bank-owned route engine will analyse safe routes after you confirm.
@@ -108,6 +108,7 @@ export function PaymentIntentIntake({
           <strong>Conversational in. Deterministic out.</strong>
           <span>GenAI structures and explains the intent. The bank-owned route engine decides the route.</span>
         </div>
+        <span className="suggested-intent-label">Suggested demo intent — review and edit before analysis</span>
         <label htmlFor="natural-language-intent">Customer outcome</label>
         <div className="outcome-input-row">
           <textarea

@@ -69,16 +69,27 @@ describe('page-like demo stage shell', () => {
     vi.clearAllMocks()
   })
 
-  it('shows only the active stage and restores the journey map in Stage 3', async () => {
+  it('shows only the active stage and restores the journey map in Stage 4', async () => {
     render(<App />)
 
-    expect(screen.getByRole('button', { name: /speak payment intent/i })).toBeInTheDocument()
+    expect(screen.getAllByText('Secure Session').length).toBeGreaterThan(0)
+    expect(screen.getByText('Customer verified. Agent scoped. Execution locked.')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /speak payment intent/i })).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Customer outcome')).not.toBeInTheDocument()
+    expect(screen.queryByText('Demo scenarios')).not.toBeInTheDocument()
     expect(screen.queryByText('Analysing safe routes')).not.toBeInTheDocument()
     expect(screen.queryByText('Payment journey map')).not.toBeInTheDocument()
     expect(screen.queryByText('Route recommendation ready for approval')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /^Intent Capture$/i })).not.toBeDisabled()
     expect(screen.getByRole('button', { name: /Route Intelligence locked until route analysis/i })).toBeDisabled()
     expect(screen.getByRole('button', { name: /Journey & Controls locked until route analysis/i })).toBeDisabled()
     expect(screen.getByRole('button', { name: /Approval & Tracking locked until route analysis/i })).toBeDisabled()
+
+    fireEvent.click(screen.getByRole('button', { name: /Continue to Intent Capture/i }))
+    expect(screen.getAllByText('Intent Capture').length).toBeGreaterThan(0)
+    expect(screen.getByRole('button', { name: /speak payment intent/i })).toBeInTheDocument()
+    expect(screen.getByText('Suggested demo intent — review and edit before analysis')).toBeInTheDocument()
+    expect(screen.getByText('Demo scenarios')).toBeInTheDocument()
 
     fireEvent.change(screen.getByLabelText('Customer outcome'), {
       target: { value: 'Send GBP 500 to a UK beneficiary as quickly as possible.' },

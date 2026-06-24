@@ -89,3 +89,13 @@
 - Secure Intent now uses a premium composer layout with a prominent textarea, visible speech-capture affordance, preference cards and a safety boundary.
 - The voice boundary remains unchanged: voice captures intent only; passkey approval is required before anything moves.
 - Phase 3C remains the next phase after this fix.
+
+## Secure Session / Intent Capture Split Decisions
+
+- Phase 3 UX-fix split the opening journey into five stages: Secure Session, Intent Capture, Route Intelligence, Journey & Controls, and Approval & Tracking.
+- Secure Session now focuses on customer verification, scoped trusted-agent consent and execution lock messaging before any payment outcome is captured.
+- Intent Capture now owns the natural-language composer, browser voice capture, preferences, structured intent preview and secondary demo scenarios.
+- The route engine still recommends routes only after the customer reaches Intent Capture and starts route analysis.
+- The agent and Gemini authority boundaries remain unchanged: they may structure/explain intent but cannot select routes, approve, execute, amend, cancel or move money.
+- Passkey remains an approval boundary in Approval & Tracking, not an intent-capture shortcut.
+- Phase 3C remains the next phase after this UX fix.

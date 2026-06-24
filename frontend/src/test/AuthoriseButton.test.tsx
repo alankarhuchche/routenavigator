@@ -45,6 +45,7 @@ describe('Approve with passkey button', () => {
 
   it('appears on Approval & Tracking after analysing and continuing through the journey', async () => {
     render(<App />)
+    fireEvent.click(screen.getByRole('button', { name: /Continue to Intent Capture/i }))
     fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
     await waitFor(() => expect(screen.getByText('Analysing safe routes')).toBeInTheDocument())
     fireEvent.click(screen.getByRole('button', { name: /Continue to Journey & Controls/i }))
@@ -53,8 +54,9 @@ describe('Approve with passkey button', () => {
     await waitFor(() => expect(screen.getByRole('button', { name: /^Approve with passkey$/i })).toBeInTheDocument())
   }, 10_000)
 
-  it('hides after authorise accepts approval in stage 4', async () => {
+  it('hides after authorise accepts approval in stage 5', async () => {
     render(<App />)
+    fireEvent.click(screen.getByRole('button', { name: /Continue to Intent Capture/i }))
     fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
     await waitFor(() => expect(screen.getByText('Analysing safe routes')).toBeInTheDocument())
     fireEvent.click(screen.getByRole('button', { name: /Continue to Journey & Controls/i }))

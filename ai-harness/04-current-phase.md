@@ -14,6 +14,7 @@ Prepare the demo launch pack, walkthrough script and handoff checklist for Payme
 - Phase 3A-fix is complete: the active stage is exclusive/page-like and the Journey & Controls map visibility regression is resolved.
 - Phase 3B voice intent and trusted agent explanation demo is complete.
 - Phase 3B-fix is complete: Secure Intent now uses a controlled intent composer, visible voice affordance and premium preference layout.
+- Phase 3 UX-fix is complete locally: Secure Session is now a dedicated first stage and Intent Capture owns the payment outcome composer, voice capture, preferences and demo scenarios.
 - Browser voice capture is used only to populate/edit the payment intent field.
 - Trusted agent/Gemini explanation remains explanation-only.
 - Browser read-aloud uses text-to-speech only.

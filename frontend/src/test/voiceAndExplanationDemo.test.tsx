@@ -48,7 +48,7 @@ describe('voice intent capture demo', () => {
   it('shows usable objective options and accessible preference cards', () => {
     render(<PaymentIntentIntake scenarios={demoScenarios} />)
 
-    expect(screen.getByText('Secure Intent')).toBeInTheDocument()
+    expect(screen.getByText('Intent Capture')).toBeInTheDocument()
     expect(screen.getByRole('combobox', { name: /objective/i })).toHaveValue('FASTEST')
     expect(screen.getByRole('option', { name: 'Fastest' })).toBeInTheDocument()
     expect(screen.getByRole('option', { name: 'Cheapest' })).toBeInTheDocument()

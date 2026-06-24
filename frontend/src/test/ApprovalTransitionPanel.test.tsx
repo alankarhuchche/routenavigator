@@ -14,11 +14,13 @@ describe('Approval step transition', () => {
   it('separates route recommendation handoff from approval tracking', async () => {
     render(<App />)
 
-    expect(screen.getAllByText('Secure Intent').length).toBeGreaterThan(0)
-    expect(screen.getByRole('button', { name: /Route Intelligence/i })).toBeDisabled()
-    expect(screen.getByRole('button', { name: /Journey & Controls/i })).toBeDisabled()
-    expect(screen.getByRole('button', { name: /Approval & Tracking/i })).toBeDisabled()
+    expect(screen.getAllByText('Secure Session').length).toBeGreaterThan(0)
+    expect(screen.getByRole('button', { name: /^Intent Capture$/i })).not.toBeDisabled()
+    expect(screen.getByRole('button', { name: /Route Intelligence locked until route analysis/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /Journey & Controls locked until route analysis/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /Approval & Tracking locked until route analysis/i })).toBeDisabled()
 
+    fireEvent.click(screen.getByRole('button', { name: /Continue to Intent Capture/i }))
     const outcomeInput = screen.getByLabelText('Customer outcome')
     fireEvent.change(outcomeInput, { target: { value: 'Send GBP 5,000 to India in INR with tracking.' } })
     fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
@@ -50,6 +52,7 @@ describe('Approval step transition', () => {
   it('preserves route state when navigating back and forward between stages', async () => {
     render(<App />)
 
+    fireEvent.click(screen.getByRole('button', { name: /Continue to Intent Capture/i }))
     fireEvent.change(screen.getByLabelText('Customer outcome'), {
       target: { value: 'Send GBP 5,000 to India in INR with tracking.' },
     })

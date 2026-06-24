@@ -21,7 +21,7 @@ import { ScenarioSelector } from './components/ScenarioSelector'
 import { StepIndicator } from './components/StepIndicator'
 import { TrustedSessionBanner } from './components/TrustedSessionBanner'
 import { TrustedAgentExplanationPanel } from './components/TrustedAgentExplanationPanel'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, BadgeCheck, Fingerprint, LockKeyhole, ShieldCheck } from 'lucide-react'
 import type { DecisionTrace } from './types'
 import type { ApiPaymentSnapshot } from './apiTypes'
 import { createRouteDecision, fetchExplanation, authorisePayment, simulateNext, simulateDegradation, classifyIntent } from './api'
@@ -29,7 +29,7 @@ import { adaptTrace } from './traceAdapter'
 import type { LivePreferences } from './components/PaymentIntentIntake'
 import { STATE_LABELS } from './stateLabels'
 
-type JourneyStep = 1 | 2 | 3 | 4
+type JourneyStep = 1 | 2 | 3 | 4 | 5
 
 function App() {
   const [scenarioId, setScenarioId] = useState(demoScenarios[0].id)
@@ -79,11 +79,11 @@ function App() {
     }
   }, [scenario.intent, livePreferences])
 
-  const maxUnlockedStep: JourneyStep = analysisComplete ? 4 : 1
+  const maxUnlockedStep: JourneyStep = analysisComplete ? 5 : 2
   const approvalAccepted = Boolean(paymentSnapshot) || staticApprovalAcknowledged
 
   function handleStepClick(s: number) {
-    if ((s === 1 || s === 2 || s === 3 || s === 4) && s <= maxUnlockedStep) {
+    if ((s === 1 || s === 2 || s === 3 || s === 4 || s === 5) && s <= maxUnlockedStep) {
       setStep(s as JourneyStep)
     }
   }
@@ -123,7 +123,7 @@ function App() {
         setExplanationProvider(undefined)
         setAnalysisNotice(`${scenario.executionLabel ?? 'Illustrative corridor demo'} — using static frontend route trace. Backend corridor support is deferred.`)
         setAnalysisComplete(true)
-        setStep(2)
+        setStep(3)
         return
       }
       if (intentText.trim()) {
@@ -143,11 +143,11 @@ function App() {
       setLiveTrace(adapted)
       setExplanationProvider(explanationResp.provider)
       setAnalysisComplete(true)
-      setStep(2)
+      setStep(3)
     } catch {
       setAnalyseError('Analysis failed — using demo data')
       setAnalysisComplete(true)
-      setStep(2)
+      setStep(3)
     } finally {
       setIsAnalysing(false)
     }
@@ -156,16 +156,16 @@ function App() {
   async function handleAuthorise() {
     if (!liveTraceId) {
       setStaticApprovalAcknowledged(true)
-      setStep(4)
+      setStep(5)
       return
     }
     setIsAuthorising(true)
     try {
       const snapshot = await authorisePayment(liveTraceId)
       setPaymentSnapshot(snapshot)
-      setStep(4)
+      setStep(5)
     } catch {
-      setStep(4)
+      setStep(5)
     } finally {
       setIsAuthorising(false)
     }
@@ -232,7 +232,7 @@ function App() {
         <section className="stage-shell" aria-label={`Stage ${step}: ${stageTitle(step)}`} key={step}>
           <div className="stage-shell-head">
             <div>
-              <p className="eyebrow">Stage {step} of 4</p>
+              <p className="eyebrow">Stage {step} of 5</p>
               <h2>{stageTitle(step)}</h2>
               <p>{stageDescription(step)}</p>
             </div>
@@ -243,7 +243,42 @@ function App() {
 
           {step === 1 && (
             <div className="stage-content">
+              <div className="secure-session-hero" aria-label="Secure session readiness">
+                <div className="secure-session-emblem" aria-hidden="true">
+                  <Fingerprint size={30} />
+                </div>
+                <div>
+                  <p className="eyebrow">Passkey session ready</p>
+                  <h3>Customer verified. Agent scoped. Execution locked.</h3>
+                  <p>
+                    Verify the customer, scope the agent and lock execution before payment intent capture.
+                    The agent can help structure and explain intent. It cannot approve, execute, amend, cancel, or move money.
+                  </p>
+                </div>
+              </div>
               <TrustedSessionBanner />
+              <div className="secure-readiness-grid" aria-label="Session verification sequence">
+                <div>
+                  <BadgeCheck size={18} aria-hidden="true" />
+                  <strong>Passkey verified</strong>
+                  <span>Device-bound authentication confirmed</span>
+                </div>
+                <div>
+                  <ShieldCheck size={18} aria-hidden="true" />
+                  <strong>Consent scoped</strong>
+                  <span>Route advice only</span>
+                </div>
+                <div>
+                  <LockKeyhole size={18} aria-hidden="true" />
+                  <strong>Execution locked</strong>
+                  <span>Final approval required</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {step === 2 && (
+            <div className="stage-content">
               <div className="intent-grid-layout">
                 <div>
                   <PaymentIntentIntake
@@ -264,7 +299,7 @@ function App() {
             </div>
           )}
 
-          {step === 2 && (
+          {step === 3 && (
             <div className="stage-content">
               {analysisNotice && (
                 <div className="static-demo-banner">
@@ -295,7 +330,7 @@ function App() {
             </div>
           )}
 
-          {step === 3 && (
+          {step === 4 && (
             <div className="stage-content">
               {analysisNotice && (
                 <div className="static-demo-banner">
@@ -326,7 +361,7 @@ function App() {
             </div>
           )}
 
-          {step === 4 && (
+          {step === 5 && (
             <div className="stage-content execution-section">
               <ApprovalTransitionPanel trace={displayTrace} mode={approvalAccepted ? 'tracking' : 'handoff'} />
               <FinalApprovalCard
@@ -394,6 +429,11 @@ function App() {
               Back
             </button>
             {step === 1 ? (
+              <button type="button" className="primary-btn" onClick={handleContinue}>
+                Continue to Intent Capture
+                <ArrowRight size={16} aria-hidden="true" />
+              </button>
+            ) : step === 2 ? (
               <button
                 type="button"
                 className="primary-btn"
@@ -403,7 +443,7 @@ function App() {
                 {isAnalysing ? 'Analysing...' : 'Analyse safe routes'}
                 {!isAnalysing && <ArrowRight size={16} aria-hidden="true" />}
               </button>
-            ) : step < 4 ? (
+            ) : step < 5 ? (
               <button type="button" className="primary-btn" onClick={handleContinue}>
                 {continueLabel(step)}
                 <ArrowRight size={16} aria-hidden="true" />
@@ -434,12 +474,14 @@ function App() {
 function stageTitle(step: JourneyStep) {
   switch (step) {
     case 1:
-      return 'Secure Intent'
+      return 'Secure Session'
     case 2:
-      return 'Route Intelligence'
+      return 'Intent Capture'
     case 3:
-      return 'Journey & Controls'
+      return 'Route Intelligence'
     case 4:
+      return 'Journey & Controls'
+    case 5:
       return 'Approval & Tracking'
   }
 }
@@ -447,12 +489,14 @@ function stageTitle(step: JourneyStep) {
 function stageDescription(step: JourneyStep) {
   switch (step) {
     case 1:
-      return 'Capture and confirm the payment outcome before route analysis.'
+      return 'Verify the customer, scope the agent and lock execution before payment intent capture.'
     case 2:
-      return 'Review the deterministic route recommendation and explanation.'
+      return 'Speak or type the payment outcome, then review it before route analysis.'
     case 3:
-      return 'Inspect the representative journey, controls and settlement boundaries.'
+      return 'Review the deterministic route recommendation and explanation.'
     case 4:
+      return 'Inspect the representative journey, controls and settlement boundaries.'
+    case 5:
       return 'Approve with passkey, then track the simulated payment journey.'
   }
 }
@@ -460,12 +504,14 @@ function stageDescription(step: JourneyStep) {
 function continueLabel(step: JourneyStep) {
   switch (step) {
     case 1:
-      return 'Continue'
+      return 'Continue to Intent Capture'
     case 2:
-      return 'Continue to Journey & Controls'
+      return 'Continue'
     case 3:
-      return 'Continue to Approval & Tracking'
+      return 'Continue to Journey & Controls'
     case 4:
+      return 'Continue to Approval & Tracking'
+    case 5:
       return 'Continue'
   }
 }
