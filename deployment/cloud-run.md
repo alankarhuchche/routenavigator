@@ -68,7 +68,30 @@ curl -s "https://<cloud-run-url>/api/health"
 
 ## Runtime notes
 - Quarkus listens on `0.0.0.0` and uses the Cloud Run `PORT` environment variable with a local default of `8080`.
-- Gemini is disabled by default. Template explanations work without credentials.
+- Gemini is disabled by default. Rules/template fallbacks work without credentials.
 - The MVP uses local JSON mock data and in-memory traces. PostgreSQL can be added later behind the existing service/repository boundary.
 - `--max-instances=1` keeps the in-memory trace/state demo coherent until PostgreSQL or another shared persistence layer is added.
-- If you enable Gemini later, keep it explanation-only and feed it only the redacted Decision Trace.
+- If you enable Gemini, it may draft structured intent from transcript text and explain redacted route outcomes only. It must not select routes, score routes, approve execution, update payment state or move money.
+
+## Gemini configuration
+
+The app runs safely without Gemini. In fallback mode:
+- `/api/intent/classify` uses deterministic rules to create a draft structured intent for customer review.
+- `/api/explanations/route` uses a template explanation.
+- Browser voice capture remains local SpeechRecognition transcript text only; no raw audio is uploaded.
+
+To enable Gemini in Cloud Run, provide the following environment variables without committing secrets:
+
+```bash
+gcloud run services update "${SERVICE}" \
+  --region="${REGION}" \
+  --set-env-vars=GEMINI_ENABLED=true,GEMINI_MODEL=gemini-2.0-flash \
+  --set-secrets=GEMINI_API_KEY=GEMINI_API_KEY:latest
+```
+
+Required properties/env vars:
+- `GEMINI_ENABLED=true`
+- `GEMINI_API_KEY`, preferably mounted from Secret Manager
+- `GEMINI_MODEL`, optional; defaults to `gemini-2.0-flash`
+
+Keep the demo boundary clear: Gemini structures draft intent and explains outcomes. The deterministic route engine recommends the route, and customer passkey approval remains required before simulated execution.

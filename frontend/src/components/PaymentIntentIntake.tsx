@@ -2,6 +2,7 @@ import { Mic, Sparkles } from 'lucide-react'
 import type { Dispatch, SetStateAction } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { DEFAULT_PAYMENT_INTENT_TEXT } from '../defaultIntent'
+import type { ApiStructuredIntent } from '../apiTypes'
 import type { DemoScenario } from '../types'
 import { IntentConfirmationCard } from './IntentConfirmationCard'
 
@@ -17,6 +18,14 @@ interface PaymentIntentIntakeProps {
   onIntentTextChange?: (text: string) => void
   onPreferencesChange?: (prefs: LivePreferences) => void
   onScenarioMatch?: (scenarioId: string) => void
+  onStructureIntent?: () => void
+  onConfirmStructuredIntent?: () => void
+  structuredIntent?: ApiStructuredIntent
+  structuredIntentFallbackUsed?: boolean
+  structuredIntentWarnings?: string[]
+  structureError?: string | null
+  isStructuring?: boolean
+  structuredIntentConfirmed?: boolean
 }
 
 type ObjectivePreference = 'FASTEST' | 'CHEAPEST' | 'MOST_TRANSPARENT'
@@ -52,6 +61,14 @@ export function PaymentIntentIntake({
   onIntentTextChange,
   onPreferencesChange,
   onScenarioMatch,
+  onStructureIntent,
+  onConfirmStructuredIntent,
+  structuredIntent,
+  structuredIntentFallbackUsed,
+  structuredIntentWarnings,
+  structureError,
+  isStructuring,
+  structuredIntentConfirmed,
 }: PaymentIntentIntakeProps) {
   const [internalIntent, setInternalIntent] = useState(DEFAULT_PAYMENT_INTENT_TEXT)
   const [objective, setObjective] = useState<ObjectivePreference>('FASTEST')
@@ -60,7 +77,9 @@ export function PaymentIntentIntake({
   const [traditionalOnly, setTraditionalOnly] = useState(false)
   const [simulateFallback, setSimulateFallback] = useState(false)
   const [voiceStatus, setVoiceStatus] = useState<VoiceStatus>(() => getSpeechRecognitionConstructor() ? 'idle' : 'unsupported')
-  const [voiceMessage, setVoiceMessage] = useState('Voice captures intent only. Passkey approval is still required before anything moves.')
+  const [voiceMessage, setVoiceMessage] = useState(() => getSpeechRecognitionConstructor()
+    ? 'Voice captures intent only. Passkey approval is still required before anything moves.'
+    : 'Speech recognition not supported — type the intent instead.')
   const naturalLanguageIntent = intentText ?? internalIntent
 
   function updateIntentText(text: string) {
@@ -142,6 +161,21 @@ export function PaymentIntentIntake({
           {naturalLanguageIntent.trim().length} characters captured. Review and edit before analysis.
         </p>
 
+        <div className="intent-structure-actions">
+          <button
+            type="button"
+            className="secondary-btn"
+            onClick={onStructureIntent}
+            disabled={isStructuring || !naturalLanguageIntent.trim()}
+          >
+            {isStructuring ? 'Structuring intent...' : 'Structure intent'}
+          </button>
+          <span>
+            Transcript text is sent to the backend for a draft structured intent. No raw audio is uploaded.
+          </span>
+        </div>
+        {structureError && <p className="intent-structure-error">{structureError}</p>}
+
         <div className="preference-grid" aria-label="Payment preferences">
           <label className="preference-card preference-select-card">
             <span>Objective</span>
@@ -220,7 +254,18 @@ export function PaymentIntentIntake({
           </p>
         )}
       </div>
-      <IntentConfirmationCard intent={matchedScenario.scenario.intent} />
+      {structuredIntent || onConfirmStructuredIntent ? (
+        <IntentConfirmationCard
+          intent={matchedScenario.scenario.intent}
+          structuredIntent={structuredIntent}
+          fallbackUsed={structuredIntentFallbackUsed}
+          warnings={structuredIntentWarnings}
+          confirmed={structuredIntentConfirmed}
+          onConfirm={onConfirmStructuredIntent}
+        />
+      ) : (
+        <IntentConfirmationCard intent={matchedScenario.scenario.intent} />
+      )}
     </section>
   )
 }
@@ -245,7 +290,7 @@ function startVoiceCapture({
   const SpeechRecognitionCtor = getSpeechRecognitionConstructor()
   if (!SpeechRecognitionCtor) {
     setVoiceStatus('unsupported')
-    setVoiceMessage('Voice capture is not supported in this browser. Type the payment intent instead.')
+    setVoiceMessage('Speech recognition not supported — type the intent instead.')
     return
   }
 
@@ -255,7 +300,7 @@ function startVoiceCapture({
   recognition.lang = 'en-GB'
   recognition.onstart = () => {
     setVoiceStatus('listening')
-    setVoiceMessage('Listening for payment intent. Speech only fills this field; passkey approval is still required.')
+    setVoiceMessage('Listening… Speech only fills this transcript field; passkey approval is still required.')
   }
   recognition.onresult = (event) => {
     const transcript = Array.from(event.results)
@@ -268,7 +313,7 @@ function startVoiceCapture({
         : transcript
       setText(nextText)
       setVoiceStatus('captured')
-      setVoiceMessage('Voice intent captured. Review and edit before route analysis; voice cannot approve or execute payments.')
+      setVoiceMessage('Transcript captured — review before structuring. Voice cannot approve or execute payments.')
     }
   }
   recognition.onerror = () => {

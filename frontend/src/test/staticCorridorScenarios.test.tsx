@@ -34,9 +34,12 @@ describe('static corridor demo scenarios', () => {
       expect(screen.getAllByText('GBP to India (INR)').length).toBeGreaterThan(0)
     })
 
+    fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
+    await waitFor(() => expect(screen.getAllByText(/Demo fallback structured this intent/i).length).toBeGreaterThan(0))
+    fireEvent.click(screen.getByRole('button', { name: /confirm structured intent/i }))
     fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
 
     await screen.findByText(/using static frontend route trace/i)
-    expect(fetchMock).not.toHaveBeenCalled()
+    expect(fetchMock.mock.calls.some(([url]) => String(url).includes('/api/route-decisions'))).toBe(false)
   })
 })

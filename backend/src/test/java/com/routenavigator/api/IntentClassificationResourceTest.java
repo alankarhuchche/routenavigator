@@ -19,7 +19,13 @@ class IntentClassificationResourceTest {
                 .then()
                 .statusCode(200)
                 .body("scenarioId", equalTo("SCN-001"))
-                .body("classifiedBy", equalTo("KEYWORD_MATCH"));
+                .body("classifiedBy", equalTo("KEYWORD_MATCH"))
+                .body("fallbackUsed", equalTo(true))
+                .body("structuredIntent.rawText", equalTo("send GBP 500 to a UK bank"))
+                .body("structuredIntent.amount", equalTo("GBP 500"))
+                .body("structuredIntent.currency", equalTo("GBP"))
+                .body("structuredIntent.needsReview", equalTo(true))
+                .body("structuredIntent.sourceType", equalTo("rules"));
     }
 
     @Test

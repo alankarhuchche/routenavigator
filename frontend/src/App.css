@@ -2167,6 +2167,35 @@ h2 {
   font-weight: 750;
 }
 
+.intent-structure-actions {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #d9eee9;
+  border-radius: 8px;
+  background: rgba(240, 253, 250, 0.74);
+}
+
+.intent-structure-actions span {
+  color: #475569;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.intent-structure-error {
+  margin: 0;
+  padding: 9px 10px;
+  border: 1px solid #fed7aa;
+  border-radius: 6px;
+  background: #fff7ed;
+  color: #92400e;
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .voice-status-listening {
   color: #0f766e;
 }
@@ -2384,6 +2413,24 @@ h2 {
   font-size: 12px;
   font-weight: 750;
   line-height: 1.45;
+}
+
+.intent-warning-list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 9px 10px 9px 26px;
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.intent-confirm-button {
+  justify-self: start;
 }
 
 .classify-reason {

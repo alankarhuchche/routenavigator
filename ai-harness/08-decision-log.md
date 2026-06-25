@@ -118,3 +118,14 @@
 - Focused Secure Session visibility coverage now asserts that Stage 1 renders, the Continue to Intent Capture CTA is present, Stage 1 keeps intent capture hidden, and Continue opens Stage 2.
 - Backend route logic, API contracts, deployment files, dependencies, Gemini/voice behaviour and payment execution logic remain unchanged.
 - Phase 3C remains the next phase only after visual verification of the local app.
+
+## Voice/Text Structured Intent Decisions
+
+- Phase 3D wired Intent Capture so browser SpeechRecognition produces transcript text only; no raw audio is uploaded or sent to Gemini.
+- Transcript/text is sent to `POST /api/intent/classify` to create a draft structured intent for customer review.
+- `/api/intent/classify` remains backwards-compatible with `scenarioId`, `reason` and `classifiedBy`, and now also returns draft structured intent fields, fallback status, warnings and review metadata.
+- Gemini may structure draft intent fields when `GEMINI_ENABLED=true` and `GEMINI_API_KEY` is configured; otherwise rules fallback structures a safe reviewable draft.
+- Route analysis is disabled until the customer confirms the structured intent. Voice and Gemini cannot approve, execute, amend, cancel or move money.
+- Backend route decision logic remains deterministic. Gemini/rules only structure intent and explain outcomes; they do not select, score, approve or update payment state.
+- Route outcome explanation still uses `POST /api/explanations/route` and continues to expose `provider`, `geminiEnabled`, `explanation` and `redactedTrace` for honest source labelling.
+- Phase 3C remains the next phase after this implementation.

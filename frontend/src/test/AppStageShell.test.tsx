@@ -58,7 +58,31 @@ vi.mock('../api', () => ({
     fallbackApplied: false,
     events: [{ message: 'Authorised', state: 'AUTHORISED', pointOfNoReturnReached: false }],
   }),
-  classifyIntent: vi.fn().mockResolvedValue({ scenarioId: 'SCN-001', reason: 'matched demo intent' }),
+  classifyIntent: vi.fn().mockResolvedValue({
+    scenarioId: 'SCN-001',
+    reason: 'matched demo intent',
+    classifiedBy: 'GEMINI',
+    structuredIntent: {
+      rawText: 'Send GBP 500 to a UK beneficiary as quickly as possible.',
+      amount: 'GBP 500',
+      currency: 'GBP',
+      sourceCountry: 'United Kingdom',
+      source: 'UK bank account',
+      destinationCountry: 'United Kingdom',
+      beneficiaryType: 'Bank account',
+      objective: 'FASTEST',
+      trackingRequired: false,
+      digitalRoutesAllowed: false,
+      traditionalOnly: true,
+      purpose: 'Supplier payment',
+      confidence: 0.82,
+      needsReview: true,
+      sourceType: 'gemini',
+      missingFields: [],
+    },
+    fallbackUsed: false,
+    warnings: ['AI structured this draft intent for customer review.'],
+  }),
   simulateNext: vi.fn(),
   simulateDegradation: vi.fn(),
   getPaymentState: vi.fn(),
@@ -107,6 +131,12 @@ describe('page-like demo stage shell', () => {
     })
     expect(screen.getByLabelText('Customer outcome')).toHaveValue('Send GBP 500 to a UK beneficiary as quickly as possible.')
     expect(screen.getByText('Voice captures intent only. Passkey approval is required before anything moves.')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /analyse safe routes/i })).toBeDisabled()
+    fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
+    expect(await screen.findByText('AI structured this intent. Review before route analysis.')).toBeInTheDocument()
+    expect(screen.getByText('No payment can move from this step. This confirmed intent is used by the route engine. The agent cannot change it or execute the payment.')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: /confirm structured intent/i }))
+    expect(screen.getByRole('button', { name: /analyse safe routes/i })).not.toBeDisabled()
     fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
 
     expect(await screen.findByText('Analysing safe routes')).toBeInTheDocument()

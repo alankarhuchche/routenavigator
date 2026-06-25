@@ -56,6 +56,34 @@ export interface ApiExplanationResponse {
   redactedTrace: ApiDecisionTrace
 }
 
+export interface ApiStructuredIntent {
+  rawText: string
+  amount: string
+  currency: string
+  sourceCountry: string
+  source: string
+  destinationCountry: string
+  beneficiaryType: string
+  objective: string
+  trackingRequired: boolean
+  digitalRoutesAllowed: boolean
+  traditionalOnly: boolean
+  purpose: string
+  confidence: number
+  needsReview: boolean
+  sourceType: 'gemini' | 'template' | 'rules' | string
+  missingFields: string[]
+}
+
+export interface ApiIntentClassificationResponse {
+  scenarioId: string
+  reason: string
+  classifiedBy: string
+  structuredIntent?: ApiStructuredIntent
+  fallbackUsed?: boolean
+  warnings?: string[]
+}
+
 export interface ApiPaymentSnapshot {
   traceId: string
   state: string

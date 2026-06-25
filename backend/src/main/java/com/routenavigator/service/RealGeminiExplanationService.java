@@ -18,15 +18,18 @@ public class RealGeminiExplanationService implements GeminiExplanationService {
     private final TraceRedactionService traceRedactionService;
     private final GeminiApiClient geminiApiClient;
     private final String apiKey;
+    private final String model;
 
     @Inject
     public RealGeminiExplanationService(
             TraceRedactionService traceRedactionService,
             @RestClient GeminiApiClient geminiApiClient,
-            @ConfigProperty(name = "gemini.api-key", defaultValue = "") String apiKey) {
+            @ConfigProperty(name = "gemini.api-key", defaultValue = "") String apiKey,
+            @ConfigProperty(name = "gemini.model", defaultValue = "gemini-2.0-flash") String model) {
         this.traceRedactionService = traceRedactionService;
         this.geminiApiClient = geminiApiClient;
         this.apiKey = apiKey;
+        this.model = model;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class RealGeminiExplanationService implements GeminiExplanationService {
                     List.of(new GeminiApiClient.Content(List.of(new GeminiApiClient.Part(prompt)))),
                     new GeminiApiClient.GenerationConfig(512, 0.2)
             );
-            GeminiApiClient.GeminiResponse response = geminiApiClient.generateContent(apiKey, request);
+            GeminiApiClient.GeminiResponse response = geminiApiClient.generateContent(model, apiKey, request);
             String text = response.candidates().get(0).content().parts().get(0).text();
             return new RouteExplanationResponse("GEMINI", true, text, redacted);
         } catch (Exception e) {

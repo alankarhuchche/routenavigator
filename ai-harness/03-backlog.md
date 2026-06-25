@@ -32,4 +32,5 @@ Phase 1 overall status: Complete. Payment Route Intelligence Phase 1 was deploye
 | 3 UX-fix | Split Secure Session and Intent Capture | Done | Frontend/docs | Split the opening experience into Secure Session and Intent Capture stages while preserving route intelligence, journey controls and approval behaviour. |
 | 3 UX-fix 2 | Premium Secure Session landing screen | Done | Frontend/docs | Redesigned Stage 1 as a premium secure-session opening with visible CTA, readiness sequence and no initial route/debug summary. |
 | 3 UX-fix 3 | Restore visible Secure Session runtime render | Done | Frontend/docs | Added root render fallback and focused visibility coverage after a local blank-page report; Stage 1 is visible in fresh runtime smoke checks. |
+| 3D | Voice/text to structured intent and explanation readiness | Done | Frontend/backend/docs | Wired transcript/text through intent structuring with Gemini/rules fallback, customer review confirmation and bounded route explanation readiness. |
 | 3C | Demo launch pack and walkthrough | Next | Docs/demo | Prepare demo script, walkthrough checklist and launch handoff. |

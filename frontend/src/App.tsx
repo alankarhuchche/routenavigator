@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
 import { demoScenarios } from './data/demoData'
@@ -22,8 +22,8 @@ import { StepIndicator } from './components/StepIndicator'
 import { AgentContextGateway } from './components/AgentContextGateway'
 import { TrustedAgentExplanationPanel } from './components/TrustedAgentExplanationPanel'
 import { ArrowRight, BadgeCheck, Bot, CheckCircle2, Fingerprint, LockKeyhole, ShieldCheck } from 'lucide-react'
-import type { DecisionTrace } from './types'
-import type { ApiPaymentSnapshot } from './apiTypes'
+import type { DecisionTrace, PaymentIntent } from './types'
+import type { ApiIntentClassificationResponse, ApiPaymentSnapshot, ApiStructuredIntent } from './apiTypes'
 import { createRouteDecision, fetchExplanation, authorisePayment, simulateNext, simulateDegradation, classifyIntent } from './api'
 import { adaptTrace } from './traceAdapter'
 import type { LivePreferences } from './components/PaymentIntentIntake'
@@ -50,6 +50,12 @@ function App() {
   const [intentText, setIntentText] = useState(DEFAULT_PAYMENT_INTENT_TEXT)
   const [livePreferences, setLivePreferences] = useState<LivePreferences | null>(null)
   const [classifyReason, setClassifyReason] = useState<string | null>(null)
+  const [structuredIntent, setStructuredIntent] = useState<ApiStructuredIntent | undefined>(undefined)
+  const [structuredIntentFallbackUsed, setStructuredIntentFallbackUsed] = useState(false)
+  const [structuredIntentWarnings, setStructuredIntentWarnings] = useState<string[]>([])
+  const [structuredIntentConfirmed, setStructuredIntentConfirmed] = useState(false)
+  const [isStructuringIntent, setIsStructuringIntent] = useState(false)
+  const [structureError, setStructureError] = useState<string | null>(null)
   const [isAnalysing, setIsAnalysing] = useState(false)
   const [analyseError, setAnalyseError] = useState<string | null>(null)
   const [analysisNotice, setAnalysisNotice] = useState<string | null>(null)
@@ -78,6 +84,20 @@ function App() {
 
   const displayIntent = useMemo(() => {
     const base = scenario.intent
+    if (structuredIntent) {
+      return {
+        ...base,
+        amount: structuredIntent.amount || base.amount,
+        source: structuredIntent.source || base.source,
+        destination: structuredIntent.destinationCountry || base.destination,
+        objective: structuredIntent.objective || base.objective,
+        trackingRequired: structuredIntent.trackingRequired,
+        digitalRoutesAllowed: structuredIntent.digitalRoutesAllowed,
+        constraints: structuredIntent.purpose && structuredIntent.purpose !== 'To be confirmed'
+          ? [structuredIntent.purpose]
+          : base.constraints,
+      }
+    }
     if (!livePreferences) return base
     return {
       ...base,
@@ -85,7 +105,7 @@ function App() {
       trackingRequired: livePreferences.trackingRequired,
       digitalRoutesAllowed: livePreferences.digitalRoutesAllowed,
     }
-  }, [scenario.intent, livePreferences])
+  }, [scenario.intent, livePreferences, structuredIntent])
 
   const maxUnlockedStep: JourneyStep = analysisComplete ? 5 : 2
   const approvalAccepted = Boolean(paymentSnapshot) || staticApprovalAcknowledged
@@ -107,11 +127,53 @@ function App() {
     setAnalyseError(null)
     setAnalysisNotice(null)
     setExplanationProvider(undefined)
+    setStructuredIntent(undefined)
+    setStructuredIntentFallbackUsed(false)
+    setStructuredIntentWarnings([])
+    setStructuredIntentConfirmed(false)
+    setStructureError(null)
+  }
+
+  const handleIntentTextChange = useCallback((text: string) => {
+    setIntentText(text)
+    setStructuredIntentConfirmed(false)
+  }, [])
+
+  async function handleStructureIntent() {
+    if (!intentText.trim()) {
+      setStructureError('Enter or speak a payment outcome before structuring the intent.')
+      return
+    }
+    setIsStructuringIntent(true)
+    setStructureError(null)
+    setStructuredIntentConfirmed(false)
+    try {
+      const classified: ApiIntentClassificationResponse = await classifyIntent(intentText)
+      setClassifyReason(classified.reason)
+      const classifiedScenario = demoScenarios.find((candidate) => candidate.id === classified.scenarioId)
+      if (scenario.executionMode !== 'STATIC_DEMO' && classifiedScenario?.executionMode !== 'STATIC_DEMO') {
+        setScenarioId(classified.scenarioId)
+      }
+      setStructuredIntent(classified.structuredIntent ?? localStructuredIntent(intentText, displayIntent))
+      setStructuredIntentFallbackUsed(Boolean(classified.fallbackUsed || classified.classifiedBy !== 'GEMINI' || !classified.structuredIntent))
+      setStructuredIntentWarnings(classified.warnings ?? [])
+    } catch {
+      setStructuredIntent(localStructuredIntent(intentText, displayIntent))
+      setStructuredIntentFallbackUsed(true)
+      setStructuredIntentWarnings(['Demo fallback structured this intent locally for customer review. No payment can move from this step.'])
+      setClassifyReason('Backend intent structuring unavailable — using local demo fallback structured intent.')
+    } finally {
+      setIsStructuringIntent(false)
+    }
   }
 
   async function handleAnalyse() {
     if (!intentText.trim()) {
       setAnalyseError('Enter a payment outcome before analysing safe routes.')
+      return
+    }
+    if (!structuredIntentConfirmed) {
+      setAnalyseError('Confirm the structured intent before analysing safe routes.')
       return
     }
     setIsAnalysing(true)
@@ -133,14 +195,6 @@ function App() {
         setAnalysisComplete(true)
         setStep(3)
         return
-      }
-      if (intentText.trim()) {
-        try {
-          const classified = await classifyIntent(intentText)
-          setClassifyReason(classified.reason)
-        } catch {
-          // classification failed — reason text omitted, scenario unchanged
-        }
       }
       // Step 2: run route decision + Gemini explanation
       const apiTrace = await createRouteDecision(resolvedScenarioId)
@@ -322,9 +376,24 @@ function App() {
                   <PaymentIntentIntake
                     scenarios={demoScenarios}
                     intentText={intentText}
-                    onIntentTextChange={setIntentText}
+                    onIntentTextChange={handleIntentTextChange}
                     onPreferencesChange={setLivePreferences}
                     onScenarioMatch={setScenarioId}
+                    onStructureIntent={handleStructureIntent}
+                    onConfirmStructuredIntent={() => {
+                      if (structuredIntent) {
+                        setStructuredIntentConfirmed(true)
+                        setAnalyseError(null)
+                      } else {
+                        setStructureError('Structure the intent before confirming it for route analysis.')
+                      }
+                    }}
+                    structuredIntent={structuredIntent}
+                    structuredIntentFallbackUsed={structuredIntentFallbackUsed}
+                    structuredIntentWarnings={structuredIntentWarnings}
+                    structureError={structureError}
+                    isStructuring={isStructuringIntent}
+                    structuredIntentConfirmed={structuredIntentConfirmed}
                   />
                 </div>
                 <div>
@@ -476,7 +545,8 @@ function App() {
                 type="button"
                 className="primary-btn"
                 onClick={handleAnalyse}
-                disabled={isAnalysing || !intentText.trim()}
+                disabled={isAnalysing || !intentText.trim() || !structuredIntentConfirmed}
+                title={!structuredIntentConfirmed ? 'Confirm the structured intent before route analysis' : undefined}
               >
                 {isAnalysing ? 'Analysing...' : 'Analyse safe routes'}
                 {!isAnalysing && <ArrowRight size={16} aria-hidden="true" />}
@@ -555,3 +625,29 @@ function continueLabel(step: JourneyStep) {
 }
 
 export default App
+
+function localStructuredIntent(rawText: string, intent: PaymentIntent): ApiStructuredIntent {
+  return {
+    rawText,
+    amount: intent.amount || 'To be confirmed',
+    currency: firstCurrency(`${intent.amount} ${intent.destination} ${rawText}`),
+    sourceCountry: intent.source || 'To be confirmed',
+    source: intent.source || 'To be confirmed',
+    destinationCountry: intent.destination || 'To be confirmed',
+    beneficiaryType: intent.destination.toLowerCase().includes('wallet') ? 'Digital wallet' : 'Bank account',
+    objective: intent.objective,
+    trackingRequired: intent.trackingRequired,
+    digitalRoutesAllowed: intent.digitalRoutesAllowed,
+    traditionalOnly: !intent.digitalRoutesAllowed,
+    purpose: intent.constraints[0] ?? 'To be confirmed',
+    confidence: 0.62,
+    needsReview: true,
+    sourceType: 'rules',
+    missingFields: [],
+  }
+}
+
+function firstCurrency(text: string) {
+  const match = text.toUpperCase().match(/\b(GBP|USD|USDC|EUR|INR|CNY|AUD|AED)\b/)
+  return match?.[1] ?? 'To be confirmed'
+}

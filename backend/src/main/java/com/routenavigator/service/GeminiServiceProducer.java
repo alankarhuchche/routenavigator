@@ -24,11 +24,14 @@ public class GeminiServiceProducer {
     @ConfigProperty(name = "gemini.api-key")
     Optional<String> apiKey;
 
+    @ConfigProperty(name = "gemini.model", defaultValue = "gemini-2.0-flash")
+    String model;
+
     @Produces
     @ApplicationScoped
     public GeminiExplanationService produceExplanationService() {
         if (geminiEnabled && apiKey.isPresent() && !apiKey.get().isBlank()) {
-            return new RealGeminiExplanationService(traceRedactionService, geminiApiClient, apiKey.get());
+            return new RealGeminiExplanationService(traceRedactionService, geminiApiClient, apiKey.get(), model);
         }
         return new TemplateExplanationService(traceRedactionService, geminiEnabled);
     }

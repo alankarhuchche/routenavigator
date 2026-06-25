@@ -41,6 +41,8 @@ Do not run Cloud Build or Cloud Run deployment commands without explicit user co
 - [ ] Confirm Cloud Run service name, project and region with the user.
 - [ ] Avoid stale frontend assets by building from the current committed source.
 - [ ] Confirm Gemini remains disabled unless explicitly configured.
+- [ ] Confirm intent structuring falls back to rules when Gemini is disabled or unavailable.
+- [ ] If enabling Gemini, set `GEMINI_ENABLED=true`, provide `GEMINI_API_KEY` via Secret Manager, and optionally set `GEMINI_MODEL`.
 - [ ] Confirm no production secrets are required.
 - [ ] Confirm `/api/health` works after local container run or deployment.
 - [ ] Confirm the deployed URL shows the Phase 1 UI, not an old UI.

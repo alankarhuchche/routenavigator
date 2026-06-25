@@ -2,6 +2,7 @@ package com.routenavigator.service;
 
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
@@ -12,8 +13,11 @@ import java.util.List;
 public interface GeminiApiClient {
 
     @POST
-    @Path("/gemini-2.0-flash:generateContent")
-    GeminiResponse generateContent(@QueryParam("key") String apiKey, GeminiRequest request);
+    @Path("/{model}:generateContent")
+    GeminiResponse generateContent(
+            @PathParam("model") String model,
+            @QueryParam("key") String apiKey,
+            GeminiRequest request);
 
     record GeminiRequest(List<Content> contents, GenerationConfig generationConfig) {}
 

@@ -23,6 +23,9 @@ describe('Approval step transition', () => {
     fireEvent.click(screen.getAllByRole('button', { name: /Continue to Intent Capture/i })[0])
     const outcomeInput = screen.getByLabelText('Customer outcome')
     fireEvent.change(outcomeInput, { target: { value: 'Send GBP 5,000 to India in INR with tracking.' } })
+    fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
+    await waitFor(() => expect(screen.getAllByText(/structured this intent/i).length).toBeGreaterThan(0))
+    fireEvent.click(screen.getByRole('button', { name: /confirm structured intent/i }))
     fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
 
     expect(await screen.findByText('Analysing safe routes')).toBeInTheDocument()
@@ -56,6 +59,9 @@ describe('Approval step transition', () => {
     fireEvent.change(screen.getByLabelText('Customer outcome'), {
       target: { value: 'Send GBP 5,000 to India in INR with tracking.' },
     })
+    fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
+    await waitFor(() => expect(screen.getAllByText(/structured this intent/i).length).toBeGreaterThan(0))
+    fireEvent.click(screen.getByRole('button', { name: /confirm structured intent/i }))
     fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
 
     await screen.findByText(/using static frontend route trace/i)

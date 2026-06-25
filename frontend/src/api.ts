@@ -1,4 +1,4 @@
-import type { ApiDecisionTrace, ApiExplanationResponse, ApiPaymentSnapshot } from './apiTypes'
+import type { ApiDecisionTrace, ApiExplanationResponse, ApiIntentClassificationResponse, ApiPaymentSnapshot } from './apiTypes'
 
 async function requireOk(res: Response): Promise<Response> {
   if (!res.ok) {
@@ -51,7 +51,7 @@ export async function getPaymentState(traceId: string): Promise<ApiPaymentSnapsh
   return res.json()
 }
 
-export async function classifyIntent(text: string): Promise<{ scenarioId: string; reason: string; classifiedBy: string }> {
+export async function classifyIntent(text: string): Promise<ApiIntentClassificationResponse> {
   const res = await fetch('/api/intent/classify', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

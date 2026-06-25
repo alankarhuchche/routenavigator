@@ -64,7 +64,7 @@ describe('voice intent capture demo', () => {
 
     const voiceButton = screen.getByRole('button', { name: /speak payment intent/i })
     expect(voiceButton).toBeDisabled()
-    expect(screen.getByText('Voice captures intent only. Passkey approval is still required before anything moves.')).toBeInTheDocument()
+    expect(screen.getByText('Speech recognition not supported — type the intent instead.')).toBeInTheDocument()
     expect(screen.getByText('Voice captures intent only. Passkey approval is required before anything moves.')).toBeInTheDocument()
   })
 
@@ -92,8 +92,49 @@ describe('voice intent capture demo', () => {
     fireEvent.click(screen.getByRole('button', { name: /speak payment intent/i }))
 
     expect(screen.getByLabelText('Customer outcome')).toHaveValue('Send USD 10,000 from my UK bank account to a US bank account. Fastest route, tracking required, digital routes allowed. Send GBP 5,000 to India in INR with tracking.')
-    expect(screen.getByText(/Voice intent captured/i)).toBeInTheDocument()
+    expect(screen.getByText(/Transcript captured/i)).toBeInTheDocument()
     expect(screen.getByText(/voice cannot approve or execute payments/i)).toBeInTheDocument()
+  })
+
+  it('offers transcript structuring and customer confirmation before route analysis', () => {
+    const onStructureIntent = vi.fn()
+    const onConfirmStructuredIntent = vi.fn()
+
+    render(
+      <PaymentIntentIntake
+        scenarios={demoScenarios}
+        intentText="Send GBP 5,000 to India in INR with tracking."
+        onStructureIntent={onStructureIntent}
+        onConfirmStructuredIntent={onConfirmStructuredIntent}
+        structuredIntent={{
+          rawText: 'Send GBP 5,000 to India in INR with tracking.',
+          amount: 'GBP 5,000',
+          currency: 'GBP',
+          sourceCountry: 'United Kingdom',
+          source: 'UK bank account',
+          destinationCountry: 'India',
+          beneficiaryType: 'Bank account',
+          objective: 'FASTEST',
+          trackingRequired: true,
+          digitalRoutesAllowed: false,
+          traditionalOnly: true,
+          purpose: 'Supplier payment',
+          confidence: 0.76,
+          needsReview: true,
+          sourceType: 'rules',
+          missingFields: [],
+        }}
+        structuredIntentFallbackUsed
+        structuredIntentWarnings={['Demo fallback structured this intent for customer review.']}
+      />,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
+    expect(onStructureIntent).toHaveBeenCalled()
+    expect(screen.getByText('Demo fallback structured this intent. Review before route analysis.')).toBeInTheDocument()
+    expect(screen.getByText(/No payment can move from this step/i)).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: /confirm structured intent/i }))
+    expect(onConfirmStructuredIntent).toHaveBeenCalled()
   })
 })
 

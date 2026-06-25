@@ -1,32 +1,50 @@
 import { BadgeCheck, Bot, CheckCircle2 } from 'lucide-react'
+import type { ApiStructuredIntent } from '../apiTypes'
 import type { PaymentIntent } from '../types'
 
 interface IntentConfirmationCardProps {
   intent: PaymentIntent
+  structuredIntent?: ApiStructuredIntent
+  fallbackUsed?: boolean
+  warnings?: string[]
+  confirmed?: boolean
+  onConfirm?: () => void
 }
 
-export function IntentConfirmationCard({ intent }: IntentConfirmationCardProps) {
+export function IntentConfirmationCard({
+  intent,
+  structuredIntent,
+  fallbackUsed,
+  warnings,
+  confirmed,
+  onConfirm,
+}: IntentConfirmationCardProps) {
   const fields = [
-    { label: 'Amount', value: display(intent.amount) },
-    { label: 'Destination', value: display(intent.destination) },
-    { label: 'Beneficiary type', value: beneficiaryType(intent.destination) },
-    { label: 'Target currency', value: targetCurrency(intent.amount, intent.destination) },
-    { label: 'Urgency', value: urgency(intent.objective) },
-    { label: 'Priority', value: objectiveLabel(intent.objective) },
-    { label: 'Payment purpose', value: intent.constraints[0] ?? 'To be confirmed' },
+    { label: 'Amount', value: display(structuredIntent?.amount ?? intent.amount) },
+    { label: 'Destination', value: display(structuredIntent?.destinationCountry ?? intent.destination) },
+    { label: 'Beneficiary type', value: display(structuredIntent?.beneficiaryType ?? beneficiaryType(intent.destination)) },
+    { label: 'Target currency', value: display(structuredIntent?.currency ?? targetCurrency(intent.amount, intent.destination)) },
+    { label: 'Urgency', value: urgency(structuredIntent?.objective ?? intent.objective) },
+    { label: 'Priority', value: objectiveLabel(structuredIntent?.objective ?? intent.objective) },
+    { label: 'Payment purpose', value: structuredIntent?.purpose ?? intent.constraints[0] ?? 'To be confirmed' },
     { label: 'Execution permission', value: 'Not granted — final approval required' },
   ]
+  const sourceLabel = structuredIntent
+    ? fallbackUsed
+      ? 'Demo fallback structured this intent. Review before route analysis.'
+      : 'AI structured this intent. Review before route analysis.'
+    : 'Confirm this structured payment intent before we analyse safe routes.'
 
   return (
     <section className="intent-confirmation-card" aria-label="Structured payment intent confirmation">
       <div className="intent-confirmation-head">
         <div>
           <h3>Here’s what I understood</h3>
-          <p>Confirm this structured payment intent before we analyse safe routes.</p>
+          <p>{sourceLabel}</p>
         </div>
         <span>
           <CheckCircle2 size={15} aria-hidden="true" />
-          Ready for route analysis
+          {confirmed ? 'Confirmed for route analysis' : 'Customer review required'}
         </span>
       </div>
 
@@ -42,17 +60,29 @@ export function IntentConfirmationCard({ intent }: IntentConfirmationCardProps) 
       <div className="intent-confirmation-meta">
         <span>
           <Bot size={14} aria-hidden="true" />
-          Captured by: Trusted banking agent
+          Source: {structuredIntent ? sourceName(structuredIntent.sourceType) : 'Demo preview'}
         </span>
         <span>
           <BadgeCheck size={14} aria-hidden="true" />
-          Intent confidence: Demo estimate
+          Intent confidence: {structuredIntent ? `${Math.round(structuredIntent.confidence * 100)}% demo estimate` : 'Demo estimate'}
         </span>
       </div>
 
+      {warnings && warnings.length > 0 && (
+        <ul className="intent-warning-list">
+          {warnings.map((warning) => <li key={warning}>{warning}</li>)}
+        </ul>
+      )}
+
       <p className="intent-confirmation-boundary">
-        This confirmed intent is used by the route engine. The agent cannot change it or execute the payment.
+        No payment can move from this step. This confirmed intent is used by the route engine. The agent cannot change it or execute the payment.
       </p>
+
+      {onConfirm && (
+        <button type="button" className="secondary-btn intent-confirm-button" onClick={onConfirm}>
+          {confirmed ? 'Structured intent confirmed' : 'Confirm structured intent'}
+        </button>
+      )}
     </section>
   )
 }
@@ -83,4 +113,11 @@ function urgency(objective: string) {
 
 function objectiveLabel(objective: string) {
   return objective.replaceAll('_', ' ').toLowerCase().replace(/^\w/, (letter) => letter.toUpperCase())
+}
+
+function sourceName(sourceType: string) {
+  if (sourceType === 'gemini') return 'Gemini structured draft'
+  if (sourceType === 'rules') return 'Rules fallback structured draft'
+  if (sourceType === 'template') return 'Template structured draft'
+  return sourceType
 }

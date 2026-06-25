@@ -1,6 +1,6 @@
 # Program Execution State
 
-Previous completed phase: Phase 3 UX-fix 3 — Restore visible Secure Session runtime render
+Previous completed phase: Phase 3D — Browser voice transcript to structured intent and explanation readiness
 
 Current program phase: Phase 3C — Demo launch pack and walkthrough
 
@@ -8,13 +8,13 @@ Current phase file: not created yet
 
 Next phase: Phase 3C — Demo launch pack and walkthrough
 
-Last completed local commit before this run: `1dc9142` (`Polish secure session landing screen`)
+Last completed local commit before this run: `f032591` (`Fix blank secure session render`)
 
 Latest gate resolution: Phase 2C-fix kept scenarios `SCN-007` through `SCN-011` as labelled static frontend corridor demos. Backend corridor route support remains deferred behind the route decision logic / product scope gate.
 
-Latest phase result: Phase 3 UX-fix 3 investigated a reported blank first page, confirmed Secure Session renders visibly in a fresh runtime smoke check, added a root render fallback for local browser/HMR failures and added focused visibility coverage for Stage 1 and Continue navigation. The five-stage journey, route-engine authority, agent boundaries and passkey approval boundary remain intact.
+Latest phase result: Phase 3D wired browser transcript/text to backend intent structuring via `POST /api/intent/classify`, added Gemini/rules draft structured intent fields, required customer confirmation before route analysis and preserved bounded route explanation via `POST /api/explanations/route`. The route engine remains deterministic and voice/Gemini cannot approve, execute, amend, cancel or move money.
 
-Push status: Phase 2 release candidate was pushed. Phase 3A, 3B, 3A-fix, 3B-fix, Phase 3 UX-fix, Phase 3 UX-fix 2 and Phase 3 UX-fix 3 local changes are not pushed.
+Push status: Phase 2 release candidate was pushed. Phase 3A, 3B, 3A-fix, 3B-fix, Phase 3 UX-fix, Phase 3 UX-fix 2, Phase 3 UX-fix 3 and Phase 3D local changes are not pushed.
 
 Deployment trigger warning: pushing to GitHub may trigger Cloud Build and Cloud Run deployment.
 
