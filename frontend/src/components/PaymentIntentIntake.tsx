@@ -261,7 +261,7 @@ export function PaymentIntentIntake({
           fallbackUsed={structuredIntentFallbackUsed}
           warnings={structuredIntentWarnings}
           confirmed={structuredIntentConfirmed}
-          onConfirm={onConfirmStructuredIntent}
+          onConfirm={structuredIntent ? onConfirmStructuredIntent : undefined}
         />
       ) : (
         <IntentConfirmationCard intent={matchedScenario.scenario.intent} />

@@ -16,4 +16,4 @@
 | Voice intent capture is demo-only | Reduced | No | 3D | Browser speech recognition still only produces transcript text; Phase 3D sends transcript/text to backend intent structuring with Gemini/rules fallback and requires customer confirmation before route analysis. |
 | Map is representative, not live telemetry | Medium | No | Future | Keep safety line visible. Do not imply real correspondent network visibility. |
 | No real payment execution | High | No | Future | This is correct for the demo. Do not add live rails or money movement without a separate approved architecture/security phase. |
-| Gemini explanation is optional and must remain bounded | Medium | No | Future | Gemini may explain redacted traces only. It must not score, select, approve or update payment state. |
+| Gemini explanation/intent structuring live path is not validated | Medium | No | Deploy verification | Fallback mode passed local Phase 3E QA without secrets. Live Gemini requires explicit Cloud Run env/Secret Manager config and post-deploy verification. Gemini may draft intent and explain redacted traces only; it must not score, select, approve or update payment state. |

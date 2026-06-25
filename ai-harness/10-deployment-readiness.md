@@ -16,6 +16,15 @@ The UI was viewed via the local Vite development server during Phase 1 work. Clo
 
 The current Docker path builds the Vite app and copies `frontend/dist/` into `backend/src/main/resources/META-INF/resources/` before packaging Quarkus. The deployment readiness pass must verify that Cloud Run is serving those fresh production assets, not stale frontend output.
 
+## Last Local Release-Gate QA
+
+- Date: 2026-06-25
+- Commit under review: `eee49cb` plus local Phase 3E blocker fix
+- Automated validation: frontend lint/typecheck/build/test passed; backend test and package passed; `scripts/ai-precommit-check.sh` passed
+- Runtime smoke: Vite UI plus local backend fallback mode completed the five-stage journey with no page-level JavaScript errors
+- Deployment mode: Cloud Run Docker path still builds Vite assets and copies `frontend/dist/` into Quarkus static resources before packaging
+- Gemini mode: fallback mode is ready without secrets; live Gemini still requires explicit `GEMINI_ENABLED`, `GEMINI_API_KEY` and optional `GEMINI_MODEL` configuration
+
 ## Do Not Deploy Without Confirmation
 
 Do not run Cloud Build or Cloud Run deployment commands without explicit user confirmation in the active task.
