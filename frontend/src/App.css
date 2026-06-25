@@ -2160,6 +2160,101 @@ h2 {
   font-weight: 700;
 }
 
+.voice-caption-card,
+.captured-transcript-card {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
+}
+
+.voice-caption-card {
+  border: 1px solid #99f6e4;
+  background: linear-gradient(135deg, rgba(240, 253, 250, 0.96), rgba(255, 255, 255, 0.92));
+}
+
+.voice-caption-head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.voice-caption-head div {
+  display: grid;
+  gap: 2px;
+}
+
+.voice-caption-head strong {
+  color: #0f766e;
+  font-size: 13px;
+}
+
+.voice-caption-head span:not(.listening-pulse) {
+  color: #475569;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.listening-pulse {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #14b8a6;
+  box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.5);
+  animation: listening-pulse 1.4s ease-out infinite;
+}
+
+.voice-caption-card p,
+.captured-transcript-card p {
+  margin: 0;
+  color: #0f172a;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.voice-caption-card p {
+  color: #334155;
+  font-style: italic;
+}
+
+.voice-caption-card small,
+.captured-transcript-card small {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.captured-transcript-card {
+  border: 1px solid #bfdbfe;
+  background: linear-gradient(135deg, rgba(239, 246, 255, 0.96), rgba(255, 255, 255, 0.94));
+}
+
+.captured-transcript-card strong {
+  color: #1e3a8a;
+  font-size: 13px;
+}
+
+.captured-transcript-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@keyframes listening-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 9px rgba(20, 184, 166, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(20, 184, 166, 0);
+  }
+}
+
 .intent-helper-text {
   margin: -8px 0 0;
   color: #64748b;

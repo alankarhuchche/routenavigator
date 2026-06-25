@@ -129,3 +129,12 @@
 - Backend route decision logic remains deterministic. Gemini/rules only structure intent and explain outcomes; they do not select, score, approve or update payment state.
 - Route outcome explanation still uses `POST /api/explanations/route` and continues to expose `provider`, `geminiEnabled`, `explanation` and `redactedTrace` for honest source labelling.
 - Phase 3C remains the next phase after this implementation.
+
+## Live Transcript Confirmation Decisions
+
+- Phase 3D-fix changed browser SpeechRecognition from final-only capture to live captioned capture with interim results enabled.
+- Interim transcript is displayed in the browser as a live caption only; it is not copied into the main intent text and is not sent to Gemini or `/api/intent/classify`.
+- Final captured transcript is shown in a review panel before structuring. The customer can use the transcript, try again or edit manually.
+- A captured transcript is sent for Gemini/rules structuring only after the user confirms it or chooses the manual Structure intent action.
+- No raw audio is uploaded. Voice cannot approve, execute, amend, cancel or move money. Passkey/customer approval remains the final movement boundary.
+- Phase 3E remains the next release-gate phase after this fix.

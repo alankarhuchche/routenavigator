@@ -13,7 +13,7 @@
 | `.claude/worktrees` git noise | Low | No | 1K | Local worktree metadata appears modified. Do not touch it casually; exclude from deployment commits if unrelated. |
 | Cloud Run may serve stale frontend assets if build packaging is wrong | Resolved | No | 1M | Resolved for Phase 1: deployed app served the new UI successfully after GitHub -> Cloud Build -> Cloud Run deployment. |
 | Agent/MCP drawer is mocked only | Medium | No | Future | Keep labelled as mocked/advice-only. Do not imply real MCP/OAuth/tool calls. |
-| Voice intent capture is demo-only | Reduced | No | 3D | Browser speech recognition still only produces transcript text; Phase 3D sends transcript/text to backend intent structuring with Gemini/rules fallback and requires customer confirmation before route analysis. |
+| Voice intent capture is demo-only | Reduced | No | 3D-fix | Browser speech recognition still only produces transcript text; Phase 3D-fix shows interim transcript captions locally and requires final transcript confirmation before backend/Gemini/rules structuring. |
 | Map is representative, not live telemetry | Medium | No | Future | Keep safety line visible. Do not imply real correspondent network visibility. |
 | No real payment execution | High | No | Future | This is correct for the demo. Do not add live rails or money movement without a separate approved architecture/security phase. |
 | Gemini explanation/intent structuring live path is not validated | Medium | No | Deploy verification | Fallback mode passed local Phase 3E QA without secrets. Live Gemini requires explicit Cloud Run env/Secret Manager config and post-deploy verification. Gemini may draft intent and explain redacted traces only; it must not score, select, approve or update payment state. |

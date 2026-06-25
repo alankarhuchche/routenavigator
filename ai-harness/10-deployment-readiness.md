@@ -25,6 +25,12 @@ The current Docker path builds the Vite app and copies `frontend/dist/` into `ba
 - Deployment mode: Cloud Run Docker path still builds Vite assets and copies `frontend/dist/` into Quarkus static resources before packaging
 - Gemini mode: fallback mode is ready without secrets; live Gemini still requires explicit `GEMINI_ENABLED`, `GEMINI_API_KEY` and optional `GEMINI_MODEL` configuration
 
+## Voice Transcript Deployment Note
+
+- Phase 3D-fix keeps browser SpeechRecognition local to the client. Interim transcript captions are displayed only in the browser.
+- Final captured transcript must be confirmed before it is sent as text to `/api/intent/classify`.
+- No raw audio is uploaded or sent to Gemini.
+
 ## Do Not Deploy Without Confirmation
 
 Do not run Cloud Build or Cloud Run deployment commands without explicit user confirmation in the active task.

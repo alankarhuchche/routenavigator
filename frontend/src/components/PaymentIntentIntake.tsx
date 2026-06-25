@@ -1,6 +1,5 @@
 import { Mic, Sparkles } from 'lucide-react'
-import type { Dispatch, SetStateAction } from 'react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { DEFAULT_PAYMENT_INTENT_TEXT } from '../defaultIntent'
 import type { ApiStructuredIntent } from '../apiTypes'
 import type { DemoScenario } from '../types'
@@ -18,7 +17,7 @@ interface PaymentIntentIntakeProps {
   onIntentTextChange?: (text: string) => void
   onPreferencesChange?: (prefs: LivePreferences) => void
   onScenarioMatch?: (scenarioId: string) => void
-  onStructureIntent?: () => void
+  onStructureIntent?: (textOverride?: string) => void
   onConfirmStructuredIntent?: () => void
   structuredIntent?: ApiStructuredIntent
   structuredIntentFallbackUsed?: boolean
@@ -36,7 +35,7 @@ interface SpeechRecognitionResultLike {
 }
 
 interface SpeechRecognitionEventLike {
-  results: ArrayLike<ArrayLike<SpeechRecognitionResultLike>>
+  results: ArrayLike<ArrayLike<SpeechRecognitionResultLike> & { isFinal?: boolean }>
 }
 
 interface SpeechRecognitionLike {
@@ -79,7 +78,10 @@ export function PaymentIntentIntake({
   const [voiceStatus, setVoiceStatus] = useState<VoiceStatus>(() => getSpeechRecognitionConstructor() ? 'idle' : 'unsupported')
   const [voiceMessage, setVoiceMessage] = useState(() => getSpeechRecognitionConstructor()
     ? 'Voice captures intent only. Passkey approval is still required before anything moves.'
-    : 'Speech recognition not supported — type the intent instead.')
+    : 'Speech recognition is not supported in this browser. Type the payment intent instead.')
+  const [interimTranscript, setInterimTranscript] = useState('')
+  const [capturedTranscript, setCapturedTranscript] = useState('')
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const naturalLanguageIntent = intentText ?? internalIntent
 
   function updateIntentText(text: string) {
@@ -87,6 +89,41 @@ export function PaymentIntentIntake({
       setInternalIntent(text)
     }
     onIntentTextChange?.(text)
+  }
+
+  function beginVoiceCapture() {
+    startVoiceCapture({
+      setInterimTranscript,
+      setCapturedTranscript,
+      setVoiceStatus,
+      setVoiceMessage,
+    })
+  }
+
+  function useCapturedTranscript() {
+    const transcript = capturedTranscript.trim()
+    if (!transcript) return
+    updateIntentText(transcript)
+    setInterimTranscript('')
+    setVoiceMessage('Transcript confirmed — structuring intent for customer review. Voice cannot approve or execute payments.')
+    onStructureIntent?.(transcript)
+  }
+
+  function tryVoiceAgain() {
+    setInterimTranscript('')
+    setCapturedTranscript('')
+    beginVoiceCapture()
+  }
+
+  function editManually() {
+    if (capturedTranscript.trim()) {
+      updateIntentText(capturedTranscript.trim())
+    }
+    setInterimTranscript('')
+    setCapturedTranscript('')
+    setVoiceStatus(getSpeechRecognitionConstructor() ? 'idle' : 'unsupported')
+    setVoiceMessage('Edit the transcript manually before structuring. No raw audio is uploaded.')
+    textareaRef.current?.focus()
   }
 
   useEffect(() => {
@@ -131,6 +168,7 @@ export function PaymentIntentIntake({
         <label htmlFor="natural-language-intent">Customer outcome</label>
         <div className="outcome-input-row">
           <textarea
+            ref={textareaRef}
             id="natural-language-intent"
             value={naturalLanguageIntent}
             rows={7}
@@ -145,18 +183,48 @@ export function PaymentIntentIntake({
             disabled={voiceStatus === 'unsupported' || voiceStatus === 'listening'}
             title={voiceStatus === 'unsupported' ? 'Speech recognition is not supported in this browser' : 'Speak payment intent for demo capture'}
             aria-label="Speak payment intent"
-            onClick={() => startVoiceCapture({
-              currentText: naturalLanguageIntent,
-              setText: updateIntentText,
-              setVoiceStatus,
-              setVoiceMessage,
-            })}
+            onClick={beginVoiceCapture}
           >
             <Mic size={17} aria-hidden="true" />
             <span>{voiceStatus === 'listening' ? 'Listening' : 'Speak payment intent'}</span>
           </button>
         </div>
         <p className={`voice-mock-note voice-status-${voiceStatus}`}>{voiceMessage}</p>
+        {(voiceStatus === 'listening' || interimTranscript) && (
+          <section className="voice-caption-card" aria-live="polite" aria-label="Live transcript">
+            <div className="voice-caption-head">
+              <span className="listening-pulse" aria-hidden="true" />
+              <div>
+                <strong>Listening…</strong>
+                <span>Live transcript</span>
+              </div>
+            </div>
+            <p>
+              {interimTranscript || 'Browser speech recognition is listening. Start speaking your payment outcome.'}
+            </p>
+            <small>Browser speech recognition is converting your voice to text. No payment can move from this step.</small>
+          </section>
+        )}
+        {capturedTranscript && (
+          <section className="captured-transcript-card" aria-label="Captured transcript review">
+            <div>
+              <strong>Captured transcript — review before structuring</strong>
+              <p>{capturedTranscript}</p>
+            </div>
+            <div className="captured-transcript-actions">
+              <button type="button" className="secondary-btn" onClick={useCapturedTranscript}>
+                Use this transcript
+              </button>
+              <button type="button" className="secondary-btn" onClick={tryVoiceAgain}>
+                Try again
+              </button>
+              <button type="button" className="secondary-btn" onClick={editManually}>
+                Edit manually
+              </button>
+            </div>
+            <small>Nothing is sent for structuring until you use this transcript or choose Structure intent manually.</small>
+          </section>
+        )}
         <p className="intent-helper-text">
           {naturalLanguageIntent.trim().length} characters captured. Review and edit before analysis.
         </p>
@@ -165,7 +233,7 @@ export function PaymentIntentIntake({
           <button
             type="button"
             className="secondary-btn"
-            onClick={onStructureIntent}
+            onClick={() => onStructureIntent?.()}
             disabled={isStructuring || !naturalLanguageIntent.trim()}
           >
             {isStructuring ? 'Structuring intent...' : 'Structure intent'}
@@ -277,41 +345,53 @@ function getSpeechRecognitionConstructor() {
 }
 
 function startVoiceCapture({
-  currentText,
-  setText,
+  setInterimTranscript,
+  setCapturedTranscript,
   setVoiceStatus,
   setVoiceMessage,
 }: {
-  currentText: string
-  setText: (text: string) => void
-  setVoiceStatus: Dispatch<SetStateAction<VoiceStatus>>
+  setInterimTranscript: (text: string) => void
+  setCapturedTranscript: (text: string) => void
+  setVoiceStatus: (updater: VoiceStatus | ((current: VoiceStatus) => VoiceStatus)) => void
   setVoiceMessage: (message: string) => void
 }) {
   const SpeechRecognitionCtor = getSpeechRecognitionConstructor()
   if (!SpeechRecognitionCtor) {
     setVoiceStatus('unsupported')
-    setVoiceMessage('Speech recognition not supported — type the intent instead.')
+    setVoiceMessage('Speech recognition is not supported in this browser. Type the payment intent instead.')
     return
   }
 
+  setInterimTranscript('')
+  setCapturedTranscript('')
   const recognition = new SpeechRecognitionCtor()
   recognition.continuous = false
-  recognition.interimResults = false
+  recognition.interimResults = true
   recognition.lang = 'en-GB'
   recognition.onstart = () => {
     setVoiceStatus('listening')
-    setVoiceMessage('Listening… Speech only fills this transcript field; passkey approval is still required.')
+    setVoiceMessage('Listening… live transcript captions are local to the browser until you confirm them.')
   }
   recognition.onresult = (event) => {
-    const transcript = Array.from(event.results)
-      .map(result => result[0]?.transcript ?? '')
-      .join(' ')
-      .trim()
-    if (transcript) {
-      const nextText = currentText.trim()
-        ? `${currentText.trim()} ${transcript}`
-        : transcript
-      setText(nextText)
+    const transcripts = Array.from(event.results).reduce(
+      (acc, result) => {
+        const transcript = result[0]?.transcript?.trim() ?? ''
+        if (!transcript) return acc
+        if (result.isFinal) {
+          acc.final.push(transcript)
+        } else {
+          acc.interim.push(transcript)
+        }
+        return acc
+      },
+      { final: [] as string[], interim: [] as string[] },
+    )
+    const interim = transcripts.interim.join(' ').trim()
+    const finalTranscript = transcripts.final.join(' ').trim()
+    setInterimTranscript(interim || finalTranscript)
+    if (finalTranscript) {
+      setCapturedTranscript(finalTranscript)
+      setInterimTranscript('')
       setVoiceStatus('captured')
       setVoiceMessage('Transcript captured — review before structuring. Voice cannot approve or execute payments.')
     }

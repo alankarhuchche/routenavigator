@@ -139,26 +139,30 @@ function App() {
     setStructuredIntentConfirmed(false)
   }, [])
 
-  async function handleStructureIntent() {
-    if (!intentText.trim()) {
+  async function handleStructureIntent(textOverride?: string) {
+    const textForStructuring = textOverride?.trim() || intentText.trim()
+    if (!textForStructuring) {
       setStructureError('Enter or speak a payment outcome before structuring the intent.')
       return
+    }
+    if (textOverride?.trim()) {
+      setIntentText(textOverride.trim())
     }
     setIsStructuringIntent(true)
     setStructureError(null)
     setStructuredIntentConfirmed(false)
     try {
-      const classified: ApiIntentClassificationResponse = await classifyIntent(intentText)
+      const classified: ApiIntentClassificationResponse = await classifyIntent(textForStructuring)
       setClassifyReason(classified.reason)
       const classifiedScenario = demoScenarios.find((candidate) => candidate.id === classified.scenarioId)
       if (scenario.executionMode !== 'STATIC_DEMO' && classifiedScenario?.executionMode !== 'STATIC_DEMO') {
         setScenarioId(classified.scenarioId)
       }
-      setStructuredIntent(classified.structuredIntent ?? localStructuredIntent(intentText, displayIntent))
+      setStructuredIntent(classified.structuredIntent ?? localStructuredIntent(textForStructuring, displayIntent))
       setStructuredIntentFallbackUsed(Boolean(classified.fallbackUsed || classified.classifiedBy !== 'GEMINI' || !classified.structuredIntent))
       setStructuredIntentWarnings(classified.warnings ?? [])
     } catch {
-      setStructuredIntent(localStructuredIntent(intentText, displayIntent))
+      setStructuredIntent(localStructuredIntent(textForStructuring, displayIntent))
       setStructuredIntentFallbackUsed(true)
       setStructuredIntentWarnings(['Demo fallback structured this intent locally for customer review. No payment can move from this step.'])
       setClassifyReason('Backend intent structuring unavailable — using local demo fallback structured intent.')
