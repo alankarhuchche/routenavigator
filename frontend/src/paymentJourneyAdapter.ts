@@ -101,7 +101,7 @@ function routeKind(trace: DecisionTrace) {
 
 function domesticTemplates(): JourneyNodeTemplate[] {
   return [
-    ['customer', 'Customer', 'Payment originator', 'Intent confirmed', 'Your payment outcome has been structured for the route engine.', 'Identity and session context are assessed before route analysis.', 'party'],
+    ['customer', 'Customer', 'Money movement originator', 'Intent confirmed', 'Your money movement outcome has been structured for the route engine.', 'Identity and session context are assessed before route analysis.', 'party'],
     ['sending-bank', 'Sending bank', 'Bank-owned orchestration', 'Control checkpoint', 'The bank evaluates whether the payment can be safely routed.', 'Fraud, sanctions, eligibility and route policy are assessed in the route decision.', 'control'],
     ['scheme', 'Domestic scheme', 'Domestic clearing rail', 'Assessed in route decision', 'The recommended domestic rail is checked for availability.', 'Scheme availability and cut-off assumptions are represented with demo-safe data.', 'control'],
     ['beneficiary-bank', 'Beneficiary bank', 'Receiving bank', 'Beneficiary verified', 'The beneficiary bank is checked as the receiving endpoint.', 'Beneficiary reachability is assessed before recommendation.', 'party'],
@@ -111,7 +111,7 @@ function domesticTemplates(): JourneyNodeTemplate[] {
 
 function digitalTemplates(isTokenised: boolean): JourneyNodeTemplate[] {
   return [
-    ['customer', 'Customer', 'Payment originator', 'Intent confirmed', 'Your payment outcome has been confirmed. No money has moved yet.', 'Identity/session and scoped consent were verified before route recommendation.', 'party'],
+    ['customer', 'Customer', 'Money movement originator', 'Intent confirmed', 'Your money movement outcome has been confirmed. No money has moved yet.', 'Identity/session and scoped consent were verified before route recommendation.', 'party'],
     ['sending-bank', 'Sending bank', 'Bank-owned orchestration', 'Control checkpoint', 'The bank checks whether a digital route is permitted for this intent.', 'Policy, fraud, sanctions and liquidity controls are assessed in the route decision.', 'control'],
     ['bridge', isTokenised ? 'Token network' : 'Digital bridge', 'Digital route component', 'Route health checked', 'The digital leg is assessed as part of the route recommendation.', 'Digital eligibility uses demo-safe route attributes, not live network telemetry.', 'control'],
     ['wallet-screening', 'Wallet screening', 'Eligibility checkpoint', 'Assessed in route decision', 'Wallet or payout eligibility must be suitable before recommendation.', 'Wallet, off-ramp and beneficiary endpoint controls are represented generically.', 'control'],
@@ -122,7 +122,7 @@ function digitalTemplates(isTokenised: boolean): JourneyNodeTemplate[] {
 
 function internationalTemplates(trace: DecisionTrace): JourneyNodeTemplate[] {
   return [
-    ['customer', 'Customer', 'Payment originator', 'Intent confirmed', 'Your payment outcome has been confirmed. No money has moved yet.', 'Identity/session and scoped consent were verified before route recommendation.', 'party'],
+    ['customer', 'Customer', 'Money movement originator', 'Intent confirmed', 'Your money movement outcome has been confirmed. No money has moved yet.', 'Identity/session and scoped consent were verified before route recommendation.', 'party'],
     ['sending-bank', 'Sending bank', 'Bank-owned orchestration', 'Control checkpoint', 'The bank evaluates whether the payment can be safely routed.', 'Fraud, sanctions, eligibility and route policy are assessed in the route decision.', 'control'],
     ['fx', 'FX', 'Currency and cut-off checkpoint', 'FX/cut-off checked', 'Currency conversion is assessed before release.', 'FX availability and cut-off are evaluated by the route engine.', 'control'],
     ['swift', trace.selectedRoute.label.includes('SWIFT') ? 'SWIFT / rail' : 'Rail leg', 'Cross-border messaging leg', 'Assessed in route decision', 'The cross-border leg is checked for suitability and traceability.', 'Intermediary details are generic demo labels, not real correspondent bank data.', 'control'],

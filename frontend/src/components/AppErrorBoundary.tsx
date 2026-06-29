@@ -17,7 +17,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error('Payment Route Intelligence render failed', error, info)
+    console.error('Money Movement Intelligence render failed', error, info)
   }
 
   render() {
@@ -27,7 +27,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
           <section className="app-error-card" role="alert">
             <AlertTriangle size={22} aria-hidden="true" />
             <div>
-              <p className="eyebrow">Payment Route Intelligence</p>
+              <p className="eyebrow">Money Movement Intelligence</p>
               <h1>Secure Session could not render</h1>
               <p>
                 The demo hit a local browser render error. No payment action has started, no money has moved,

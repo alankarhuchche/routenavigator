@@ -142,7 +142,7 @@ function App() {
   async function handleStructureIntent(textOverride?: string) {
     const textForStructuring = textOverride?.trim() || intentText.trim()
     if (!textForStructuring) {
-      setStructureError('Enter or speak a payment outcome before structuring the intent.')
+      setStructureError('Enter or speak a money movement outcome before structuring the intent.')
       return
     }
     if (textOverride?.trim()) {
@@ -173,7 +173,7 @@ function App() {
 
   async function handleAnalyse() {
     if (!intentText.trim()) {
-      setAnalyseError('Enter a payment outcome before analysing safe routes.')
+      setAnalyseError('Enter a money movement outcome before analysing safe routes.')
       return
     }
     if (!structuredIntentConfirmed) {
@@ -276,11 +276,11 @@ function App() {
       <DisclaimerBanner />
       <header className="app-header">
         <div>
-          <p className="eyebrow">Payment Route Intelligence</p>
-          <h1>Payment Route Intelligence</h1>
-          <p className="header-tagline">Express the outcome. Let the bank recommend the safest executable route.</p>
+          <p className="eyebrow">Money Movement Intelligence</p>
+          <h1>Money Movement Intelligence</h1>
+          <p className="header-tagline">Ask to move money. Let the bank find the best safe way.</p>
           <p className="journey-narrative">
-            Customers no longer need to choose rails. They confirm the outcome; the bank evaluates safe routes.
+            The customer does not choose a rail. They confirm the outcome; the bank evaluates safe movement options.
           </p>
         </div>
         {analysisComplete ? (
@@ -295,7 +295,7 @@ function App() {
           <div className="header-metrics header-session-strip" aria-label="Secure session boundaries">
             <span className="header-chip">Demo environment</span>
             <span className="header-chip">No money moved</span>
-            <span className="header-chip">Route engine decides</span>
+            <span className="header-chip">Bank route engine decides</span>
           </div>
         )}
       </header>
@@ -329,8 +329,8 @@ function App() {
                     <p className="eyebrow">Secure banking session</p>
                     <h3>Customer verified. Agent scoped. Execution locked.</h3>
                     <p>
-                      Verify the customer, scope the trusted banking agent and lock execution before payment intent capture.
-                      The route engine will decide routes only after the customer confirms the intent.
+                      Verify the customer, scope the trusted banking agent and lock execution before money movement intent capture.
+                      The bank route engine will recommend a safe way only after the customer confirms the intent.
                     </p>
                     <div className="secure-session-boundary">
                       <Bot size={17} aria-hidden="true" />
@@ -341,10 +341,10 @@ function App() {
                     </div>
                     <div className="secure-session-actions">
                       <button type="button" className="primary-btn secure-session-primary" onClick={handleContinue}>
-                        Continue to Intent Capture
+                        Continue to Money Movement Intent
                         <ArrowRight size={16} aria-hidden="true" />
                       </button>
-                      <span>Next: speak or type the payment outcome.</span>
+                      <span>Next: speak or type the money movement outcome.</span>
                     </div>
                   </div>
                 </div>
@@ -452,7 +452,7 @@ function App() {
               <div className="stage-focus-card">
                 <strong>Journey & Controls map</strong>
                 <span>
-                  Review the representative journey, control checkpoints and settlement boundaries for the recommended route.
+                  Review the representative money movement journey, control checkpoints and settlement boundaries for the recommended route.
                   Expected journey only — no money has moved.
                 </span>
               </div>
@@ -541,7 +541,7 @@ function App() {
             </button>
             {step === 1 ? (
               <button type="button" className="primary-btn" onClick={handleContinue}>
-                Continue to Intent Capture
+                Continue to Money Movement Intent
                 <ArrowRight size={16} aria-hidden="true" />
               </button>
             ) : step === 2 ? (
@@ -588,7 +588,7 @@ function stageTitle(step: JourneyStep) {
     case 1:
       return 'Secure Session'
     case 2:
-      return 'Intent Capture'
+      return 'Money Movement Intent'
     case 3:
       return 'Route Intelligence'
     case 4:
@@ -601,22 +601,22 @@ function stageTitle(step: JourneyStep) {
 function stageDescription(step: JourneyStep) {
   switch (step) {
     case 1:
-      return 'Verify the customer, scope the agent and lock execution before payment intent capture.'
+      return 'Verify the customer, scope the agent and lock execution before money movement intent capture.'
     case 2:
-      return 'Speak or type the payment outcome, then review it before route analysis.'
+      return 'Speak or type what the customer wants to do with money, then review the structured intent.'
     case 3:
       return 'Review the deterministic route recommendation and explanation.'
     case 4:
-      return 'Inspect the representative journey, controls and settlement boundaries.'
+      return 'Inspect the representative money movement journey, controls and settlement boundaries.'
     case 5:
-      return 'Approve with passkey, then track the simulated payment journey.'
+      return 'Approve with passkey, then track the simulated money movement journey.'
   }
 }
 
 function continueLabel(step: JourneyStep) {
   switch (step) {
     case 1:
-      return 'Continue to Intent Capture'
+      return 'Continue to Money Movement Intent'
     case 2:
       return 'Continue'
     case 3:

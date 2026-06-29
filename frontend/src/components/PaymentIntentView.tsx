@@ -6,7 +6,7 @@ export function PaymentIntentView({ intent }: { intent: PaymentIntent }) {
     <section className="panel">
       <div className="panel-title">
         <ReceiptText size={18} aria-hidden="true" />
-        <h2>Payment Intent</h2>
+        <h2>Money Movement Intent</h2>
       </div>
       <dl className="intent-grid">
         <div>
@@ -30,15 +30,21 @@ export function PaymentIntentView({ intent }: { intent: PaymentIntent }) {
           <dd>{intent.trackingRequired ? 'Required' : 'Optional'}</dd>
         </div>
         <div>
-          <dt>Digital routes</dt>
+          <dt>Digital options</dt>
           <dd>{intent.digitalRoutesAllowed ? 'Allowed' : 'Not allowed'}</dd>
         </div>
       </dl>
       <div className="constraint-list">
         {intent.constraints.map((constraint) => (
-          <span key={constraint}>{constraint}</span>
+          <span key={constraint}>{displayConstraint(constraint)}</span>
         ))}
       </div>
     </section>
   )
+}
+
+function displayConstraint(constraint: string) {
+  return constraint
+    .replaceAll('Digital routes', 'Digital options')
+    .replaceAll('digital routes', 'digital options')
 }

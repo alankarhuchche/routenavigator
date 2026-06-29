@@ -12,7 +12,7 @@ export function FinalApprovalCard({ trace, intent, paymentState }: Props) {
 
   const fields = [
     { label: 'Confirmed intent', value: `${intent.amount} · ${intent.objective.replaceAll('_', ' ').toLowerCase()}` },
-    { label: 'Recommended route', value: trace.selectedRoute.label },
+    { label: 'Recommended safe route', value: trace.selectedRoute.label },
     { label: 'Destination', value: intent.destination },
     { label: 'Estimated arrival', value: trace.selectedRoute.eta },
     { label: 'Cost band', value: trace.selectedRoute.cost },

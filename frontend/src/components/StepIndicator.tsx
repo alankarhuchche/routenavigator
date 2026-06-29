@@ -14,23 +14,23 @@ const steps = [
   },
   {
     number: 2,
-    label: 'Intent Capture',
+    label: 'Money Movement Intent',
     description: 'Speak or type outcome, review structured intent',
   },
   {
     number: 3,
     label: 'Route Intelligence',
-    description: 'Analyse rails, controls, cut-offs and settlement quality',
+    description: 'Evaluate safe options, controls and settlement quality',
   },
   {
     number: 4,
     label: 'Journey & Controls',
-    description: 'Inspect route path, controls, PONR and finality',
+    description: 'Inspect movement path, controls, PONR and finality',
   },
   {
     number: 5,
     label: 'Approval & Tracking',
-    description: 'Approve execution and monitor payment progress',
+    description: 'Approve execution and monitor simulated movement',
   },
 ]
 

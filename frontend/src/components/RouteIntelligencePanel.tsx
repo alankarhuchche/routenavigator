@@ -15,11 +15,11 @@ interface Props {
 
 const lanes = [
   {
-    title: 'Rail availability',
+    title: 'Movement option availability',
     icon: Landmark,
     lines: [
-      'Domestic, international and digital rails checked',
-      'Available routes identified',
+      'Domestic, international and digital options checked',
+      'Available safe routes identified',
     ],
   },
   {
@@ -35,7 +35,7 @@ const lanes = [
     icon: ShieldCheck,
     lines: [
       'Beneficiary, fraud, sanctions and policy gates evaluated',
-      'Digital routes require wallet/off-ramp eligibility',
+      'Digital options require wallet/off-ramp eligibility',
     ],
   },
   {
@@ -50,7 +50,7 @@ const lanes = [
     title: 'Recommendation readiness',
     icon: ListChecks,
     lines: [
-      'Executable routes ranked',
+      'Executable movement options ranked',
       'Rejected routes recorded with reason codes',
     ],
   },
@@ -65,10 +65,10 @@ export function RouteIntelligencePanel({ trace }: Props) {
   const metricSource = candidateRoutes > 0 ? 'Derived from current route decision' : 'Demo analysis'
 
   const metrics = [
-    { label: 'Candidate routes', value: candidateRoutes > 0 ? String(candidateRoutes) : 'Demo' },
-    { label: 'Executable routes', value: candidateRoutes > 0 ? String(executableRoutes) : 'Demo' },
-    { label: 'Rejected routes', value: candidateRoutes > 0 ? String(rejectedRoutes) : 'Demo' },
-    { label: 'Recommended route', value: trace.selectedRoute.label || 'To be confirmed' },
+    { label: 'Candidate options', value: candidateRoutes > 0 ? String(candidateRoutes) : 'Demo' },
+    { label: 'Executable options', value: candidateRoutes > 0 ? String(executableRoutes) : 'Demo' },
+    { label: 'Rejected options', value: candidateRoutes > 0 ? String(rejectedRoutes) : 'Demo' },
+    { label: 'Recommended safe route', value: trace.selectedRoute.label || 'To be confirmed' },
   ]
 
   return (
@@ -76,9 +76,9 @@ export function RouteIntelligencePanel({ trace }: Props) {
       <div className="route-intelligence-head">
         <div>
           <p className="eyebrow">Route intelligence</p>
-          <h2>Analysing safe routes</h2>
+          <h2>Analysing the best safe way</h2>
           <p>
-            Checking route availability, cut-offs, controls and settlement quality before recommending a route.
+            Checking availability, cut-offs, controls and settlement quality before recommending how to move the money.
           </p>
         </div>
         <span className="route-intelligence-source">

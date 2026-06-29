@@ -1,20 +1,20 @@
 # Program Execution State
 
-Previous completed phase: Phase 3D-fix — Live voice transcript confirmation
+Previous completed phase: Phase 4A — Reframe as Money Movement Intelligence
 
-Current program phase: Phase 3E — Final demo QA and release gate
+Current program phase: Phase 4B — Separate Customer View and Bank Intelligence drawer
 
 Current phase file: not created yet
 
-Next phase: Phase 3E — Final demo QA and release gate
+Next phase: Phase 4B — Separate Customer View and Bank Intelligence drawer
 
-Last completed local commit before this run: `f032591` (`Fix blank secure session render`)
+Last completed local commit: Phase 4A local commit created by this run.
 
 Latest gate resolution: Phase 2C-fix kept scenarios `SCN-007` through `SCN-011` as labelled static frontend corridor demos. Backend corridor route support remains deferred behind the route decision logic / product scope gate.
 
-Latest phase result: Phase 3D-fix added live browser transcript captions during SpeechRecognition, shows final captured transcript for review, and requires user confirmation before transcript text is sent to `/api/intent/classify` for Gemini/rules structuring. Interim transcript remains browser-only and no raw audio is uploaded.
+Latest phase result: Phase 4A reframed the visible proposition from Payment Route Intelligence to Money Movement Intelligence. The customer-facing journey is now outcome-led and rail-agnostic, Stage 2 is Money Movement Intent, and no backend route logic, payment execution logic, API contracts, deployment files or dependencies changed. Customer insight screens and the Bank Intelligence drawer remain future Phase 4B/4C items.
 
-Push status: Phase 2 release candidate was pushed. Phase 3A, 3B, 3A-fix, 3B-fix, Phase 3 UX-fix, Phase 3 UX-fix 2, Phase 3 UX-fix 3, Phase 3D, Phase 3E and Phase 3D-fix local changes are not pushed.
+Push status: Do not push without explicit human approval. Pushing to GitHub may trigger Cloud Build and Cloud Run deployment.
 
 Deployment trigger warning: pushing to GitHub may trigger Cloud Build and Cloud Run deployment.
 

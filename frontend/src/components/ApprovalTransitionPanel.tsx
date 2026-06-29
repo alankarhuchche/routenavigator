@@ -37,7 +37,7 @@ export function ApprovalTransitionPanel({ trace, mode }: ApprovalTransitionPanel
       <p className="approval-transition-boundary">
         Agent boundary: the trusted banking agent may explain this route, but cannot approve, execute, amend, cancel or move money.
       </p>
-      <p className="approval-transition-route">Recommended route: {trace.selectedRoute.label}</p>
+      <p className="approval-transition-route">Recommended safe route: {trace.selectedRoute.label}</p>
     </section>
   )
 }

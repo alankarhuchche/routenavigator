@@ -9,7 +9,7 @@ export function PaymentTracker({ trace }: { trace: DecisionTrace }) {
         <Activity size={18} aria-hidden="true" />
         <div>
           <h2>Tracking after approval</h2>
-          <p>Simulation status for the expected payment journey.</p>
+          <p>Simulation status for the expected money movement journey.</p>
         </div>
       </div>
       <ol className="tracker-list">

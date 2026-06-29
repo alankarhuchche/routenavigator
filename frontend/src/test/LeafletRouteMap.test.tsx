@@ -21,7 +21,7 @@ describe('LeafletRouteMap', () => {
     const { getByTestId } = render(<LeafletRouteMap trace={makeTrace('route-a')} />)
     expect(getByTestId('map')).toBeInTheDocument()
     expect(getByTestId('map')).toHaveClass('route-map')
-    expect(getByTestId('map')).toHaveAccessibleName('Representative payment journey map')
+    expect(getByTestId('map')).toHaveAccessibleName('Representative money movement journey map')
   })
 
   it('re-mounts the map when the selected route changes (key prop fix)', () => {

@@ -78,7 +78,7 @@ export function PaymentIntentIntake({
   const [voiceStatus, setVoiceStatus] = useState<VoiceStatus>(() => getSpeechRecognitionConstructor() ? 'idle' : 'unsupported')
   const [voiceMessage, setVoiceMessage] = useState(() => getSpeechRecognitionConstructor()
     ? 'Voice captures intent only. Passkey approval is still required before anything moves.'
-    : 'Speech recognition is not supported in this browser. Type the payment intent instead.')
+    : 'Speech recognition is not supported in this browser. Type the money movement intent instead.')
   const [interimTranscript, setInterimTranscript] = useState('')
   const [capturedTranscript, setCapturedTranscript] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
@@ -152,27 +152,27 @@ export function PaymentIntentIntake({
           <Sparkles size={22} aria-hidden="true" />
         </div>
         <div>
-          <p className="eyebrow">Intent Capture</p>
-          <h2>What outcome do you need from this payment?</h2>
+          <p className="eyebrow">Money Movement Intent</p>
+          <h2>What are you trying to do with your money?</h2>
           <p>
-            Speak or type the payment outcome. The bank-owned route engine will analyse safe routes after you confirm.
+            Speak or type the outcome. The bank will find the best safe way to move it after you confirm.
           </p>
         </div>
       </div>
       <div className="intent-form">
         <div className="intent-principle">
           <strong>Conversational in. Deterministic out.</strong>
-          <span>GenAI structures and explains the intent. The bank-owned route engine decides the route.</span>
+          <span>AI structures and explains. The bank route engine decides. The customer approves.</span>
         </div>
         <span className="suggested-intent-label">Suggested demo intent — review and edit before analysis</span>
-        <label htmlFor="natural-language-intent">Customer outcome</label>
+        <label htmlFor="natural-language-intent">Money movement outcome</label>
         <div className="outcome-input-row">
           <textarea
             ref={textareaRef}
             id="natural-language-intent"
             value={naturalLanguageIntent}
             rows={7}
-            placeholder="Example: Send GBP 5,000 to a supplier in India in INR today, with tracking and strong certainty."
+            placeholder="Example: Move GBP 5,000 to a supplier in India in INR today, with tracking and strong certainty."
             onChange={(event) => {
               updateIntentText(event.target.value)
             }}
@@ -181,12 +181,12 @@ export function PaymentIntentIntake({
             type="button"
             className="mic-button"
             disabled={voiceStatus === 'unsupported' || voiceStatus === 'listening'}
-            title={voiceStatus === 'unsupported' ? 'Speech recognition is not supported in this browser' : 'Speak payment intent for demo capture'}
-            aria-label="Speak payment intent"
+            title={voiceStatus === 'unsupported' ? 'Speech recognition is not supported in this browser' : 'Speak money movement intent for demo capture'}
+            aria-label="Speak money movement intent"
             onClick={beginVoiceCapture}
           >
             <Mic size={17} aria-hidden="true" />
-            <span>{voiceStatus === 'listening' ? 'Listening' : 'Speak payment intent'}</span>
+            <span>{voiceStatus === 'listening' ? 'Listening' : 'Speak money intent'}</span>
           </button>
         </div>
         <p className={`voice-mock-note voice-status-${voiceStatus}`}>{voiceMessage}</p>
@@ -200,7 +200,7 @@ export function PaymentIntentIntake({
               </div>
             </div>
             <p>
-              {interimTranscript || 'Browser speech recognition is listening. Start speaking your payment outcome.'}
+              {interimTranscript || 'Browser speech recognition is listening. Start speaking your money movement outcome.'}
             </p>
             <small>Browser speech recognition is converting your voice to text. No payment can move from this step.</small>
           </section>
@@ -244,7 +244,7 @@ export function PaymentIntentIntake({
         </div>
         {structureError && <p className="intent-structure-error">{structureError}</p>}
 
-        <div className="preference-grid" aria-label="Payment preferences">
+        <div className="preference-grid" aria-label="Money movement preferences">
           <label className="preference-card preference-select-card">
             <span>Objective</span>
             <select value={objective} onChange={(event) => {
@@ -278,7 +278,7 @@ export function PaymentIntentIntake({
                 onPreferencesChange?.({ objective, trackingRequired, digitalRoutesAllowed: event.target.checked })
               }}
             />
-            <span>Digital routes allowed</span>
+            <span>Digital options allowed</span>
           </label>
           <label className="check-row preference-card">
             <input
@@ -294,7 +294,7 @@ export function PaymentIntentIntake({
                 }
               }}
             />
-            <span>Traditional bank transfer only</span>
+            <span>Bank transfer only</span>
           </label>
           <label className="check-row preference-card">
             <input
@@ -302,7 +302,7 @@ export function PaymentIntentIntake({
               checked={simulateFallback}
               onChange={(event) => setSimulateFallback(event.target.checked)}
             />
-            <span>Simulate a mid-payment failure</span>
+            <span>Simulate a mid-movement failure</span>
           </label>
         </div>
 
@@ -358,7 +358,7 @@ function startVoiceCapture({
   const SpeechRecognitionCtor = getSpeechRecognitionConstructor()
   if (!SpeechRecognitionCtor) {
     setVoiceStatus('unsupported')
-    setVoiceMessage('Speech recognition is not supported in this browser. Type the payment intent instead.')
+    setVoiceMessage('Speech recognition is not supported in this browser. Type the money movement intent instead.')
     return
   }
 
@@ -398,7 +398,7 @@ function startVoiceCapture({
   }
   recognition.onerror = () => {
     setVoiceStatus('error')
-    setVoiceMessage('Voice capture failed. Type or edit the payment intent manually; passkey approval remains required.')
+    setVoiceMessage('Voice capture failed. Type or edit the money movement intent manually; passkey approval remains required.')
   }
   recognition.onend = () => {
     setVoiceStatus((current) => current === 'listening' ? 'idle' : current)
@@ -489,11 +489,11 @@ function matchScenario(
     normalisedText.includes('bank transfer only') ||
     normalisedText.includes('no digital')
   ) {
-    return withReason(scenarios, 'SCN-005', 'Matched to traditional bank-transfer-only flow; digital routes are excluded.')
+    return withReason(scenarios, 'SCN-005', 'Matched to bank-transfer-only flow; digital options are excluded.')
   }
 
   if (normalisedText.includes('wallet') || normalisedText.includes('usdc')) {
-    return withReason(scenarios, 'SCN-003', 'Matched to wallet-to-wallet digital-dollar transfer based on asset and endpoint language.')
+    return withReason(scenarios, 'SCN-003', 'Matched to wallet-to-wallet movement based on asset and endpoint language.')
   }
 
   if (preferences.objective === 'CHEAPEST' || normalisedText.includes('cheap') || normalisedText.includes('lowest cost')) {

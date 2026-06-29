@@ -31,7 +31,7 @@ export function TrustedSessionBanner() {
         <p className="eyebrow">Secure payment session</p>
         <h2>Trusted banking agent active</h2>
         <p>
-          Your trusted banking agent can help structure the payment intent. It cannot execute money movement without
+          Your trusted banking agent can help structure the money movement intent. It cannot execute money movement without
           your final approval.
         </p>
       </div>

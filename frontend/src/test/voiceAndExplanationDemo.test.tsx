@@ -28,7 +28,7 @@ describe('voice intent capture demo', () => {
       />,
     )
 
-    fireEvent.change(screen.getByLabelText('Customer outcome'), {
+    fireEvent.change(screen.getByLabelText('Money movement outcome'), {
       target: { value: 'Send GBP 2,500 to a supplier in Germany with tracking.' },
     })
 
@@ -42,29 +42,29 @@ describe('voice intent capture demo', () => {
       />,
     )
 
-    expect(screen.getByLabelText('Customer outcome')).toHaveValue('Send GBP 2,500 to a supplier in Germany with tracking.')
+    expect(screen.getByLabelText('Money movement outcome')).toHaveValue('Send GBP 2,500 to a supplier in Germany with tracking.')
   })
 
   it('shows usable objective options and accessible preference cards', () => {
     render(<PaymentIntentIntake scenarios={demoScenarios} />)
 
-    expect(screen.getByText('Intent Capture')).toBeInTheDocument()
+    expect(screen.getByText('Money Movement Intent')).toBeInTheDocument()
     expect(screen.getByRole('combobox', { name: /objective/i })).toHaveValue('FASTEST')
     expect(screen.getByRole('option', { name: 'Fastest' })).toBeInTheDocument()
     expect(screen.getByRole('option', { name: 'Cheapest' })).toBeInTheDocument()
     expect(screen.getByRole('option', { name: 'Most transparent' })).toBeInTheDocument()
     expect(screen.getByLabelText('Tracking required')).toBeChecked()
-    expect(screen.getByLabelText('Digital routes allowed')).toBeChecked()
-    expect(screen.getByLabelText('Traditional bank transfer only')).not.toBeChecked()
+    expect(screen.getByLabelText('Digital options allowed')).toBeChecked()
+    expect(screen.getByLabelText('Bank transfer only')).not.toBeChecked()
     expect(screen.getByText('Voice captures intent only. Passkey approval is required before anything moves.')).toBeInTheDocument()
   })
 
   it('shows a safe unsupported fallback when speech recognition is unavailable', () => {
     render(<PaymentIntentIntake scenarios={demoScenarios} />)
 
-    const voiceButton = screen.getByRole('button', { name: /speak payment intent/i })
+    const voiceButton = screen.getByRole('button', { name: /speak money movement intent/i })
     expect(voiceButton).toBeDisabled()
-    expect(screen.getByText('Speech recognition is not supported in this browser. Type the payment intent instead.')).toBeInTheDocument()
+    expect(screen.getByText('Speech recognition is not supported in this browser. Type the money movement intent instead.')).toBeInTheDocument()
     expect(screen.getByText('Voice captures intent only. Passkey approval is required before anything moves.')).toBeInTheDocument()
   })
 
@@ -96,13 +96,13 @@ describe('voice intent capture demo', () => {
     render(
       <PaymentIntentIntake
         scenarios={demoScenarios}
-        intentText="Original typed payment outcome."
+        intentText="Original typed money movement outcome."
         onIntentTextChange={onIntentTextChange}
         onStructureIntent={onStructureIntent}
       />,
     )
 
-    fireEvent.click(screen.getByRole('button', { name: /speak payment intent/i }))
+    fireEvent.click(screen.getByRole('button', { name: /speak money movement intent/i }))
 
     act(() => {
       MockSpeechRecognition.current?.onresult?.({ results: [Object.assign([{ transcript: 'Send GBP 5,000' }], { isFinal: false })] })
@@ -118,7 +118,7 @@ describe('voice intent capture demo', () => {
 
     expect(screen.getByText('Captured transcript — review before structuring')).toBeInTheDocument()
     expect(screen.getByText('Send GBP 5,000 to India in INR with tracking.')).toBeInTheDocument()
-    expect(screen.getByLabelText('Customer outcome')).toHaveValue('Original typed payment outcome.')
+    expect(screen.getByLabelText('Money movement outcome')).toHaveValue('Original typed money movement outcome.')
     expect(onStructureIntent).not.toHaveBeenCalled()
     expect(screen.getByText(/Transcript captured/i)).toBeInTheDocument()
     expect(screen.getByText(/voice cannot approve or execute payments/i)).toBeInTheDocument()
@@ -165,7 +165,7 @@ describe('voice intent capture demo', () => {
       />,
     )
 
-    fireEvent.click(screen.getByRole('button', { name: /speak payment intent/i }))
+    fireEvent.click(screen.getByRole('button', { name: /speak money movement intent/i }))
     expect(screen.getByText('Send GBP 100 to the wrong place.')).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: /try again/i }))
@@ -175,7 +175,7 @@ describe('voice intent capture demo', () => {
     fireEvent.click(screen.getByRole('button', { name: /edit manually/i }))
     expect(onIntentTextChange).toHaveBeenCalledWith('Send GBP 250 to a UK bank account.')
     expect(screen.queryByText('Captured transcript — review before structuring')).not.toBeInTheDocument()
-    fireEvent.change(screen.getByLabelText('Customer outcome'), {
+    fireEvent.change(screen.getByLabelText('Money movement outcome'), {
       target: { value: 'Send GBP 300 to a UK bank account with tracking.' },
     })
     expect(onIntentTextChange).toHaveBeenCalledWith('Send GBP 300 to a UK bank account with tracking.')

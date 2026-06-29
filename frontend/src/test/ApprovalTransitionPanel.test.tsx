@@ -15,25 +15,25 @@ describe('Approval step transition', () => {
     render(<App />)
 
     expect(screen.getAllByText('Secure Session').length).toBeGreaterThan(0)
-    expect(screen.getByRole('button', { name: /^Intent Capture$/i })).not.toBeDisabled()
+    expect(screen.getByRole('button', { name: /^Money Movement Intent$/i })).not.toBeDisabled()
     expect(screen.getByRole('button', { name: /Route Intelligence locked until route analysis/i })).toBeDisabled()
     expect(screen.getByRole('button', { name: /Journey & Controls locked until route analysis/i })).toBeDisabled()
     expect(screen.getByRole('button', { name: /Approval & Tracking locked until route analysis/i })).toBeDisabled()
 
-    fireEvent.click(screen.getAllByRole('button', { name: /Continue to Intent Capture/i })[0])
-    const outcomeInput = screen.getByLabelText('Customer outcome')
+    fireEvent.click(screen.getAllByRole('button', { name: /Continue to Money Movement Intent/i })[0])
+    const outcomeInput = screen.getByLabelText('Money movement outcome')
     fireEvent.change(outcomeInput, { target: { value: 'Send GBP 5,000 to India in INR with tracking.' } })
     fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
     await waitFor(() => expect(screen.getAllByText(/structured this intent/i).length).toBeGreaterThan(0))
     fireEvent.click(screen.getByRole('button', { name: /confirm structured intent/i }))
     fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
 
-    expect(await screen.findByText('Analysing safe routes')).toBeInTheDocument()
+    expect(await screen.findByText('Analysing the best safe way')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /^Journey & Controls$/i })).not.toBeDisabled()
 
     fireEvent.click(screen.getByRole('button', { name: /Continue to Journey & Controls/i }))
 
-    expect(await screen.findByText('Payment journey map')).toBeInTheDocument()
+    expect(await screen.findByText('Money movement journey map')).toBeInTheDocument()
     expect(screen.getByText('Expected journey only — no money has moved. Final approval is still required.')).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: /Continue to Approval & Tracking/i }))
@@ -55,8 +55,8 @@ describe('Approval step transition', () => {
   it('preserves route state when navigating back and forward between stages', async () => {
     render(<App />)
 
-    fireEvent.click(screen.getAllByRole('button', { name: /Continue to Intent Capture/i })[0])
-    fireEvent.change(screen.getByLabelText('Customer outcome'), {
+    fireEvent.click(screen.getAllByRole('button', { name: /Continue to Money Movement Intent/i })[0])
+    fireEvent.change(screen.getByLabelText('Money movement outcome'), {
       target: { value: 'Send GBP 5,000 to India in INR with tracking.' },
     })
     fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
@@ -66,13 +66,13 @@ describe('Approval step transition', () => {
 
     await screen.findByText(/using static frontend route trace/i)
     fireEvent.click(screen.getByRole('button', { name: /Continue to Journey & Controls/i }))
-    await screen.findByText('Payment journey map')
+    await screen.findByText('Money movement journey map')
 
     fireEvent.click(screen.getByRole('button', { name: /^Back$/i }))
     expect(await screen.findByText('Recommended: Best chance of compliant INR receipt')).toBeInTheDocument()
     expect(screen.getByText(/using static frontend route trace/i)).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: /Continue to Journey & Controls/i }))
-    expect(await screen.findByText('Payment journey map')).toBeInTheDocument()
+    expect(await screen.findByText('Money movement journey map')).toBeInTheDocument()
   }, 10_000)
 })

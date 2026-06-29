@@ -1,6 +1,6 @@
 # Deployment Readiness
 
-This file captures the next deployment-readiness pass for Payment Route Intelligence.
+This file captures deployment-readiness notes for Money Movement Intelligence, formerly Payment Route Intelligence.
 
 ## Last Successful Deployment
 
@@ -30,6 +30,13 @@ The current Docker path builds the Vite app and copies `frontend/dist/` into `ba
 - Phase 3D-fix keeps browser SpeechRecognition local to the client. Interim transcript captions are displayed only in the browser.
 - Final captured transcript must be confirmed before it is sent as text to `/api/intent/classify`.
 - No raw audio is uploaded or sent to Gemini.
+
+## Phase 4A Deployment Note
+
+- Phase 4A reframed visible product language to Money Movement Intelligence.
+- No route decision logic, payment execution logic, API contracts, deployment files or dependencies changed.
+- Customer insight screen and Bank Intelligence drawer are future Phase 4B/4C items.
+- Before the next push/deploy, verify the production build serves the Money Movement Intelligence header and Money Movement Intent stage.
 
 ## Do Not Deploy Without Confirmation
 
@@ -147,5 +154,5 @@ curl -s "https://<cloud-run-url>/api/health"
 - Docker or Cloud Build builds from current source.
 - Production container serves fresh Vite assets.
 - Cloud Run health endpoint responds.
-- Deployed UI shows Payment Route Intelligence Phase 1 journey.
+- Deployed UI shows the current Money Movement Intelligence journey.
 - No live payment integrations, real secrets or production data are introduced.

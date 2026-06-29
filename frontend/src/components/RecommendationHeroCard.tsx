@@ -9,18 +9,18 @@ export function RecommendationHeroCard({ trace }: Props) {
   const selected = trace.selectedRoute
   const recommendationReason =
     selected.reasons[0] ??
-    'This route was recommended because it best matches the confirmed payment intent, available route controls and current scoring policy.'
+    'This route was recommended because it best matches the confirmed money movement intent, available controls and current scoring policy.'
 
   const badges = buildBadges(trace)
 
   return (
-    <section className="recommendation-hero" aria-label="Recommended route">
+    <section className="recommendation-hero" aria-label="Recommended safe route">
       <div className="recommendation-main">
         <div className="recommendation-icon" aria-hidden="true">
           <Award size={22} />
         </div>
         <div>
-          <p className="eyebrow">Bank recommendation</p>
+          <p className="eyebrow">Best safe way to move money</p>
           <h2>Recommended: {recommendationOutcome(trace)}</h2>
           <p className="recommendation-subtitle">Uses {readableRouteName(selected)}.</p>
         </div>
@@ -64,15 +64,15 @@ function recommendationOutcome(trace: DecisionTrace): string {
     return 'Best route to beneficiary usable value'
   }
   if (selected.family.includes('DOMESTIC')) {
-    return 'Fast domestic payment outcome'
+    return 'Fast domestic money movement outcome'
   }
   if (selected.family.includes('WALLET')) {
     return 'Wallet-ready digital value transfer'
   }
   if (selected.family.includes('STABLECOIN')) {
-    return 'Fast digital-dollar payout route'
+    return 'Fast digital-dollar payout option'
   }
-  return 'Best match for the confirmed payment intent'
+  return 'Best match for the confirmed money movement intent'
 }
 
 function readableRouteName(route: RouteCandidate): string {

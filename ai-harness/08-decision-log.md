@@ -138,3 +138,13 @@
 - A captured transcript is sent for Gemini/rules structuring only after the user confirms it or chooses the manual Structure intent action.
 - No raw audio is uploaded. Voice cannot approve, execute, amend, cancel or move money. Passkey/customer approval remains the final movement boundary.
 - Phase 3E remains the next release-gate phase after this fix.
+
+## Money Movement Intelligence Reframing Decisions
+
+- Phase 4A reframed the demo proposition from Payment Route Intelligence to Money Movement Intelligence.
+- The customer-facing thesis is now: the customer asks to move money; the bank uses consented insight, controls and route intelligence to choose the best safe way; AI structures and explains; the bank decides; the customer approves.
+- Visible stage framing now uses Secure Session, Money Movement Intent, Route Intelligence, Journey & Controls, and Approval & Tracking.
+- Rail, SWIFT, stablecoin and DLT terminology remains secondary/background evidence where existing scenario or route detail already requires it.
+- No backend route decision logic, payment execution logic, API contracts, deployment files or dependencies changed in Phase 4A.
+- Customer insight screens, bank intelligence drawer and any customer profile/scoring model are deferred to Phase 4B/4C behind explicit product scope.
+- Next phase is Phase 4B — Separate Customer View and Bank Intelligence drawer.

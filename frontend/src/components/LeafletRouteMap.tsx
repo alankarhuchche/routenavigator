@@ -14,9 +14,9 @@ const routeColors: Record<RouteCandidate['status'], string> = {
 function AnimatedPolyline({ candidate }: { candidate: RouteCandidate }) {
   const isSelected = candidate.status === 'SELECTED'
   const routeLabel = isSelected
-    ? `Recommended route: ${candidate.label}`
+    ? `Recommended safe movement route: ${candidate.label}`
     : candidate.status === 'AVAILABLE'
-      ? `Alternative route: ${candidate.label}`
+      ? `Alternative movement option: ${candidate.label}`
       : `Not selected: ${candidate.label}`
   return (
     <Polyline
@@ -70,8 +70,8 @@ export function LeafletRouteMap({ trace }: { trace: DecisionTrace }) {
       <div className="panel-title map-title">
         <Landmark size={18} aria-hidden="true" />
         <div>
-          <h2>Payment journey map</h2>
-          <p>Representative journey based on the selected route and decision trace.</p>
+          <h2>Money movement journey map</h2>
+          <p>Representative journey based on the recommended safe route and decision trace.</p>
         </div>
       </div>
       <div className="map-safety-line">
@@ -86,7 +86,7 @@ export function LeafletRouteMap({ trace }: { trace: DecisionTrace }) {
             zoom={3}
             scrollWheelZoom={false}
             className="route-map"
-            aria-label="Representative payment journey map"
+            aria-label="Representative money movement journey map"
           >
             <MapResizeHandler traceId={trace.traceId} />
             <TileLayer
@@ -135,27 +135,27 @@ export function LeafletRouteMap({ trace }: { trace: DecisionTrace }) {
             })}
           </MapContainer>
           <div className="map-legend">
-            <span><i className="legend selected" />Recommended route</span>
-            <span><i className="legend available" />Alternative route</span>
+            <span><i className="legend selected" />Recommended safe route</span>
+            <span><i className="legend available" />Alternative option</span>
             <span><i className="legend excluded" />Alternative not selected</span>
             <span><i className="legend control" />Control checkpoint</span>
             <span><i className="legend settlement" />Settlement boundary</span>
           </div>
         </div>
 
-        <aside className="journey-detail-panel" aria-label="Payment journey node detail">
+        <aside className="journey-detail-panel" aria-label="Money movement journey node detail">
           <div className="journey-detail-head">
             <BadgeCheck size={18} aria-hidden="true" />
             <div>
               <h3>{selectedNode?.name ?? 'Journey checkpoint'}</h3>
-              <p>{selectedNode?.role ?? 'Route journey checkpoint'}</p>
+              <p>{selectedNode?.role ?? 'Money movement checkpoint'}</p>
             </div>
           </div>
           <p className="journey-select-hint">Select a node to see customer and expert context.</p>
           <dl className="journey-detail-grid">
             <div>
               <dt>Role in journey</dt>
-              <dd>{selectedNode?.role ?? 'Route journey checkpoint'}</dd>
+              <dd>{selectedNode?.role ?? 'Money movement checkpoint'}</dd>
             </div>
             <div>
               <dt>Status</dt>
@@ -163,7 +163,7 @@ export function LeafletRouteMap({ trace }: { trace: DecisionTrace }) {
             </div>
             <div>
               <dt>Customer meaning</dt>
-              <dd>{selectedNode?.customerMeaning ?? 'This checkpoint explains the expected route journey.'}</dd>
+              <dd>{selectedNode?.customerMeaning ?? 'This checkpoint explains the expected money movement journey.'}</dd>
             </div>
             <div>
               <dt>Expert note</dt>
@@ -190,7 +190,7 @@ export function LeafletRouteMap({ trace }: { trace: DecisionTrace }) {
         <div className="alternative-route-card">
           <Ban size={16} aria-hidden="true" />
           <div>
-            <strong>{alternative ? `${alternative.label} not selected` : 'Alternative route not shown'}</strong>
+          <strong>{alternative ? `${alternative.label} not selected` : 'Alternative option not shown'}</strong>
             <p>
               {alternative?.reasons[0] ?? 'Did not best match confirmed intent and controls.'}
             </p>
@@ -200,12 +200,12 @@ export function LeafletRouteMap({ trace }: { trace: DecisionTrace }) {
           <ShieldCheck size={16} aria-hidden="true" />
           <div>
             <strong>Final approval required</strong>
-            <p>Expected route journey only. No money moves until customer approval and simulated execution.</p>
+            <p>Expected money movement journey only. No money moves until customer approval and simulated execution.</p>
           </div>
         </div>
       </div>
 
-      <ol className="journey-timeline" aria-label="Expected route journey timeline">
+      <ol className="journey-timeline" aria-label="Expected money movement journey timeline">
         {journey.timelineLabels.map((label, index) => (
           <li key={label} className={index < 3 ? 'assessed' : ''}>
             <span>{index + 1}</span>

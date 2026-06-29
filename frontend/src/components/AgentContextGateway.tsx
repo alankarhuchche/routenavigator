@@ -1,7 +1,7 @@
 import { Bot, CheckCircle2, FileClock, LockKeyhole, ShieldCheck, XCircle } from 'lucide-react'
 
 const allowedActions = [
-  'Structure payment intent',
+  'Structure money movement intent',
   'Request route options',
   'Explain recommendation',
   'Summarise rejected alternatives',
@@ -78,7 +78,7 @@ export function AgentContextGateway() {
             <dl className="agent-facts">
               <div><dt>Agent</dt><dd>Trusted banking agent</dd></div>
               <div><dt>Mode</dt><dd>Advice only</dd></div>
-              <div><dt>Session</dt><dd>Scoped to this payment journey</dd></div>
+              <div><dt>Session</dt><dd>Scoped to this money movement journey</dd></div>
               <div><dt>Status</dt><dd>Active</dd></div>
             </dl>
           </section>

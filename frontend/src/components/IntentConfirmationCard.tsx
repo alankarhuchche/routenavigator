@@ -33,10 +33,10 @@ export function IntentConfirmationCard({
     ? fallbackUsed
       ? 'Demo fallback structured this intent. Review before route analysis.'
       : 'AI structured this intent. Review before route analysis.'
-    : 'Confirm this structured payment intent before we analyse safe routes.'
+    : 'Confirm this structured money movement intent before we analyse safe routes.'
 
   return (
-    <section className="intent-confirmation-card" aria-label="Structured payment intent confirmation">
+    <section className="intent-confirmation-card" aria-label="Structured money movement intent confirmation">
       <div className="intent-confirmation-head">
         <div>
           <h3>Here’s what I understood</h3>

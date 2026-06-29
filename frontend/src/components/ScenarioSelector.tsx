@@ -14,7 +14,7 @@ export function ScenarioSelector({ scenarios, selectedId, onSelect }: ScenarioSe
         <ListChecks size={18} aria-hidden="true" />
         <span>
           <h2>Demo scenarios</h2>
-          <p>Use these to load pre-built payment journeys for the executive demo.</p>
+          <p>Use these to load pre-built money movement journeys for the executive demo.</p>
         </span>
       </summary>
       <div className="scenario-list">
