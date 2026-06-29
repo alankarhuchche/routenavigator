@@ -53,6 +53,13 @@ The current Docker path builds the Vite app and copies `frontend/dist/` into `ba
 - Customer insight context is mocked/static and does not require secrets, production data or external services.
 - No deploy was run for Phase 4C.
 
+## Phase 4D Deployment Note
+
+- Phase 4D is local-only until a human-approved push/release gate.
+- Profile-aware explanation is frontend-only and does not change backend route decision logic, route scoring/ranking, API contracts or deployment packaging.
+- Customer insight remains mocked/static and explanation context only.
+- No deploy was run for Phase 4D.
+
 ## Do Not Deploy Without Confirmation
 
 Do not run Cloud Build or Cloud Run deployment commands without explicit user confirmation in the active task.

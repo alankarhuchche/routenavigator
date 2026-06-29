@@ -26,6 +26,16 @@ export interface CustomerInsightProfile {
   insights: CustomerInsight[]
 }
 
+export function customerFitReasons(profile: CustomerInsightProfile): string[] {
+  return [
+    `This looks like ${profile.purposeDetected.toLowerCase()}, where speed and certainty matter.`,
+    `The amount is within the usual movement range of ${profile.typicalAmountRange}.`,
+    `The beneficiary is a ${profile.beneficiaryRelationship.toLowerCase()}.`,
+    `The customer usually prefers tracked, reliable movements with ${profile.trackingPreference.toLowerCase()} tracking need.`,
+    `The explanation notes prior experience: ${profile.previousRouteExperience.toLowerCase()}.`,
+  ]
+}
+
 export const demoCustomerInsightProfile: CustomerInsightProfile = {
   purposeDetected: 'Family support',
   purposeConfidence: 'High',

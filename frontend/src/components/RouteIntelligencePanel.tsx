@@ -7,8 +7,9 @@ import {
   ListChecks,
   Scale,
   ShieldCheck,
+  UserCheck,
 } from 'lucide-react'
-import type { CustomerInsightProfile } from '../data/customerInsights'
+import { customerFitReasons, type CustomerInsightProfile } from '../data/customerInsights'
 import type { DecisionTrace } from '../types'
 
 interface Props {
@@ -74,6 +75,7 @@ export function RouteIntelligencePanel({ trace, customerInsightsUsed, insightPro
     { label: 'Rejected options', value: candidateRoutes > 0 ? String(rejectedRoutes) : 'Demo' },
     { label: 'Recommended safe route', value: trace.selectedRoute.label || 'To be confirmed' },
   ]
+  const fitReasons = insightProfile ? customerFitReasons(insightProfile) : []
 
   return (
     <section className="route-intelligence-panel" aria-label="Route intelligence analysis">
@@ -107,6 +109,39 @@ export function RouteIntelligencePanel({ trace, customerInsightsUsed, insightPro
           )}
         </div>
       </div>
+
+      {customerInsightsUsed ? (
+        <div className="customer-fit-explanation" aria-label="Customer-fit explanation">
+          <div className="customer-fit-head">
+            <UserCheck size={18} aria-hidden="true" />
+            <div>
+              <h3>Why this fits your money movement</h3>
+              <p>These reasons use the mocked consented customer context for explanation only.</p>
+            </div>
+          </div>
+          <ul>
+            {fitReasons.map(reason => (
+              <li key={reason}>
+                <CheckCircle2 size={14} aria-hidden="true" />
+                <span>{reason}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="customer-fit-boundary">
+            Customer insight can explain fit and future ranking, but it cannot override fraud, sanctions, limits, eligibility or regulatory controls.
+          </p>
+        </div>
+      ) : (
+        <div className="customer-fit-explanation no-insight" aria-label="No customer insight explanation">
+          <div className="customer-fit-head">
+            <Info size={18} aria-hidden="true" />
+            <div>
+              <h3>Customer insight was not used for this analysis.</h3>
+              <p>The recommendation used confirmed intent, controls and route conditions only. No customer profile context was applied.</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="route-intelligence-lanes">
         {lanes.map((lane) => {

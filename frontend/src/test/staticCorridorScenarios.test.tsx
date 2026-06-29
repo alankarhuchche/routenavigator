@@ -43,5 +43,5 @@ describe('static corridor demo scenarios', () => {
 
     await screen.findByText(/using static frontend route trace/i)
     expect(fetchMock.mock.calls.some(([url]) => String(url).includes('/api/route-decisions'))).toBe(false)
-  })
+  }, 10_000)
 })

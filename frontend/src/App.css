@@ -828,6 +828,85 @@ h2 {
   line-height: 1.4;
 }
 
+.customer-fit-explanation {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid #99f6e4;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 10px 22px rgba(15, 118, 110, 0.06);
+}
+
+.customer-fit-explanation.no-insight {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+  box-shadow: none;
+}
+
+.customer-fit-head {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 9px;
+  align-items: start;
+}
+
+.customer-fit-head svg {
+  margin-top: 2px;
+  color: #0f766e;
+}
+
+.customer-fit-head h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 15px;
+}
+
+.customer-fit-head p,
+.customer-fit-boundary {
+  margin: 4px 0 0;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.customer-fit-explanation ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.customer-fit-explanation li {
+  display: grid;
+  grid-template-columns: 15px 1fr;
+  gap: 7px;
+  align-items: start;
+  padding: 9px;
+  border: 1px solid #ccfbf1;
+  border-radius: 6px;
+  background: #f0fdfa;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.customer-fit-explanation li svg {
+  margin-top: 1px;
+  color: #0f766e;
+}
+
+.customer-fit-boundary {
+  padding-top: 8px;
+  border-top: 1px solid #ccfbf1;
+  color: #0f766e;
+  font-weight: 850;
+}
+
 .stage-nav-note {
   color: #64748b;
   font-size: 13px;
@@ -1193,6 +1272,33 @@ h2 {
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   background: #ffffff;
+}
+
+.trusted-agent-explanation-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+  gap: 12px;
+}
+
+.trusted-agent-explanation-grid section {
+  min-width: 0;
+}
+
+.trusted-agent-explanation-grid strong {
+  color: #1e3a8a;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.trusted-agent-explanation-grid ul {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.45;
 }
 
 .trusted-agent-boundary {
@@ -3866,11 +3972,13 @@ dd {
   .agent-gateway-grid,
   .final-approval-grid,
   .route-intelligence-lanes,
-  .route-intelligence-metrics {
+  .route-intelligence-metrics,
+  .customer-fit-explanation ul {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .route-intelligence-summary {
+  .route-intelligence-summary,
+  .trusted-agent-explanation-grid {
     grid-template-columns: 1fr;
   }
 
@@ -4132,7 +4240,8 @@ dd {
 
   .bank-intelligence-access,
   .bank-intelligence-facts,
-  .customer-insight-grid {
+  .customer-insight-grid,
+  .customer-fit-explanation ul {
     grid-template-columns: 1fr;
   }
 

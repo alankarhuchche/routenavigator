@@ -17,7 +17,7 @@ import {
 import type { LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import type { ApiPaymentSnapshot, ApiStructuredIntent } from '../apiTypes'
-import type { CustomerInsightProfile } from '../data/customerInsights'
+import { customerFitReasons, type CustomerInsightProfile } from '../data/customerInsights'
 import { STATE_LABELS } from '../stateLabels'
 import type { DecisionTrace } from '../types'
 
@@ -196,6 +196,7 @@ function RouteIntel({
   const rejected = trace.candidates.filter(candidate => candidate.status === 'EXCLUDED')
   const passedGates = trace.gates.filter(gate => gate.result === 'PASS').length
   const blockedGates = trace.gates.length - passedGates
+  const fitSignals = customerFitReasons(customerInsightProfile).slice(0, 4)
 
   return (
     <>
@@ -206,11 +207,23 @@ function RouteIntel({
       <IntelCard icon={BrainCircuit} title="Customer insight pass-through">
         <dl className="bank-intelligence-facts">
           <div><dt>Insight used</dt><dd>{customerInsightsUsedForAnalysis ? 'Yes, as context only' : 'No'}</dd></div>
+          <div><dt>Source</dt><dd>{customerInsightProfile.insightSource}</dd></div>
           <div><dt>Purpose</dt><dd>{customerInsightProfile.purposeDetected}</dd></div>
           <div><dt>Pattern</dt><dd>{customerInsightProfile.usualMovementPattern}</dd></div>
-          <div><dt>Scoring change</dt><dd>None in Phase 4C</dd></div>
+          <div><dt>Profile-aware scoring</dt><dd>Not implemented yet</dd></div>
+          <div><dt>Scoring change</dt><dd>None in Phase 4D</dd></div>
         </dl>
-        <p>Route scoring has not changed in this phase. Customer insight is passed through as visible context only.</p>
+        {customerInsightsUsedForAnalysis && (
+          <ul className="bank-intelligence-list">
+            {fitSignals.map(signal => (
+              <li key={signal}>
+                <strong>Explanation signal</strong>
+                <span>{signal}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+        <p>Route scoring and ranking have not changed in this phase. Customer insight is explanation context only and cannot override fraud, sanctions, limits, eligibility or regulatory controls.</p>
       </IntelCard>
       <IntelCard icon={Gauge} title="Route evidence">
         <dl className="bank-intelligence-facts">

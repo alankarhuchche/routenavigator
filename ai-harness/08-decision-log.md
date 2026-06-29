@@ -168,3 +168,13 @@
 - Customer insight cannot override fraud, sanctions, limits, eligibility or regulatory controls.
 - No backend route decision logic, payment execution logic, API contracts, deployment files or dependencies changed in Phase 4C.
 - Next phase is Phase 4D — Profile-aware route explanation.
+
+## Profile-Aware Explanation Decisions
+
+- Phase 4D added customer-fit explanation in Route Intelligence when the customer chose to use mocked customer insight.
+- The customer-fit explanation uses demo insight signals such as purpose, usual movement range, beneficiary relationship, tracking preference and previous route experience.
+- When the customer analyses without insight, Route Intelligence explicitly says customer insight was not used and no customer profile context was applied.
+- Trusted agent explanation now separates route outcome explanation from customer-fit explanation and keeps the explanation-only boundary visible.
+- Bank Intelligence shows insight source, explanation signals, that profile-aware scoring is not implemented yet, and that scoring/ranking are unchanged in this phase.
+- No backend route decision logic, route scoring/ranking, payment execution logic, API contracts, deployment files or dependencies changed in Phase 4D.
+- Next phase is Phase 4E — Bounded customer-fit scoring, which remains gated because it may affect route logic.

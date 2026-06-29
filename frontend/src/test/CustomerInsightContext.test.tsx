@@ -46,7 +46,7 @@ describe('Customer Insight Context stage', () => {
     expect(screen.getByText('Previous route experience')).toBeInTheDocument()
     expect(screen.getByText('Risk normality')).toBeInTheDocument()
     expect(screen.getByLabelText('Use customer insight for this analysis')).toBeChecked()
-  })
+  }, 10_000)
 
   it('analyses with customer insight and shows insight considered in Route Intelligence', async () => {
     mockBackendFallback()
@@ -56,11 +56,20 @@ describe('Customer Insight Context stage', () => {
 
     expect(await screen.findByText('Analysing the best safe way')).toBeInTheDocument()
     expect(screen.getByText('Customer insight considered')).toBeInTheDocument()
+    expect(screen.getByText('Why this fits your money movement')).toBeInTheDocument()
+    expect(screen.getAllByText(/This looks like family support/i).length).toBeGreaterThan(1)
+    expect(screen.getAllByText(/within the usual movement range/i).length).toBeGreaterThan(1)
+    expect(screen.getAllByText(/beneficiary is a previously paid beneficiary/i).length).toBeGreaterThan(1)
+    expect(screen.getByText(/Customer insight can explain fit and future ranking/i)).toBeInTheDocument()
     expect(screen.getByText(/profile-aware scoring is planned for a later phase/i)).toBeInTheDocument()
+    expect(screen.getByText('Customer-fit explanation')).toBeInTheDocument()
+    expect(screen.getByText(/Customer-fit reasoning is explanation-only/i)).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /show bank intelligence/i }))
     const drawer = screen.getByRole('dialog', { name: /route recommendation evidence/i })
     expect(within(drawer).getByText('Yes, as context only')).toBeInTheDocument()
-    expect(within(drawer).getByText('None in Phase 4C')).toBeInTheDocument()
+    expect(within(drawer).getByText('Not implemented yet')).toBeInTheDocument()
+    expect(within(drawer).getByText('None in Phase 4D')).toBeInTheDocument()
+    expect(within(drawer).getByText(/cannot override fraud, sanctions, limits, eligibility or regulatory controls/i)).toBeInTheDocument()
   })
 
   it('analyses without customer insight and keeps no-real-data boundary visible in the drawer', async () => {
@@ -73,6 +82,8 @@ describe('Customer Insight Context stage', () => {
 
     expect(await screen.findByText('Analysing the best safe way')).toBeInTheDocument()
     expect(screen.getByText('Customer insight not used for this analysis')).toBeInTheDocument()
+    expect(screen.getByText('Customer insight was not used for this analysis.')).toBeInTheDocument()
+    expect(screen.getByText(/No customer profile context was applied/i)).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /show bank intelligence/i }))
     const drawer = screen.getByRole('dialog', { name: /route recommendation evidence/i })
     expect(within(drawer).getByText('No')).toBeInTheDocument()

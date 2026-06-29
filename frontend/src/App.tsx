@@ -484,6 +484,8 @@ function App() {
                 trace={displayTrace}
                 provider={explanationProvider}
                 isLoading={isAnalysing}
+                customerInsightsUsed={customerInsightsUsedForAnalysis}
+                insightProfile={demoCustomerInsightProfile}
               />
               <DecisionImpactBanner trace={displayTrace} />
               <details className="customer-evidence-details">
