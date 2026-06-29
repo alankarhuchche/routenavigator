@@ -178,3 +178,15 @@
 - Bank Intelligence shows insight source, explanation signals, that profile-aware scoring is not implemented yet, and that scoring/ranking are unchanged in this phase.
 - No backend route decision logic, route scoring/ranking, payment execution logic, API contracts, deployment files or dependencies changed in Phase 4D.
 - Next phase is Phase 4E — Bounded customer-fit scoring, which remains gated because it may affect route logic.
+
+## Bounded Customer-Fit Scoring Design Decisions
+
+- Phase 4E-design produced `ai-harness/16-customer-fit-scoring-design.md`.
+- Current backend route decisions run hard gates first, score only `AVAILABLE` routes, and select the highest deterministic score from `speed`, `cost`, `certainty` and `transparency` dimensions.
+- The design requires customer-fit scoring to run only after hard controls pass.
+- Customer-fit contribution is capped and may nudge eligible routes, but can never make an excluded route eligible or override fraud, sanctions, limits, eligibility, regulatory, beneficiary, account/customer or scheme/rail restrictions.
+- No-insight analysis must apply zero customer-fit adjustment and say customer profile context was not used.
+- Gemini may structure and explain, but must not calculate scores, rank routes, select routes, override controls, approve, execute or update payment state.
+- The design records consent, data minimisation, transparency, retention, audit and protected-characteristic boundaries for any future real implementation.
+- No runtime app logic, backend route logic, API contracts, payment execution logic, dependencies, push or deploy changed in Phase 4E-design.
+- Next phase is Phase 4E-implementation — Bounded customer-fit scoring, gated for explicit route-logic approval.
