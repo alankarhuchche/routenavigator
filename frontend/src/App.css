@@ -622,6 +622,218 @@ h2 {
   padding: 14px;
 }
 
+.customer-insight-context {
+  display: grid;
+  gap: 16px;
+}
+
+.customer-insight-hero {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid #ccfbf1;
+  border-radius: 8px;
+  background: #f0fdfa;
+}
+
+.customer-insight-hero h2 {
+  color: #111827;
+  font-size: 24px;
+}
+
+.customer-insight-hero p:last-child {
+  max-width: 760px;
+  margin: 8px 0 0;
+  color: #475569;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.customer-insight-hero > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border: 1px solid #99f6e4;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #0f766e;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.customer-insight-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.customer-insight-card {
+  display: grid;
+  gap: 8px;
+  min-height: 150px;
+  padding: 14px;
+  border: 1px solid #d9dee8;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.customer-insight-card > div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.customer-insight-card svg {
+  color: #0f766e;
+}
+
+.customer-insight-card h3 {
+  margin: 0;
+  color: #334155;
+  font-size: 13px;
+}
+
+.customer-insight-card strong {
+  color: #111827;
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.customer-insight-card p {
+  margin: 0;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.customer-insight-card > span {
+  align-self: end;
+  justify-self: start;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3730a3;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.customer-insight-boundary,
+.customer-insight-choice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid #d9dee8;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.customer-insight-boundary {
+  justify-content: flex-start;
+  background: #fff7ed;
+  border-color: #fed7aa;
+  color: #92400e;
+}
+
+.customer-insight-boundary p,
+.customer-insight-footnote {
+  margin: 0;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.customer-insight-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #334155;
+}
+
+.customer-insight-toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: #0f766e;
+}
+
+.customer-insight-toggle span {
+  display: grid;
+  gap: 3px;
+}
+
+.customer-insight-toggle strong {
+  color: #111827;
+  font-size: 14px;
+}
+
+.customer-insight-toggle small,
+.customer-insight-footnote {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.customer-insight-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.route-insight-context {
+  display: flex;
+  align-items: start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid #d9dee8;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.route-insight-context.used {
+  border-color: #99f6e4;
+  background: #f0fdfa;
+}
+
+.route-insight-context.not-used {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.route-insight-context svg {
+  margin-top: 2px;
+  color: #0f766e;
+}
+
+.route-insight-context strong {
+  color: #111827;
+  font-size: 14px;
+}
+
+.route-insight-context p,
+.route-insight-context small {
+  display: block;
+  margin: 4px 0 0;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.stage-nav-note {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 750;
+}
+
 .map-fallback-row {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
@@ -3919,7 +4131,18 @@ dd {
   }
 
   .bank-intelligence-access,
-  .bank-intelligence-facts {
+  .bank-intelligence-facts,
+  .customer-insight-grid {
     grid-template-columns: 1fr;
+  }
+
+  .customer-insight-hero,
+  .customer-insight-choice {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .customer-insight-actions {
+    justify-content: flex-start;
   }
 }

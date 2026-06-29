@@ -1,8 +1,8 @@
 import { Check } from 'lucide-react'
 
 interface StepIndicatorProps {
-  currentStep: 1 | 2 | 3 | 4 | 5
-  maxUnlockedStep: 1 | 2 | 3 | 4 | 5
+  currentStep: 1 | 2 | 3 | 4 | 5 | 6
+  maxUnlockedStep: 1 | 2 | 3 | 4 | 5 | 6
   onStepClick: (step: number) => void
 }
 
@@ -19,16 +19,21 @@ const steps = [
   },
   {
     number: 3,
+    label: 'Customer Insight Context',
+    description: 'Review consented context before analysis',
+  },
+  {
+    number: 4,
     label: 'Route Intelligence',
     description: 'Evaluate safe options, controls and settlement quality',
   },
   {
-    number: 4,
+    number: 5,
     label: 'Journey & Controls',
     description: 'Inspect movement path, controls, PONR and finality',
   },
   {
-    number: 5,
+    number: 6,
     label: 'Approval & Tracking',
     description: 'Approve execution and monitor simulated movement',
   },
@@ -49,8 +54,8 @@ export function StepIndicator({ currentStep, maxUnlockedStep, onStepClick }: Ste
               disabled={isLocked}
               onClick={() => !isLocked && onStepClick(step.number)}
               aria-current={isActive ? 'step' : undefined}
-              aria-label={`${step.label}${isLocked ? ' locked until route analysis' : ''}`}
-              title={isLocked ? 'Locked until route analysis is complete' : `Go to ${step.label}`}
+              aria-label={`${step.label}${isLocked ? ' locked until prior stage is complete' : ''}`}
+              title={isLocked ? 'Locked until the prior stage is complete' : `Go to ${step.label}`}
             >
               <span className="step-circle" aria-hidden="true">
                 {isCompleted ? <Check size={14} strokeWidth={3} /> : step.number}
@@ -58,7 +63,7 @@ export function StepIndicator({ currentStep, maxUnlockedStep, onStepClick }: Ste
               <span className="step-copy">
                 <span className="step-label">{step.label}</span>
                 <span className="step-description">{step.description}</span>
-                {isLocked && <span className="step-lock-label">Locked until route analysis</span>}
+                {isLocked && <span className="step-lock-label">Locked until prior stage complete</span>}
               </span>
             </button>
             {index < steps.length - 1 && (

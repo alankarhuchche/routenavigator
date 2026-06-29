@@ -158,3 +158,13 @@
 - Agent, voice and Gemini boundaries remain visible where they protect trust. More detailed authority/control/audit context now lives in Bank Intelligence.
 - No route/scoring/profile logic, payment execution logic, API contracts, deployment files or dependencies changed in Phase 4B.
 - Customer Insight Context remains future Phase 4C.
+
+## Customer Insight Context Decisions
+
+- Phase 4C added Customer Insight Context as stage 3 in a six-stage Money Movement Intelligence journey.
+- Customer insight is represented by a typed frontend mock profile only; no real customer data, real accounts, external services or production data are used.
+- The customer can choose to use the insight context for the analysis or continue without it.
+- Route Intelligence and Bank Intelligence show whether customer insight was used, but explicitly state that profile-aware scoring/ranking has not been implemented in this phase.
+- Customer insight cannot override fraud, sanctions, limits, eligibility or regulatory controls.
+- No backend route decision logic, payment execution logic, API contracts, deployment files or dependencies changed in Phase 4C.
+- Next phase is Phase 4D — Profile-aware route explanation.

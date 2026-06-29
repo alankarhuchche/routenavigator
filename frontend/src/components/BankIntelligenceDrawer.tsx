@@ -10,16 +10,18 @@ import {
   Mic,
   Route,
   ShieldCheck,
+  UserCheck,
   X,
   XCircle,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import type { ApiPaymentSnapshot, ApiStructuredIntent } from '../apiTypes'
+import type { CustomerInsightProfile } from '../data/customerInsights'
 import { STATE_LABELS } from '../stateLabels'
 import type { DecisionTrace } from '../types'
 
-type Stage = 1 | 2 | 3 | 4 | 5
+type Stage = 1 | 2 | 3 | 4 | 5 | 6
 
 interface BankIntelligenceDrawerProps {
   open: boolean
@@ -32,6 +34,9 @@ interface BankIntelligenceDrawerProps {
   analysisNotice?: string | null
   paymentSnapshot?: ApiPaymentSnapshot | null
   approvalAccepted: boolean
+  customerInsightProfile: CustomerInsightProfile
+  useCustomerInsights: boolean
+  customerInsightsUsedForAnalysis: boolean | null
   onClose: () => void
 }
 
@@ -46,6 +51,9 @@ export function BankIntelligenceDrawer({
   analysisNotice,
   paymentSnapshot,
   approvalAccepted,
+  customerInsightProfile,
+  useCustomerInsights,
+  customerInsightsUsedForAnalysis,
   onClose,
 }: BankIntelligenceDrawerProps) {
   if (!open) return null
@@ -73,9 +81,17 @@ export function BankIntelligenceDrawer({
               structuredIntentFallbackUsed={structuredIntentFallbackUsed}
             />
           )}
-          {stage === 3 && <RouteIntel trace={trace} provider={provider} />}
-          {stage === 4 && <JourneyIntel trace={trace} analysisNotice={analysisNotice} />}
-          {stage === 5 && <ApprovalIntel trace={trace} paymentSnapshot={paymentSnapshot} approvalAccepted={approvalAccepted} />}
+          {stage === 3 && <CustomerInsightIntel profile={customerInsightProfile} useCustomerInsights={useCustomerInsights} />}
+          {stage === 4 && (
+            <RouteIntel
+              trace={trace}
+              provider={provider}
+              customerInsightProfile={customerInsightProfile}
+              customerInsightsUsedForAnalysis={customerInsightsUsedForAnalysis}
+            />
+          )}
+          {stage === 5 && <JourneyIntel trace={trace} analysisNotice={analysisNotice} />}
+          {stage === 6 && <ApprovalIntel trace={trace} paymentSnapshot={paymentSnapshot} approvalAccepted={approvalAccepted} />}
         </div>
       </div>
     </aside>
@@ -139,7 +155,43 @@ function IntentIntel({
   )
 }
 
-function RouteIntel({ trace, provider }: { trace: DecisionTrace; provider?: string }) {
+function CustomerInsightIntel({
+  profile,
+  useCustomerInsights,
+}: {
+  profile: CustomerInsightProfile
+  useCustomerInsights: boolean
+}) {
+  return (
+    <>
+      <IntelCard icon={UserCheck} title="Customer insight source">
+        <ChipGrid items={[profile.insightSource, 'Demo/static customer profile', 'No real customer data used']} />
+        <dl className="bank-intelligence-facts">
+          <div><dt>Purpose signal</dt><dd>{profile.purposeDetected}</dd></div>
+          <div><dt>Pattern signal</dt><dd>{profile.usualMovementPattern}</dd></div>
+          <div><dt>Beneficiary signal</dt><dd>{profile.beneficiaryRelationship}</dd></div>
+          <div><dt>Consent state</dt><dd>{useCustomerInsights ? 'Enabled for this analysis' : 'Switched off for this analysis'}</dd></div>
+        </dl>
+      </IntelCard>
+      <IntelCard icon={ShieldCheck} title="Insight boundary">
+        <ChipGrid items={['No external services called', 'No profile-aware scoring yet', 'Hard controls still override']} />
+        <p>Customer insight can influence ranking only in a future phase and cannot override fraud, sanctions, limits, eligibility or regulatory controls.</p>
+      </IntelCard>
+    </>
+  )
+}
+
+function RouteIntel({
+  trace,
+  provider,
+  customerInsightProfile,
+  customerInsightsUsedForAnalysis,
+}: {
+  trace: DecisionTrace
+  provider?: string
+  customerInsightProfile: CustomerInsightProfile
+  customerInsightsUsedForAnalysis: boolean | null
+}) {
   const selectedScore = trace.selectedRoute.score
   const rejected = trace.candidates.filter(candidate => candidate.status === 'EXCLUDED')
   const passedGates = trace.gates.filter(gate => gate.result === 'PASS').length
@@ -150,6 +202,15 @@ function RouteIntel({ trace, provider }: { trace: DecisionTrace; provider?: stri
       <IntelCard icon={Route} title="Recommendation authority">
         <ChipGrid items={['Route engine owns recommendation', explanationProvider(provider), 'AI cannot choose or approve']} />
         <p>The deterministic route engine applies gates, controls and scoring. Gemini/template explanation only turns the redacted trace into plain language.</p>
+      </IntelCard>
+      <IntelCard icon={BrainCircuit} title="Customer insight pass-through">
+        <dl className="bank-intelligence-facts">
+          <div><dt>Insight used</dt><dd>{customerInsightsUsedForAnalysis ? 'Yes, as context only' : 'No'}</dd></div>
+          <div><dt>Purpose</dt><dd>{customerInsightProfile.purposeDetected}</dd></div>
+          <div><dt>Pattern</dt><dd>{customerInsightProfile.usualMovementPattern}</dd></div>
+          <div><dt>Scoring change</dt><dd>None in Phase 4C</dd></div>
+        </dl>
+        <p>Route scoring has not changed in this phase. Customer insight is passed through as visible context only.</p>
       </IntelCard>
       <IntelCard icon={Gauge} title="Route evidence">
         <dl className="bank-intelligence-facts">
@@ -280,10 +341,12 @@ function drawerTitle(stage: Stage) {
     case 2:
       return 'Intent structuring context'
     case 3:
-      return 'Route recommendation evidence'
+      return 'Customer insight evidence'
     case 4:
-      return 'Journey and controls evidence'
+      return 'Route recommendation evidence'
     case 5:
+      return 'Journey and controls evidence'
+    case 6:
       return 'Approval and tracking evidence'
   }
 }
@@ -295,10 +358,12 @@ function drawerIntro(stage: Stage) {
     case 2:
       return 'How transcript text becomes a draft structured intent before customer review.'
     case 3:
-      return 'How the deterministic route engine produced the recommendation.'
+      return 'What consented customer context may be considered before route analysis.'
     case 4:
-      return 'How the representative journey, controls and finality boundary should be interpreted.'
+      return 'How the deterministic route engine produced the recommendation.'
     case 5:
+      return 'How the representative journey, controls and finality boundary should be interpreted.'
+    case 6:
       return 'How approval, simulation state and audit boundaries are protected.'
   }
 }

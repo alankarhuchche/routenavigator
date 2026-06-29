@@ -49,7 +49,9 @@ describe('Approve with passkey button', () => {
     fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
     await waitFor(() => expect(screen.getByRole('button', { name: /confirm structured intent/i })).toBeInTheDocument())
     fireEvent.click(screen.getByRole('button', { name: /confirm structured intent/i }))
-    fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
+    fireEvent.click(screen.getByRole('button', { name: /Continue to Customer Insight Context/i }))
+    expect(screen.getAllByText('Customer Insight Context').length).toBeGreaterThan(0)
+    fireEvent.click(screen.getByRole('button', { name: /Use insights and analyse safe routes/i }))
     await waitFor(() => expect(screen.getByText('Analysing the best safe way')).toBeInTheDocument())
     fireEvent.click(screen.getByRole('button', { name: /Continue to Journey & Controls/i }))
     await waitFor(() => expect(screen.getByText('Money movement journey map')).toBeInTheDocument())
@@ -57,13 +59,15 @@ describe('Approve with passkey button', () => {
     await waitFor(() => expect(screen.getByRole('button', { name: /^Approve with passkey$/i })).toBeInTheDocument())
   }, 10_000)
 
-  it('hides after authorise accepts approval in stage 5', async () => {
+  it('hides after authorise accepts approval in stage 6', async () => {
     render(<App />)
     fireEvent.click(screen.getAllByRole('button', { name: /Continue to Money Movement Intent/i })[0])
     fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
     await waitFor(() => expect(screen.getByRole('button', { name: /confirm structured intent/i })).toBeInTheDocument())
     fireEvent.click(screen.getByRole('button', { name: /confirm structured intent/i }))
-    fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
+    fireEvent.click(screen.getByRole('button', { name: /Continue to Customer Insight Context/i }))
+    expect(screen.getAllByText('Customer Insight Context').length).toBeGreaterThan(0)
+    fireEvent.click(screen.getByRole('button', { name: /Use insights and analyse safe routes/i }))
     await waitFor(() => expect(screen.getByText('Analysing the best safe way')).toBeInTheDocument())
     fireEvent.click(screen.getByRole('button', { name: /Continue to Journey & Controls/i }))
     await waitFor(() => expect(screen.getByText('Money movement journey map')).toBeInTheDocument())

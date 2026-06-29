@@ -1,29 +1,32 @@
 # Current Phase
 
-Phase 4C — Add Customer Insight Context screen
+Phase 4D — Profile-aware route explanation
 
-Execution mode: do not start Phase 4C unless explicitly instructed. Use `ai-harness/program/execution-state.md` and `bash scripts/ai-program-next.sh` to confirm state before further controlled execution.
+Execution mode: do not start Phase 4D unless explicitly instructed. Use `ai-harness/program/execution-state.md` and `bash scripts/ai-program-next.sh` to confirm state before further controlled execution.
 
 ## Objective
 
-Define and present the permitted customer insights that may inform safe money movement decisions, while keeping customer consent, source, freshness, correction and trace visibility explicit.
+Make the customer and bank explanations show how consented customer insight relates to the recommendation, without changing deterministic route scoring or backend decision logic.
 
 ## Current Status
 
 - Phase 4A reframed the product as Money Movement Intelligence.
-- Phase 4B is complete locally.
+- Phase 4C is complete locally.
 - Customer View is the default, simple, outcome-led layer.
 - Bank Intelligence is now optional behind-the-scenes context for controls, AI role, route evidence, map caveats and approval boundaries.
 - Detailed route evidence and control-room content are no longer the first thing a customer sees.
-- No backend route decision logic, payment execution logic, API contracts, deployment files, dependencies, customer profile logic or scoring logic changed in Phase 4B.
+- Phase 4C added Customer Insight Context as stage 3 in a six-stage journey.
+- Customer insight is mocked/static, visible to the customer, and can be included or excluded before analysis.
+- Route Intelligence and Bank Intelligence now show whether insight was used as context.
+- No backend route decision logic, payment execution logic, API contracts, deployment files, dependencies, customer profile scoring or ranking logic changed in Phase 4C.
 
-## Expected Phase 4C Scope
+## Expected Phase 4D Scope
 
-- Define a frontend-visible Customer Insight Context model.
-- Show which customer insights are consented, bank-held, user-declared, inferred, stale or missing.
-- Explain whether each insight can be used for gates, scoring, explanation, audit or customer correction.
-- Keep insight usage transparent and bank-safe.
-- Do not change route scoring or backend decision logic unless a separate gate explicitly approves it.
+- Add customer-facing explanation copy that connects the confirmed intent, customer insight context and route recommendation.
+- Keep profile-aware content clearly explanatory/demo only unless a route-scoring gate is explicitly approved.
+- Show how insight signals may affect fit, assurance and customer preference in plain language.
+- Keep hard controls, sanctions, fraud, eligibility, limits and regulatory checks as non-overridable.
+- Preserve the current route result and deterministic route decision path.
 
 ## Constraints
 
@@ -36,12 +39,12 @@ Define and present the permitted customer insights that may inform safe money mo
 - Do not add dependencies.
 - Do not touch `.claude/worktrees`.
 
-## Expected Outputs For Phase 4C
+## Expected Outputs For Phase 4D
 
 - Files inspected.
 - Files changed.
-- Customer insight model and UI summary.
-- Safety/consent wording summary.
+- Profile-aware explanation summary.
+- Safety/consent/scoring-boundary wording summary.
 - Commands run and results.
 - Acceptance criteria result.
 - Local commit only if checks pass.

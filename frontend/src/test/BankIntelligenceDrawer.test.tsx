@@ -25,7 +25,7 @@ describe('Bank Intelligence drawer', () => {
     expect(screen.queryByRole('dialog', { name: /secure session controls/i })).not.toBeInTheDocument()
   })
 
-  it('shows stage-specific behind-the-scenes context through the five-stage journey', async () => {
+  it('shows stage-specific behind-the-scenes context through the six-stage journey', async () => {
     vi.stubGlobal('fetch', vi.fn(() => Promise.reject(new Error('force local/static demo path'))))
     render(<App />)
 
@@ -47,7 +47,9 @@ describe('Bank Intelligence drawer', () => {
     fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
     await waitFor(() => expect(screen.getAllByText(/structured this intent/i).length).toBeGreaterThan(0))
     fireEvent.click(screen.getByRole('button', { name: /confirm structured intent/i }))
-    fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
+    fireEvent.click(screen.getByRole('button', { name: /Continue to Customer Insight Context/i }))
+    expect(screen.getAllByText('Customer Insight Context').length).toBeGreaterThan(0)
+    fireEvent.click(screen.getByRole('button', { name: /Use insights and analyse safe routes/i }))
 
     expect(await screen.findByText('Analysing the best safe way')).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /show bank intelligence/i }))

@@ -2,8 +2,10 @@ import { useCallback, useMemo, useState } from 'react'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
 import { demoScenarios } from './data/demoData'
+import { demoCustomerInsightProfile } from './data/customerInsights'
 import { ControlRoom } from './components/ControlRoom'
 import { ApprovalTransitionPanel } from './components/ApprovalTransitionPanel'
+import { CustomerInsightContext } from './components/CustomerInsightContext'
 import { DisclaimerBanner } from './components/DisclaimerBanner'
 import { DecisionImpactBanner } from './components/DecisionImpactBanner'
 import { DecisionTracePanel } from './components/DecisionTracePanel'
@@ -29,7 +31,7 @@ import { adaptTrace } from './traceAdapter'
 import type { LivePreferences } from './components/PaymentIntentIntake'
 import { STATE_LABELS } from './stateLabels'
 
-type JourneyStep = 1 | 2 | 3 | 4 | 5
+type JourneyStep = 1 | 2 | 3 | 4 | 5 | 6
 
 const secureReadinessItems = [
   { label: 'Passkey verified', detail: 'Device-bound authentication confirmed', icon: BadgeCheck },
@@ -64,6 +66,8 @@ function App() {
   const [isAuthorising, setIsAuthorising] = useState(false)
   const [isSimulating, setIsSimulating] = useState(false)
   const [isBankIntelligenceOpen, setIsBankIntelligenceOpen] = useState(false)
+  const [useCustomerInsights, setUseCustomerInsights] = useState(demoCustomerInsightProfile.consentForPersonalisedRouting)
+  const [customerInsightsUsedForAnalysis, setCustomerInsightsUsedForAnalysis] = useState<boolean | null>(null)
 
   const scenario = useMemo(
     () => demoScenarios.find((candidate) => candidate.id === scenarioId) ?? demoScenarios[0],
@@ -108,11 +112,11 @@ function App() {
     }
   }, [scenario.intent, livePreferences, structuredIntent])
 
-  const maxUnlockedStep: JourneyStep = analysisComplete ? 5 : 2
+  const maxUnlockedStep: JourneyStep = analysisComplete ? 6 : structuredIntentConfirmed ? 3 : 2
   const approvalAccepted = Boolean(paymentSnapshot) || staticApprovalAcknowledged
 
   function handleStepClick(s: number) {
-    if ((s === 1 || s === 2 || s === 3 || s === 4 || s === 5) && s <= maxUnlockedStep) {
+    if ((s === 1 || s === 2 || s === 3 || s === 4 || s === 5 || s === 6) && s <= maxUnlockedStep) {
       setIsBankIntelligenceOpen(false)
       setStep(s as JourneyStep)
     }
@@ -135,6 +139,8 @@ function App() {
     setStructuredIntentWarnings([])
     setStructuredIntentConfirmed(false)
     setStructureError(null)
+    setUseCustomerInsights(demoCustomerInsightProfile.consentForPersonalisedRouting)
+    setCustomerInsightsUsedForAnalysis(null)
   }
 
   const handleIntentTextChange = useCallback((text: string) => {
@@ -174,7 +180,7 @@ function App() {
     }
   }
 
-  async function handleAnalyse() {
+  async function handleAnalyse(useInsights: boolean = useCustomerInsights) {
     if (!intentText.trim()) {
       setAnalyseError('Enter a money movement outcome before analysing safe routes.')
       return
@@ -189,6 +195,7 @@ function App() {
     setClassifyReason(null)
     setPaymentSnapshot(null)
     setStaticApprovalAcknowledged(false)
+    setCustomerInsightsUsedForAnalysis(useInsights)
     try {
       // Use the client-side matched scenario as authoritative source.
       // The backend classifier only supplies the reason text — it predates
@@ -201,7 +208,7 @@ function App() {
         setAnalysisNotice(`${scenario.executionLabel ?? 'Illustrative corridor demo'} — using static frontend route trace. Backend corridor support is deferred.`)
         setAnalysisComplete(true)
         setIsBankIntelligenceOpen(false)
-        setStep(3)
+        setStep(4)
         return
       }
       // Step 2: run route decision + Gemini explanation
@@ -214,12 +221,12 @@ function App() {
       setExplanationProvider(explanationResp.provider)
       setAnalysisComplete(true)
       setIsBankIntelligenceOpen(false)
-      setStep(3)
+      setStep(4)
     } catch {
       setAnalyseError('Analysis failed — using demo data')
       setAnalysisComplete(true)
       setIsBankIntelligenceOpen(false)
-      setStep(3)
+      setStep(4)
     } finally {
       setIsAnalysing(false)
     }
@@ -229,7 +236,7 @@ function App() {
     if (!liveTraceId) {
       setStaticApprovalAcknowledged(true)
       setIsBankIntelligenceOpen(false)
-      setStep(5)
+      setStep(6)
       return
     }
     setIsAuthorising(true)
@@ -237,10 +244,10 @@ function App() {
       const snapshot = await authorisePayment(liveTraceId)
       setPaymentSnapshot(snapshot)
       setIsBankIntelligenceOpen(false)
-      setStep(5)
+      setStep(6)
     } catch {
       setIsBankIntelligenceOpen(false)
-      setStep(5)
+      setStep(6)
     } finally {
       setIsAuthorising(false)
     }
@@ -317,7 +324,7 @@ function App() {
         <section className="stage-shell" aria-label={`Stage ${step}: ${stageTitle(step)}`} key={step}>
           <div className="stage-shell-head">
             <div>
-              <p className="eyebrow">Stage {step} of 5</p>
+            <p className="eyebrow">Stage {step} of 6</p>
               <h2>{stageTitle(step)}</h2>
               <p>{stageDescription(step)}</p>
             </div>
@@ -349,6 +356,9 @@ function App() {
             analysisNotice={analysisNotice}
             paymentSnapshot={paymentSnapshot}
             approvalAccepted={approvalAccepted}
+            customerInsightProfile={demoCustomerInsightProfile}
+            useCustomerInsights={useCustomerInsights}
+            customerInsightsUsedForAnalysis={customerInsightsUsedForAnalysis}
             onClose={() => setIsBankIntelligenceOpen(false)}
           />
 
@@ -446,13 +456,29 @@ function App() {
 
           {step === 3 && (
             <div className="stage-content">
+              <CustomerInsightContext
+                profile={demoCustomerInsightProfile}
+                useInsights={useCustomerInsights}
+                isAnalysing={isAnalysing}
+                onUseInsightsChange={setUseCustomerInsights}
+                onAnalyse={handleAnalyse}
+              />
+            </div>
+          )}
+
+          {step === 4 && (
+            <div className="stage-content">
               {analysisNotice && (
                 <div className="static-demo-banner">
                   <strong>Static corridor demo</strong>
                   <span>{analysisNotice}</span>
                 </div>
               )}
-              <RouteIntelligencePanel trace={displayTrace} />
+              <RouteIntelligencePanel
+                trace={displayTrace}
+                customerInsightsUsed={customerInsightsUsedForAnalysis}
+                insightProfile={demoCustomerInsightProfile}
+              />
               <RecommendationHeroCard trace={displayTrace} />
               <TrustedAgentExplanationPanel
                 trace={displayTrace}
@@ -478,7 +504,7 @@ function App() {
             </div>
           )}
 
-          {step === 4 && (
+          {step === 5 && (
             <div className="stage-content">
               {analysisNotice && (
                 <div className="static-demo-banner">
@@ -512,7 +538,7 @@ function App() {
             </div>
           )}
 
-          {step === 5 && (
+          {step === 6 && (
             <div className="stage-content execution-section">
               <ApprovalTransitionPanel trace={displayTrace} mode={approvalAccepted ? 'tracking' : 'handoff'} />
               <FinalApprovalCard
@@ -588,14 +614,16 @@ function App() {
               <button
                 type="button"
                 className="primary-btn"
-                onClick={handleAnalyse}
+                onClick={handleContinue}
                 disabled={isAnalysing || !intentText.trim() || !structuredIntentConfirmed}
-                title={!structuredIntentConfirmed ? 'Confirm the structured intent before route analysis' : undefined}
+                title={!structuredIntentConfirmed ? 'Confirm the structured intent before customer insight review' : undefined}
               >
-                {isAnalysing ? 'Analysing...' : 'Analyse safe routes'}
+                Continue to Customer Insight Context
                 {!isAnalysing && <ArrowRight size={16} aria-hidden="true" />}
               </button>
-            ) : step < 5 ? (
+            ) : step === 3 && !analysisComplete ? (
+              <span className="stage-nav-note">Choose whether to use customer insight before route analysis.</span>
+            ) : step < 6 ? (
               <button type="button" className="primary-btn" onClick={handleContinue}>
                 {continueLabel(step)}
                 <ArrowRight size={16} aria-hidden="true" />
@@ -630,10 +658,12 @@ function stageTitle(step: JourneyStep) {
     case 2:
       return 'Money Movement Intent'
     case 3:
-      return 'Route Intelligence'
+      return 'Customer Insight Context'
     case 4:
-      return 'Journey & Controls'
+      return 'Route Intelligence'
     case 5:
+      return 'Journey & Controls'
+    case 6:
       return 'Approval & Tracking'
   }
 }
@@ -645,10 +675,12 @@ function stageDescription(step: JourneyStep) {
     case 2:
       return 'Speak or type what the customer wants to do with money, then review the structured intent.'
     case 3:
-      return 'Review the deterministic route recommendation and explanation.'
+      return 'Review consented customer context before route analysis.'
     case 4:
-      return 'Inspect the representative money movement journey, controls and settlement boundaries.'
+      return 'Review the deterministic route recommendation and explanation.'
     case 5:
+      return 'Inspect the representative money movement journey, controls and settlement boundaries.'
+    case 6:
       return 'Approve with passkey, then track the simulated money movement journey.'
   }
 }
@@ -660,10 +692,12 @@ function continueLabel(step: JourneyStep) {
     case 2:
       return 'Continue'
     case 3:
-      return 'Continue to Journey & Controls'
+      return 'Continue to Route Intelligence'
     case 4:
-      return 'Continue to Approval & Tracking'
+      return 'Continue to Journey & Controls'
     case 5:
+      return 'Continue to Approval & Tracking'
+    case 6:
       return 'Continue'
   }
 }

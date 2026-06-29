@@ -37,4 +37,5 @@ Phase 1 overall status: Complete. Payment Route Intelligence Phase 1 was deploye
 | 3C | Demo launch pack and walkthrough | Done | Docs/demo | Superseded by Phase 4 reframing work after release-gated demo evolution. |
 | 4A | Reframe as Money Movement Intelligence | Done | Frontend/docs | Reframed customer-facing proposition from rail-led payment routing to outcome-based money movement; no route logic changed. |
 | 4B | Separate Customer View and Bank Intelligence drawer | Done | Frontend/product | Added optional Bank Intelligence drawer and kept customer outcome flow primary; no route/scoring/profile logic changed. |
-| 4C | Add Customer Insight Context screen | Next | Product/frontend/backend gated | Define and show consented customer insights before any scoring or route-logic changes. |
+| 4C | Add Customer Insight Context screen | Done | Frontend/docs | Added a six-stage journey with consented mock customer insight context before route analysis; no route scoring or backend decision logic changed. |
+| 4D | Profile-aware route explanation | Next | Product/frontend gated | Explain how customer insight would inform recommendations, while keeping scoring unchanged unless a separate route-logic gate approves it. |

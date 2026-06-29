@@ -43,7 +43,15 @@ The current Docker path builds the Vite app and copies `frontend/dist/` into `ba
 - Phase 4B adds a frontend-only Bank Intelligence drawer and lighter Customer View framing.
 - No route decision logic, payment execution logic, API contracts, deployment files, dependencies or customer profile/scoring logic changed.
 - Before the next push/deploy, verify the drawer opens and closes on all five stages and remains secondary to the customer journey.
-- Customer Insight Context remains a future Phase 4C item.
+- Customer Insight Context was added in Phase 4C as a frontend/demo context stage only. It uses mock/static data and does not change route scoring, backend route decision logic or deployment packaging.
+
+## Phase 4C Deployment Note
+
+- Phase 4C is local-only until a human-approved push/release gate.
+- The Vite production build passes locally with the six-stage journey.
+- Backend tests and packaging pass locally.
+- Customer insight context is mocked/static and does not require secrets, production data or external services.
+- No deploy was run for Phase 4C.
 
 ## Do Not Deploy Without Confirmation
 

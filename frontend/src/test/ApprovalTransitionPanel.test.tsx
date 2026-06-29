@@ -16,9 +16,9 @@ describe('Approval step transition', () => {
 
     expect(screen.getAllByText('Secure Session').length).toBeGreaterThan(0)
     expect(screen.getByRole('button', { name: /^Money Movement Intent$/i })).not.toBeDisabled()
-    expect(screen.getByRole('button', { name: /Route Intelligence locked until route analysis/i })).toBeDisabled()
-    expect(screen.getByRole('button', { name: /Journey & Controls locked until route analysis/i })).toBeDisabled()
-    expect(screen.getByRole('button', { name: /Approval & Tracking locked until route analysis/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /Route Intelligence locked until prior stage is complete/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /Journey & Controls locked until prior stage is complete/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /Approval & Tracking locked until prior stage is complete/i })).toBeDisabled()
 
     fireEvent.click(screen.getAllByRole('button', { name: /Continue to Money Movement Intent/i })[0])
     const outcomeInput = screen.getByLabelText('Money movement outcome')
@@ -26,7 +26,9 @@ describe('Approval step transition', () => {
     fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
     await waitFor(() => expect(screen.getAllByText(/structured this intent/i).length).toBeGreaterThan(0))
     fireEvent.click(screen.getByRole('button', { name: /confirm structured intent/i }))
-    fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
+    fireEvent.click(screen.getByRole('button', { name: /Continue to Customer Insight Context/i }))
+    expect(screen.getAllByText('Customer Insight Context').length).toBeGreaterThan(0)
+    fireEvent.click(screen.getByRole('button', { name: /Use insights and analyse safe routes/i }))
 
     expect(await screen.findByText('Analysing the best safe way')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /^Journey & Controls$/i })).not.toBeDisabled()
@@ -62,7 +64,9 @@ describe('Approval step transition', () => {
     fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
     await waitFor(() => expect(screen.getAllByText(/structured this intent/i).length).toBeGreaterThan(0))
     fireEvent.click(screen.getByRole('button', { name: /confirm structured intent/i }))
-    fireEvent.click(screen.getByRole('button', { name: /analyse safe routes/i }))
+    fireEvent.click(screen.getByRole('button', { name: /Continue to Customer Insight Context/i }))
+    expect(screen.getAllByText('Customer Insight Context').length).toBeGreaterThan(0)
+    fireEvent.click(screen.getByRole('button', { name: /Use insights and analyse safe routes/i }))
 
     await screen.findByText(/using static frontend route trace/i)
     fireEvent.click(screen.getByRole('button', { name: /Continue to Journey & Controls/i }))

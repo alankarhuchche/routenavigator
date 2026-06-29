@@ -2,15 +2,19 @@ import {
   CheckCircle2,
   Clock3,
   Gauge,
+  Info,
   Landmark,
   ListChecks,
   Scale,
   ShieldCheck,
 } from 'lucide-react'
+import type { CustomerInsightProfile } from '../data/customerInsights'
 import type { DecisionTrace } from '../types'
 
 interface Props {
   trace: DecisionTrace
+  customerInsightsUsed?: boolean | null
+  insightProfile?: CustomerInsightProfile
 }
 
 const lanes = [
@@ -56,7 +60,7 @@ const lanes = [
   },
 ]
 
-export function RouteIntelligencePanel({ trace }: Props) {
+export function RouteIntelligencePanel({ trace, customerInsightsUsed, insightProfile }: Props) {
   const candidateRoutes = trace.candidates.length
   const executableRoutes = trace.candidates.filter(
     route => route.status === 'SELECTED' || route.status === 'AVAILABLE',
@@ -85,6 +89,23 @@ export function RouteIntelligencePanel({ trace }: Props) {
           <Gauge size={15} aria-hidden="true" />
           {metricSource}
         </span>
+      </div>
+
+      <div className={`route-insight-context ${customerInsightsUsed ? 'used' : 'not-used'}`}>
+        <Info size={16} aria-hidden="true" />
+        <div>
+          <strong>
+            {customerInsightsUsed ? 'Customer insight considered' : 'Customer insight not used for this analysis'}
+          </strong>
+          <p>
+            {customerInsightsUsed
+              ? `This recommendation considered the confirmed money movement intent and relevant customer context, including ${insightProfile?.purposeDetected ?? 'declared purpose'} and ${insightProfile?.riskNormality ?? 'normality context'}.`
+              : 'This recommendation used the confirmed money movement intent and route controls only.'}
+          </p>
+          {customerInsightsUsed && (
+            <small>Customer insight is shown as context in this phase. Profile-aware scoring is planned for a later phase.</small>
+          )}
+        </div>
       </div>
 
       <div className="route-intelligence-lanes">
