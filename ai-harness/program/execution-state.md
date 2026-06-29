@@ -1,18 +1,18 @@
 # Program Execution State
 
-Previous completed phase: Phase 4A — Reframe as Money Movement Intelligence
+Previous completed phase: Phase 4B — Separate Customer View and Bank Intelligence drawer
 
-Current program phase: Phase 4B — Separate Customer View and Bank Intelligence drawer
+Current program phase: Phase 4C — Add Customer Insight Context screen
 
 Current phase file: not created yet
 
-Next phase: Phase 4B — Separate Customer View and Bank Intelligence drawer
+Next phase: Phase 4C — Add Customer Insight Context screen
 
-Last completed local commit: Phase 4A local commit created by this run.
+Last completed local commit: `eb3917a` (`Separate customer view and bank intelligence`)
 
 Latest gate resolution: Phase 2C-fix kept scenarios `SCN-007` through `SCN-011` as labelled static frontend corridor demos. Backend corridor route support remains deferred behind the route decision logic / product scope gate.
 
-Latest phase result: Phase 4A reframed the visible proposition from Payment Route Intelligence to Money Movement Intelligence. The customer-facing journey is now outcome-led and rail-agnostic, Stage 2 is Money Movement Intent, and no backend route logic, payment execution logic, API contracts, deployment files or dependencies changed. Customer insight screens and the Bank Intelligence drawer remain future Phase 4B/4C items.
+Latest phase result: Phase 4B separated the default Customer View from optional Bank Intelligence. Each stage now has a closed-by-default Bank Intelligence drawer with stage-specific controls, AI role, route evidence, map caveats and approval/simulation boundaries. Detailed route evidence and control-room content are secondary. No route/scoring/profile logic, backend route logic, payment execution logic, API contracts, deployment files or dependencies changed. Customer Insight Context remains future Phase 4C.
 
 Push status: Do not push without explicit human approval. Pushing to GitHub may trigger Cloud Build and Cloud Run deployment.
 

@@ -19,9 +19,9 @@ import { RouteComparison } from './components/RouteComparison'
 import { RouteIntelligencePanel } from './components/RouteIntelligencePanel'
 import { ScenarioSelector } from './components/ScenarioSelector'
 import { StepIndicator } from './components/StepIndicator'
-import { AgentContextGateway } from './components/AgentContextGateway'
+import { BankIntelligenceDrawer } from './components/BankIntelligenceDrawer'
 import { TrustedAgentExplanationPanel } from './components/TrustedAgentExplanationPanel'
-import { ArrowRight, BadgeCheck, Bot, CheckCircle2, Fingerprint, LockKeyhole, ShieldCheck } from 'lucide-react'
+import { ArrowRight, BadgeCheck, Bot, CheckCircle2, Fingerprint, LockKeyhole, ShieldCheck, SlidersHorizontal } from 'lucide-react'
 import type { DecisionTrace, PaymentIntent } from './types'
 import type { ApiIntentClassificationResponse, ApiPaymentSnapshot, ApiStructuredIntent } from './apiTypes'
 import { createRouteDecision, fetchExplanation, authorisePayment, simulateNext, simulateDegradation, classifyIntent } from './api'
@@ -63,6 +63,7 @@ function App() {
   const [staticApprovalAcknowledged, setStaticApprovalAcknowledged] = useState(false)
   const [isAuthorising, setIsAuthorising] = useState(false)
   const [isSimulating, setIsSimulating] = useState(false)
+  const [isBankIntelligenceOpen, setIsBankIntelligenceOpen] = useState(false)
 
   const scenario = useMemo(
     () => demoScenarios.find((candidate) => candidate.id === scenarioId) ?? demoScenarios[0],
@@ -112,11 +113,13 @@ function App() {
 
   function handleStepClick(s: number) {
     if ((s === 1 || s === 2 || s === 3 || s === 4 || s === 5) && s <= maxUnlockedStep) {
+      setIsBankIntelligenceOpen(false)
       setStep(s as JourneyStep)
     }
   }
 
   function handleReset() {
+    setIsBankIntelligenceOpen(false)
     setStep(1)
     setAnalysisComplete(false)
     setLiveTrace(null)
@@ -197,6 +200,7 @@ function App() {
         setExplanationProvider(undefined)
         setAnalysisNotice(`${scenario.executionLabel ?? 'Illustrative corridor demo'} — using static frontend route trace. Backend corridor support is deferred.`)
         setAnalysisComplete(true)
+        setIsBankIntelligenceOpen(false)
         setStep(3)
         return
       }
@@ -209,10 +213,12 @@ function App() {
       setLiveTrace(adapted)
       setExplanationProvider(explanationResp.provider)
       setAnalysisComplete(true)
+      setIsBankIntelligenceOpen(false)
       setStep(3)
     } catch {
       setAnalyseError('Analysis failed — using demo data')
       setAnalysisComplete(true)
+      setIsBankIntelligenceOpen(false)
       setStep(3)
     } finally {
       setIsAnalysing(false)
@@ -222,6 +228,7 @@ function App() {
   async function handleAuthorise() {
     if (!liveTraceId) {
       setStaticApprovalAcknowledged(true)
+      setIsBankIntelligenceOpen(false)
       setStep(5)
       return
     }
@@ -229,8 +236,10 @@ function App() {
     try {
       const snapshot = await authorisePayment(liveTraceId)
       setPaymentSnapshot(snapshot)
+      setIsBankIntelligenceOpen(false)
       setStep(5)
     } catch {
+      setIsBankIntelligenceOpen(false)
       setStep(5)
     } finally {
       setIsAuthorising(false)
@@ -261,12 +270,14 @@ function App() {
 
   function handleBack() {
     if (step > 1) {
+      setIsBankIntelligenceOpen(false)
       setStep((step - 1) as JourneyStep)
     }
   }
 
   function handleContinue() {
     if (step < maxUnlockedStep) {
+      setIsBankIntelligenceOpen(false)
       setStep((step + 1) as JourneyStep)
     }
   }
@@ -310,10 +321,36 @@ function App() {
               <h2>{stageTitle(step)}</h2>
               <p>{stageDescription(step)}</p>
             </div>
-            {analysisComplete && (
-              <span className="stage-status">Route recommendation ready</span>
-            )}
+            <div className="stage-head-actions">
+              {analysisComplete && (
+                <span className="stage-status">Route recommendation ready</span>
+              )}
+              <button
+                type="button"
+                className="bank-intelligence-toggle"
+                aria-expanded={isBankIntelligenceOpen}
+                aria-controls="bank-intelligence-drawer"
+                onClick={() => setIsBankIntelligenceOpen(true)}
+              >
+                <SlidersHorizontal size={16} aria-hidden="true" />
+                Show bank intelligence
+              </button>
+            </div>
           </div>
+
+          <BankIntelligenceDrawer
+            open={isBankIntelligenceOpen}
+            stage={step}
+            trace={displayTrace}
+            provider={explanationProvider}
+            structuredIntent={structuredIntent}
+            structuredIntentConfirmed={structuredIntentConfirmed}
+            structuredIntentFallbackUsed={structuredIntentFallbackUsed}
+            analysisNotice={analysisNotice}
+            paymentSnapshot={paymentSnapshot}
+            approvalAccepted={approvalAccepted}
+            onClose={() => setIsBankIntelligenceOpen(false)}
+          />
 
           {step === 1 && (
             <div className="stage-content secure-session-stage">
@@ -367,9 +404,6 @@ function App() {
                   </ol>
                 </aside>
               </section>
-              <div className="secure-agent-controls">
-                <AgentContextGateway />
-              </div>
             </div>
           )}
 
@@ -426,18 +460,21 @@ function App() {
                 isLoading={isAnalysing}
               />
               <DecisionImpactBanner trace={displayTrace} />
-              <div className="analysis-grid">
-                <div>
-                  <RouteComparison trace={displayTrace} />
+              <details className="customer-evidence-details">
+                <summary>View detailed route evidence</summary>
+                <div className="analysis-grid">
+                  <div>
+                    <RouteComparison trace={displayTrace} />
+                  </div>
+                  <div>
+                    <DecisionTracePanel
+                      trace={displayTrace}
+                      provider={explanationProvider}
+                      isLoading={isAnalysing}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <DecisionTracePanel
-                    trace={displayTrace}
-                    provider={explanationProvider}
-                    isLoading={isAnalysing}
-                  />
-                </div>
-              </div>
+              </details>
             </div>
           )}
 
@@ -462,13 +499,16 @@ function App() {
                   <FallbackEventView trace={displayTrace} />
                 )}
               </div>
-              <div className="control-band simulation-panel">
-                <div className="simulation-controls-head">
-                  <strong>Control evidence</strong>
-                  <span>Internal simulation evidence, not a customer execution action.</span>
+              <details className="customer-evidence-details control-band">
+                <summary>View control evidence</summary>
+                <div className="simulation-panel">
+                  <div className="simulation-controls-head">
+                    <strong>Control evidence</strong>
+                    <span>Internal simulation evidence, not a customer execution action.</span>
+                  </div>
+                  <ControlRoom trace={displayTrace} paymentState={paymentSnapshot?.state} />
                 </div>
-                <ControlRoom trace={displayTrace} paymentState={paymentSnapshot?.state} />
-              </div>
+              </details>
             </div>
           )}
 

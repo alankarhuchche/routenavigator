@@ -36,5 +36,5 @@ Phase 1 overall status: Complete. Payment Route Intelligence Phase 1 was deploye
 | 3D-fix | Live voice transcript confirmation | Done | Frontend/docs | Added live browser transcript captions and requires captured transcript confirmation before Gemini/rules structuring. Interim transcript is displayed only and no raw audio is sent. |
 | 3C | Demo launch pack and walkthrough | Done | Docs/demo | Superseded by Phase 4 reframing work after release-gated demo evolution. |
 | 4A | Reframe as Money Movement Intelligence | Done | Frontend/docs | Reframed customer-facing proposition from rail-led payment routing to outcome-based money movement; no route logic changed. |
-| 4B | Separate Customer View and Bank Intelligence drawer | Next | Frontend/product | Create clearer separation between customer outcome flow and bank insight/evidence view. |
-| 4C | Customer insight context model | Future | Product/frontend/backend gated | Define consented customer insights that may influence gates/scoring before adding logic. |
+| 4B | Separate Customer View and Bank Intelligence drawer | Done | Frontend/product | Added optional Bank Intelligence drawer and kept customer outcome flow primary; no route/scoring/profile logic changed. |
+| 4C | Add Customer Insight Context screen | Next | Product/frontend/backend gated | Define and show consented customer insights before any scoring or route-logic changes. |

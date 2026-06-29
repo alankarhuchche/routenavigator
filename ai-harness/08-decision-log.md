@@ -148,3 +148,13 @@
 - No backend route decision logic, payment execution logic, API contracts, deployment files or dependencies changed in Phase 4A.
 - Customer insight screens, bank intelligence drawer and any customer profile/scoring model are deferred to Phase 4B/4C behind explicit product scope.
 - Next phase is Phase 4B — Separate Customer View and Bank Intelligence drawer.
+
+## Customer View / Bank Intelligence Decisions
+
+- Phase 4B introduced a two-layer UI model: Customer View by default, with optional Bank Intelligence behind-the-scenes context.
+- Bank Intelligence is opened from a secondary control on each stage and is closed by default.
+- Stage-specific drawer content explains session trust, transcript handling, deterministic route evidence, representative map caveats, finality/PONR, approval boundaries and simulation status.
+- Detailed route comparison/trace and control-room evidence are tucked behind customer-initiated evidence sections so the main journey remains outcome-led.
+- Agent, voice and Gemini boundaries remain visible where they protect trust. More detailed authority/control/audit context now lives in Bank Intelligence.
+- No route/scoring/profile logic, payment execution logic, API contracts, deployment files or dependencies changed in Phase 4B.
+- Customer Insight Context remains future Phase 4C.

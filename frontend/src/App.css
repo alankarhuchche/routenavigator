@@ -301,6 +301,234 @@ h2 {
   font-weight: 850;
 }
 
+.stage-head-actions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.bank-intelligence-toggle,
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 32px;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.bank-intelligence-toggle {
+  padding: 6px 11px;
+}
+
+.bank-intelligence-toggle:hover,
+.bank-intelligence-toggle[aria-expanded="true"] {
+  border-color: #0f766e;
+  background: #f0fdfa;
+  color: #0f766e;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 999px;
+}
+
+.bank-intelligence-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  justify-content: flex-end;
+  background: rgba(15, 23, 42, 0.18);
+}
+
+.bank-intelligence-panel {
+  width: min(440px, calc(100vw - 28px));
+  height: 100%;
+  overflow: auto;
+  padding: 18px;
+  border-left: 1px solid #d9dee8;
+  background: #f8fafc;
+  box-shadow: -24px 0 48px rgba(15, 23, 42, 0.16);
+}
+
+.bank-intelligence-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid #d9dee8;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.bank-intelligence-head h2 {
+  color: #111827;
+  font-size: 22px;
+}
+
+.bank-intelligence-head p:last-child {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.bank-intelligence-body {
+  display: grid;
+  gap: 12px;
+  padding-top: 12px;
+}
+
+.bank-intelligence-card {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid #d9dee8;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.bank-intelligence-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bank-intelligence-card-title svg {
+  color: #0f766e;
+}
+
+.bank-intelligence-card-title h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 14px;
+}
+
+.bank-intelligence-card p {
+  margin: 0;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.bank-intelligence-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.bank-intelligence-chips span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border: 1px solid #ccfbf1;
+  border-radius: 999px;
+  background: #f0fdfa;
+  color: #0f766e;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.bank-intelligence-access {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.bank-intelligence-access > div {
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.bank-intelligence-access strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #334155;
+  font-size: 12px;
+}
+
+.bank-intelligence-access ul,
+.bank-intelligence-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bank-intelligence-access li,
+.bank-intelligence-list li {
+  color: #475569;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.bank-intelligence-list li {
+  display: grid;
+  gap: 3px;
+  padding: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.bank-intelligence-list strong {
+  color: #111827;
+  font-size: 12px;
+}
+
+.bank-intelligence-list span {
+  color: #64748b;
+}
+
+.bank-intelligence-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.bank-intelligence-facts div {
+  padding: 9px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.bank-intelligence-facts dt {
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.bank-intelligence-facts dd {
+  margin: 4px 0 0;
+  color: #111827;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
 .stage-content {
   display: grid;
   gap: 16px;
@@ -354,6 +582,44 @@ h2 {
   grid-template-columns: 55fr 45fr;
   gap: 16px;
   align-items: start;
+}
+
+.customer-evidence-details {
+  border: 1px solid #d9dee8;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.customer-evidence-details summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 42px;
+  padding: 0 14px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.customer-evidence-details summary::after {
+  content: "+";
+  color: #0f766e;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.customer-evidence-details[open] summary {
+  border-bottom: 1px solid #d9dee8;
+}
+
+.customer-evidence-details[open] summary::after {
+  content: "-";
+}
+
+.customer-evidence-details .analysis-grid,
+.customer-evidence-details .simulation-panel {
+  padding: 14px;
 }
 
 .map-fallback-row {
@@ -3623,5 +3889,37 @@ dd {
   .journey-timeline {
     grid-template-columns: 1fr;
     padding: 10px 12px 12px;
+  }
+}
+
+@media (max-width: 780px) {
+  .stage-shell-head,
+  .stage-head-actions {
+    align-items: stretch;
+  }
+
+  .stage-head-actions {
+    justify-content: flex-start;
+  }
+
+  .bank-intelligence-drawer {
+    align-items: flex-end;
+  }
+
+  .bank-intelligence-panel {
+    width: 100%;
+    height: min(82vh, 760px);
+    border-top: 1px solid #d9dee8;
+    border-left: 0;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .bank-intelligence-head {
+    padding: 14px;
+  }
+
+  .bank-intelligence-access,
+  .bank-intelligence-facts {
+    grid-template-columns: 1fr;
   }
 }

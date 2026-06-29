@@ -38,6 +38,13 @@ The current Docker path builds the Vite app and copies `frontend/dist/` into `ba
 - Customer insight screen and Bank Intelligence drawer are future Phase 4B/4C items.
 - Before the next push/deploy, verify the production build serves the Money Movement Intelligence header and Money Movement Intent stage.
 
+## Phase 4B Deployment Note
+
+- Phase 4B adds a frontend-only Bank Intelligence drawer and lighter Customer View framing.
+- No route decision logic, payment execution logic, API contracts, deployment files, dependencies or customer profile/scoring logic changed.
+- Before the next push/deploy, verify the drawer opens and closes on all five stages and remains secondary to the customer journey.
+- Customer Insight Context remains a future Phase 4C item.
+
 ## Do Not Deploy Without Confirmation
 
 Do not run Cloud Build or Cloud Run deployment commands without explicit user confirmation in the active task.
