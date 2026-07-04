@@ -1,6 +1,6 @@
 import { Mic, Sparkles } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { DEFAULT_PAYMENT_INTENT_TEXT } from '../defaultIntent'
+import { DEMO_PAYMENT_INTENT_TEXT } from '../defaultIntent'
 import type { ApiStructuredIntent } from '../apiTypes'
 import type { DemoScenario } from '../types'
 import { IntentConfirmationCard } from './IntentConfirmationCard'
@@ -69,7 +69,8 @@ export function PaymentIntentIntake({
   isStructuring,
   structuredIntentConfirmed,
 }: PaymentIntentIntakeProps) {
-  const [internalIntent, setInternalIntent] = useState(DEFAULT_PAYMENT_INTENT_TEXT)
+  const [internalIntent, setInternalIntent] = useState('')
+  const [demoExampleUsed, setDemoExampleUsed] = useState(() => intentText === DEMO_PAYMENT_INTENT_TEXT)
   const [objective, setObjective] = useState<ObjectivePreference>('FASTEST')
   const [trackingRequired, setTrackingRequired] = useState(true)
   const [digitalRoutesAllowed, setDigitalRoutesAllowed] = useState(true)
@@ -78,7 +79,7 @@ export function PaymentIntentIntake({
   const [voiceStatus, setVoiceStatus] = useState<VoiceStatus>(() => getSpeechRecognitionConstructor() ? 'idle' : 'unsupported')
   const [voiceMessage, setVoiceMessage] = useState(() => getSpeechRecognitionConstructor()
     ? 'Voice captures intent only. Passkey approval is still required before anything moves.'
-    : 'Speech recognition is not supported in this browser. Type the money movement intent instead.')
+    : 'Speech recognition is not supported in this browser. Type the money movement intent instead. Passkey approval is still required before anything moves.')
   const [interimTranscript, setInterimTranscript] = useState('')
   const [capturedTranscript, setCapturedTranscript] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
@@ -89,6 +90,12 @@ export function PaymentIntentIntake({
       setInternalIntent(text)
     }
     onIntentTextChange?.(text)
+  }
+
+  function useDemoExample() {
+    updateIntentText(DEMO_PAYMENT_INTENT_TEXT)
+    setDemoExampleUsed(true)
+    textareaRef.current?.focus()
   }
 
   function beginVoiceCapture() {
@@ -164,7 +171,14 @@ export function PaymentIntentIntake({
           <strong>Conversational in. Deterministic out.</strong>
           <span>AI structures and explains. The bank route engine decides. The customer approves.</span>
         </div>
-        <span className="suggested-intent-label">Suggested demo intent — review and edit before analysis</span>
+        <div className="intent-example-row">
+          <button type="button" className="secondary-btn" onClick={useDemoExample}>
+            Use demo example
+          </button>
+          {demoExampleUsed && (
+            <span className="suggested-intent-label">Demo example — review or edit before structuring.</span>
+          )}
+        </div>
         <label htmlFor="natural-language-intent">Money movement outcome</label>
         <div className="outcome-input-row">
           <textarea
@@ -174,6 +188,7 @@ export function PaymentIntentIntake({
             rows={7}
             placeholder="Example: Move GBP 5,000 to a supplier in India in INR today, with tracking and strong certainty."
             onChange={(event) => {
+              if (event.target.value !== DEMO_PAYMENT_INTENT_TEXT) setDemoExampleUsed(false)
               updateIntentText(event.target.value)
             }}
           />
@@ -296,6 +311,10 @@ export function PaymentIntentIntake({
             />
             <span>Bank transfer only</span>
           </label>
+        </div>
+
+        <details className="intent-demo-controls">
+          <summary>Demo controls</summary>
           <label className="check-row preference-card">
             <input
               type="checkbox"
@@ -304,35 +323,31 @@ export function PaymentIntentIntake({
             />
             <span>Simulate a mid-movement failure</span>
           </label>
-        </div>
-
-        <div className="intent-safety-boundary">
-          Voice captures intent only. Passkey approval is required before anything moves.
-        </div>
+        </details>
 
       </div>
 
-      <div className="match-summary">
-        <dt>Structured intent preview</dt>
-        <dd>{matchedScenario.scenario.name}</dd>
-        <p>{matchedScenario.reason}</p>
-        {matchedScenario.scenario.executionMode === 'STATIC_DEMO' && (
-          <p className="static-demo-note">
-            {matchedScenario.scenario.executionLabel ?? 'Illustrative corridor demo'} — {matchedScenario.scenario.executionNote ?? 'Static frontend scenario; backend corridor route support is deferred.'}
-          </p>
-        )}
-      </div>
-      {structuredIntent || onConfirmStructuredIntent ? (
+      {structuredIntent && (
+        <div className="match-summary">
+          <dt>Structured intent preview</dt>
+          <dd>{matchedScenario.scenario.name}</dd>
+          <p>{matchedScenario.reason}</p>
+          {matchedScenario.scenario.executionMode === 'STATIC_DEMO' && (
+            <p className="static-demo-note">
+              {matchedScenario.scenario.executionLabel ?? 'Illustrative corridor demo'} — {matchedScenario.scenario.executionNote ?? 'Static frontend scenario; backend corridor route support is deferred.'}
+            </p>
+          )}
+        </div>
+      )}
+      {structuredIntent && (
         <IntentConfirmationCard
           intent={matchedScenario.scenario.intent}
           structuredIntent={structuredIntent}
           fallbackUsed={structuredIntentFallbackUsed}
           warnings={structuredIntentWarnings}
           confirmed={structuredIntentConfirmed}
-          onConfirm={structuredIntent ? onConfirmStructuredIntent : undefined}
+          onConfirm={onConfirmStructuredIntent}
         />
-      ) : (
-        <IntentConfirmationCard intent={matchedScenario.scenario.intent} />
       )}
     </section>
   )
@@ -358,7 +373,7 @@ function startVoiceCapture({
   const SpeechRecognitionCtor = getSpeechRecognitionConstructor()
   if (!SpeechRecognitionCtor) {
     setVoiceStatus('unsupported')
-    setVoiceMessage('Speech recognition is not supported in this browser. Type the money movement intent instead.')
+    setVoiceMessage('Speech recognition is not supported in this browser. Type the money movement intent instead. Passkey approval is still required before anything moves.')
     return
   }
 

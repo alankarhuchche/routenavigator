@@ -37,6 +37,7 @@ describe('Customer Insight Context stage', () => {
     expect(screen.getByRole('button', { name: /Route Intelligence locked until prior stage is complete/i })).toBeDisabled()
 
     fireEvent.click(screen.getAllByRole('button', { name: /Continue to Money Movement Intent/i })[0])
+    fireEvent.click(screen.getByRole('button', { name: /use demo example/i }))
     fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
     await waitFor(() => expect(screen.getAllByText(/structured this intent/i).length).toBeGreaterThan(0))
     fireEvent.click(screen.getByRole('button', { name: /confirm structured intent/i }))
@@ -51,6 +52,13 @@ describe('Customer Insight Context stage', () => {
     expect(screen.getByText('Previous route experience')).toBeInTheDocument()
     expect(screen.getByText('Risk normality')).toBeInTheDocument()
     expect(screen.getByLabelText('Use customer insight for this analysis')).toBeChecked()
+    expect(screen.getByText(/Customer insight can help personalise eligible route ranking after bank controls pass/i)).toBeInTheDocument()
+    expect(screen.queryByText(/future phase|visible context only|can inform ranking later/i)).not.toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: /show bank intelligence/i }))
+    const drawer = screen.getByRole('dialog', { name: /customer insight evidence/i })
+    expect(within(drawer).getByText('Bounded customer-fit scoring active')).toBeInTheDocument()
+    expect(within(drawer).getByText(/capped adjustment applies only to AVAILABLE routes after hard controls pass/i)).toBeInTheDocument()
   }, 10_000)
 
   it('analyses with customer insight and shows insight considered in Route Intelligence', async () => {

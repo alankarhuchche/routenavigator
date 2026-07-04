@@ -41,4 +41,6 @@ Phase 1 overall status: Complete. Payment Route Intelligence Phase 1 was deploye
 | 4D | Profile-aware route explanation | Done | Frontend/docs | Added customer-fit and no-insight explanations while keeping customer insight as explanation context only. |
 | 4E-design | Bounded customer-fit scoring design | Done | Docs/design | Defined hard-control gating, capped customer-fit contribution, transparency, Gemini and data/privacy boundaries. |
 | 4E-implementation | Bounded customer-fit scoring | Done | Product/backend | Added optional demo insight context, hard-controls-first capped scoring, no-insight zero adjustment and score evidence. |
-| 4F | Customer-fit regression QA and release decision | Next | QA/release gate | Re-run end-to-end regression, inspect production packaging and make a human-gated push recommendation. |
+| 4F | Customer-fit regression QA and release decision | Done | QA/release gate | Regression passed and fallback-only release candidate was approved and pushed through the human gate. |
+| 5A | Correct scoring copy and defer derived intent content | Done | Frontend/docs | Corrected stale post-4E scoring claims and starts intent capture empty with optional demo example and action-gated derived content. |
+| 5B | Simplify customer journey and responsive stepper | Next | Frontend/product | Reduce customer-screen density and replace the large six-card journey navigation with compact responsive progress. |

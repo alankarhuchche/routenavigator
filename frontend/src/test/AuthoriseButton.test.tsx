@@ -46,6 +46,7 @@ describe('Approve with passkey button', () => {
   it('appears on Approval & Tracking after analysing and continuing through the journey', async () => {
     render(<App />)
     fireEvent.click(screen.getAllByRole('button', { name: /Continue to Money Movement Intent/i })[0])
+    fireEvent.click(screen.getByRole('button', { name: /use demo example/i }))
     fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
     await waitFor(() => expect(screen.getByRole('button', { name: /confirm structured intent/i })).toBeInTheDocument())
     fireEvent.click(screen.getByRole('button', { name: /confirm structured intent/i }))
@@ -62,6 +63,7 @@ describe('Approve with passkey button', () => {
   it('hides after authorise accepts approval in stage 6', async () => {
     render(<App />)
     fireEvent.click(screen.getAllByRole('button', { name: /Continue to Money Movement Intent/i })[0])
+    fireEvent.click(screen.getByRole('button', { name: /use demo example/i }))
     fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
     await waitFor(() => expect(screen.getByRole('button', { name: /confirm structured intent/i })).toBeInTheDocument())
     fireEvent.click(screen.getByRole('button', { name: /confirm structured intent/i }))

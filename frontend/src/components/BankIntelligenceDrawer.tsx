@@ -174,8 +174,8 @@ function CustomerInsightIntel({
         </dl>
       </IntelCard>
       <IntelCard icon={ShieldCheck} title="Insight boundary">
-        <ChipGrid items={['No external services called', 'Bounded fit only after controls', 'Hard controls always override']} />
-        <p>If selected, this mocked context may add a capped fit adjustment only after a route passes fraud, sanctions, limits, eligibility and regulatory controls.</p>
+        <ChipGrid items={['No external services called', 'Bounded customer-fit scoring active', 'Hard controls always override']} />
+        <p>Bounded customer-fit scoring is active in this demo. Its capped adjustment applies only to AVAILABLE routes after hard controls pass.</p>
       </IntelCard>
     </>
   )

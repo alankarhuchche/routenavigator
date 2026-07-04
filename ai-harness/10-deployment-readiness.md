@@ -89,6 +89,14 @@ The current Docker path builds the Vite app and copies `frontend/dist/` into `ba
 - Secret scan: no private-key or Google API-key patterns found in tracked files.
 - No push or deployment was run during Phase 4F.
 
+## Phase 5A Deployment Note
+
+- Phase 5A is frontend and harness only; no backend route scoring, API contract, payment execution or deployment file changed.
+- Money Movement Intent starts empty, offers an explicit demo example and reveals structured/confirmation content only after customer action.
+- Customer Insight and Bank Intelligence copy now match the implemented bounded customer-fit scoring model.
+- Before release, verify the initial Stage 2 composer is empty, the demo example is labelled, and both manual and voice structuring still unlock confirmation.
+- No push or deployment was run during Phase 5A.
+
 ### Pre-Push Gate
 
 - Confirm the approved release range and `main` branch.

@@ -5,7 +5,7 @@ export interface CustomerInsight {
   summary: string
   signal: 'purpose' | 'pattern' | 'beneficiary' | 'preference' | 'history' | 'risk' | 'consent'
   source: string
-  use: 'Context only' | 'Can inform ranking later' | 'Consent boundary'
+  use: 'Context signal' | 'Bounded ranking signal' | 'Consent boundary'
 }
 
 export interface CustomerInsightProfile {
@@ -59,7 +59,7 @@ export const demoCustomerInsightProfile: CustomerInsightProfile = {
       summary: 'The request resembles regular support movement rather than one-off treasury activity.',
       signal: 'purpose',
       source: 'Demo customer profile',
-      use: 'Can inform ranking later',
+      use: 'Bounded ranking signal',
     },
     {
       id: 'pattern',
@@ -68,7 +68,7 @@ export const demoCustomerInsightProfile: CustomerInsightProfile = {
       summary: 'The destination corridor and movement style match a known demo pattern.',
       signal: 'pattern',
       source: 'Demo customer profile',
-      use: 'Can inform ranking later',
+      use: 'Bounded ranking signal',
     },
     {
       id: 'beneficiary',
@@ -77,7 +77,7 @@ export const demoCustomerInsightProfile: CustomerInsightProfile = {
       summary: 'The beneficiary is represented as known in the mocked customer context.',
       signal: 'beneficiary',
       source: 'Demo customer profile',
-      use: 'Context only',
+      use: 'Bounded ranking signal',
     },
     {
       id: 'preference',
@@ -86,16 +86,16 @@ export const demoCustomerInsightProfile: CustomerInsightProfile = {
       summary: 'The customer usually values certainty and visibility over lowest possible fee.',
       signal: 'preference',
       source: 'Demo customer profile',
-      use: 'Can inform ranking later',
+      use: 'Bounded ranking signal',
     },
     {
       id: 'history',
       label: 'Previous route experience',
       value: 'One previous delay on a similar route family',
-      summary: 'Prior movement experience can be explained to the customer but does not change scoring yet.',
+      summary: 'A route-family-specific delay can apply a small bounded fit penalty after controls pass.',
       signal: 'history',
       source: 'Demo customer profile',
-      use: 'Context only',
+      use: 'Context signal',
     },
     {
       id: 'risk',
@@ -104,7 +104,7 @@ export const demoCustomerInsightProfile: CustomerInsightProfile = {
       summary: 'Amount and beneficiary are represented as normal for this demo customer.',
       signal: 'risk',
       source: 'Demo customer profile',
-      use: 'Context only',
+      use: 'Bounded ranking signal',
     },
     {
       id: 'consent',

@@ -203,3 +203,15 @@
 - Gemini does not participate in scoring, ranking or route selection. Approval, execution and payment state logic are unchanged.
 - Only mocked/static demo context is sent; no real customer data or external customer-data service is used.
 - Next phase is Phase 4F — Customer-fit regression QA and release decision. Push and deploy remain human-gated.
+
+## Phase 5A Intent Reveal And Scoring Copy Decisions
+
+- Phase 5A corrected Customer Insight copy that incorrectly described scoring as future or context-only after Phase 4E implementation.
+- Customer-facing copy now says consented insight may personalise eligible route ranking only after bank controls pass and cannot override hard controls.
+- Bank Intelligence now states that bounded customer-fit scoring is active, capped and restricted to `AVAILABLE` routes after hard controls.
+- Money Movement Intent now opens with an empty textarea and placeholder; the former default sentence is available only through a secondary `Use demo example` action.
+- Structured intent preview, confirmation controls and the duplicate intent summary are hidden until the customer explicitly structures the entered or confirmed transcript text.
+- Transcript review remains event-driven and is not visible before voice capture.
+- Failure simulation moved into collapsed demo controls; static scenario functionality remains secondary and intact.
+- No backend route scoring, payment execution, API contract, dependency, push or deployment change was made.
+- Next phase is Phase 5B — Simplify customer journey and responsive stepper.

@@ -13,7 +13,6 @@ import { FallbackEventView } from './components/FallbackEventView'
 import { FinalApprovalCard } from './components/FinalApprovalCard'
 import { LeafletRouteMap } from './components/LeafletRouteMap'
 import { PaymentIntentIntake } from './components/PaymentIntentIntake'
-import { DEFAULT_PAYMENT_INTENT_TEXT } from './defaultIntent'
 import { PaymentIntentView } from './components/PaymentIntentView'
 import { PaymentTracker } from './components/PaymentTracker'
 import { RecommendationHeroCard } from './components/RecommendationHeroCard'
@@ -49,7 +48,7 @@ function App() {
   const [liveTraceId, setLiveTraceId] = useState<string | null>(null)
   const [liveTrace, setLiveTrace] = useState<DecisionTrace | null>(null)
   const [explanationProvider, setExplanationProvider] = useState<string | undefined>(undefined)
-  const [intentText, setIntentText] = useState(DEFAULT_PAYMENT_INTENT_TEXT)
+  const [intentText, setIntentText] = useState('')
   const [livePreferences, setLivePreferences] = useState<LivePreferences | null>(null)
   const [classifyReason, setClassifyReason] = useState<string | null>(null)
   const [structuredIntent, setStructuredIntent] = useState<ApiStructuredIntent | undefined>(undefined)
@@ -139,12 +138,17 @@ function App() {
     setStructuredIntentWarnings([])
     setStructuredIntentConfirmed(false)
     setStructureError(null)
+    setIntentText('')
+    setLivePreferences(null)
     setUseCustomerInsights(demoCustomerInsightProfile.consentForPersonalisedRouting)
     setCustomerInsightsUsedForAnalysis(null)
   }
 
   const handleIntentTextChange = useCallback((text: string) => {
     setIntentText(text)
+    setStructuredIntent(undefined)
+    setStructuredIntentFallbackUsed(false)
+    setStructuredIntentWarnings([])
     setStructuredIntentConfirmed(false)
   }, [])
 
@@ -435,7 +439,7 @@ function App() {
 
           {step === 2 && (
             <div className="stage-content">
-              <div className="intent-grid-layout">
+              <div className={`intent-grid-layout ${structuredIntent ? '' : 'intent-grid-layout-single'}`}>
                 <div>
                   <PaymentIntentIntake
                     scenarios={demoScenarios}
@@ -460,9 +464,11 @@ function App() {
                     structuredIntentConfirmed={structuredIntentConfirmed}
                   />
                 </div>
-                <div>
-                  <PaymentIntentView intent={displayIntent} />
-                </div>
+                {structuredIntent && (
+                  <div>
+                    <PaymentIntentView intent={displayIntent} />
+                  </div>
+                )}
               </div>
               <div className="demo-scenario-aside">
                 <ScenarioSelector scenarios={demoScenarios} selectedId={scenario.id} onSelect={setScenarioId} />

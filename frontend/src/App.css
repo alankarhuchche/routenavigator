@@ -572,6 +572,10 @@ h2 {
   align-items: start;
 }
 
+.intent-grid-layout-single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .demo-scenario-aside {
   display: grid;
   gap: 10px;
@@ -2202,6 +2206,17 @@ h2 {
   font-weight: 850;
 }
 
+.intent-example-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.intent-example-row .suggested-intent-label {
+  margin-bottom: 0;
+}
+
 .panel-title {
   display: flex;
   align-items: center;
@@ -2900,6 +2915,26 @@ h2 {
   color: #92400e;
   font-size: 12px;
   font-weight: 800;
+}
+
+.intent-demo-controls {
+  border: 1px solid #d9dee8;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.intent-demo-controls summary {
+  padding: 10px 12px;
+  color: #475569;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.intent-demo-controls .preference-card {
+  margin: 0 10px 10px;
+  min-height: 52px;
+  background: #ffffff;
 }
 
 .voice-status-listening {

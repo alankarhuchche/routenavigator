@@ -63,8 +63,8 @@ export function CustomerInsightContext({
       <div className="customer-insight-boundary">
         <ShieldCheck size={17} aria-hidden="true" />
         <p>
-          Customer insight can influence route ranking in a future phase, but it cannot override fraud,
-          sanctions, limits, eligibility or regulatory controls. In this phase, it is visible context only.
+          Customer insight can help personalise eligible route ranking after bank controls pass. It cannot
+          override fraud, sanctions, limits, eligibility or regulatory controls.
         </p>
       </div>
 

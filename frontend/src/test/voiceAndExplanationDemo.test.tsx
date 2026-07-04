@@ -18,6 +18,34 @@ afterEach(() => {
 })
 
 describe('voice intent capture demo', () => {
+  it('starts empty and reveals derived intent only after the customer structures it', () => {
+    const onStructureIntent = vi.fn()
+
+    render(
+      <PaymentIntentIntake
+        scenarios={demoScenarios}
+        onStructureIntent={onStructureIntent}
+        onConfirmStructuredIntent={vi.fn()}
+      />,
+    )
+
+    expect(screen.getByLabelText('Money movement outcome')).toHaveValue('')
+    expect(screen.queryByText('Structured intent preview')).not.toBeInTheDocument()
+    expect(screen.queryByText(/Here's what I understood/i)).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /confirm structured intent/i })).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Captured transcript review')).not.toBeInTheDocument()
+    expect(onStructureIntent).not.toHaveBeenCalled()
+
+    fireEvent.click(screen.getByRole('button', { name: /use demo example/i }))
+
+    expect(screen.getByLabelText('Money movement outcome')).toHaveValue('Send USD 10,000 from my UK bank account to a US bank account. Fastest route, tracking required, digital routes allowed.')
+    expect(screen.getByText('Demo example — review or edit before structuring.')).toBeInTheDocument()
+    expect(onStructureIntent).not.toHaveBeenCalled()
+
+    fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
+    expect(onStructureIntent).toHaveBeenCalledTimes(1)
+  })
+
   it('keeps typed controlled intent text after rerender', () => {
     const onIntentTextChange = vi.fn()
     const { rerender } = render(
@@ -56,7 +84,7 @@ describe('voice intent capture demo', () => {
     expect(screen.getByLabelText('Tracking required')).toBeChecked()
     expect(screen.getByLabelText('Digital options allowed')).toBeChecked()
     expect(screen.getByLabelText('Bank transfer only')).not.toBeChecked()
-    expect(screen.getByText('Voice captures intent only. Passkey approval is required before anything moves.')).toBeInTheDocument()
+    expect(screen.getByText(/Passkey approval is still required before anything moves/i)).toBeInTheDocument()
   })
 
   it('shows a safe unsupported fallback when speech recognition is unavailable', () => {
@@ -64,8 +92,7 @@ describe('voice intent capture demo', () => {
 
     const voiceButton = screen.getByRole('button', { name: /speak money movement intent/i })
     expect(voiceButton).toBeDisabled()
-    expect(screen.getByText('Speech recognition is not supported in this browser. Type the money movement intent instead.')).toBeInTheDocument()
-    expect(screen.getByText('Voice captures intent only. Passkey approval is required before anything moves.')).toBeInTheDocument()
+    expect(screen.getByText(/Speech recognition is not supported in this browser.*Passkey approval is still required before anything moves/i)).toBeInTheDocument()
   })
 
   it('shows live captions and requires confirmation before structuring captured speech', async () => {

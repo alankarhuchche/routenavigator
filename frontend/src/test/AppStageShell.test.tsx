@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import App from '../App'
+import { classifyIntent } from '../api'
 
 vi.mock('../api', () => ({
   createRouteDecision: vi.fn().mockResolvedValue({
@@ -139,16 +140,30 @@ describe('page-like demo stage shell', () => {
     fireEvent.click(screen.getAllByRole('button', { name: /Continue to Money Movement Intent/i })[0])
     expect(screen.getAllByText('Money Movement Intent').length).toBeGreaterThan(0)
     expect(screen.getByRole('button', { name: /speak money movement intent/i })).toBeInTheDocument()
-    expect(screen.getByText('Suggested demo intent — review and edit before analysis')).toBeInTheDocument()
+    expect(screen.getByLabelText('Money movement outcome')).toHaveValue('')
+    expect(screen.getByRole('button', { name: /use demo example/i })).toBeInTheDocument()
+    expect(screen.queryByText(/Demo example — review or edit before structuring/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Here's what I understood/i)).not.toBeInTheDocument()
+    expect(screen.queryByText('Structured intent preview')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /confirm structured intent/i })).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Captured transcript review')).not.toBeInTheDocument()
+    expect(vi.mocked(classifyIntent)).not.toHaveBeenCalled()
     expect(screen.getByText('Demo scenarios')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: /use demo example/i }))
+    expect(screen.getByLabelText('Money movement outcome')).toHaveValue('Send USD 10,000 from my UK bank account to a US bank account. Fastest route, tracking required, digital routes allowed.')
+    expect(screen.getByText('Demo example — review or edit before structuring.')).toBeInTheDocument()
+    expect(vi.mocked(classifyIntent)).not.toHaveBeenCalled()
 
     fireEvent.change(screen.getByLabelText('Money movement outcome'), {
       target: { value: 'Send GBP 500 to a UK beneficiary as quickly as possible.' },
     })
     expect(screen.getByLabelText('Money movement outcome')).toHaveValue('Send GBP 500 to a UK beneficiary as quickly as possible.')
-    expect(screen.getByText('Voice captures intent only. Passkey approval is required before anything moves.')).toBeInTheDocument()
+    expect(screen.getByText(/Passkey approval is still required before anything moves/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Continue to Customer Insight Context/i })).toBeDisabled()
+    expect(vi.mocked(classifyIntent)).not.toHaveBeenCalled()
     fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
+    expect(vi.mocked(classifyIntent)).toHaveBeenCalledTimes(1)
     expect(await screen.findByText('AI structured this intent. Review before route analysis.')).toBeInTheDocument()
     expect(screen.getByText('No payment can move from this step. This confirmed intent is used by the route engine. The agent cannot change it or execute the payment.')).toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: /confirm structured intent/i }))
