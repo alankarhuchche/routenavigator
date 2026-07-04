@@ -1,18 +1,18 @@
 # Program Execution State
 
-Previous completed phase: Phase 4E-implementation — Bounded customer-fit scoring
+Previous completed phase: Phase 4F — Customer-fit regression QA and release decision
 
-Current program phase: Phase 4F — Customer-fit regression QA and release decision
+Current program phase: Release gate — human approval to push fallback-only release candidate
 
 Current phase file: not created yet
 
-Next phase: Phase 4F — Customer-fit regression QA and release decision
+Next phase: Human-approved push, Cloud Build and Cloud Run verification
 
-Last completed local commit: this commit (`Implement bounded customer-fit scoring`)
+Last completed local commit: this commit (`Record customer-fit release gate QA`)
 
 Latest gate resolution: Phase 2C-fix kept scenarios `SCN-007` through `SCN-011` as labelled static frontend corridor demos. Backend corridor route support remains deferred behind the route decision logic / product scope gate.
 
-Latest phase result: Phase 4E-implementation added optional mocked customer insight, deterministic capped customer-fit scoring after hard gates, zero adjustment for no/disabled/unconsented insight, and score evidence in Route Intelligence and Bank Intelligence. Excluded routes remain unscored, Gemini remains explanation-only, and payment execution, deployment files and dependencies are unchanged.
+Latest phase result: Phase 4F passed frontend and backend regression QA, direct insight on/off/unconsented/missing-context API checks, local Vite/Quarkus smoke checks and static deployment-path inspection. Release decision is `READY_TO_PUSH_FALLBACK_ONLY`. Live Gemini and local container execution were not validated; Cloud Build and post-deploy checks remain human-gated. No product, backend, API, dependency or deployment file changed in Phase 4F.
 
 Push status: Do not push without explicit human approval. Pushing to GitHub may trigger Cloud Build and Cloud Run deployment.
 

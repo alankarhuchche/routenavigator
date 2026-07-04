@@ -70,6 +70,43 @@ The current Docker path builds the Vite app and copies `frontend/dist/` into `ba
 - Before release, verify both insight and no-insight journeys from the production-built frontend and confirm the Bank Intelligence score evidence.
 - No deploy was run for Phase 4E.
 
+## Phase 4F Customer-Fit Release Gate
+
+- Date: 2026-07-04
+- Commit under review: `cdb3646` (`Implement bounded customer-fit scoring`)
+- Decision: `READY_TO_PUSH_FALLBACK_ONLY`
+- Frontend validation: lint, typecheck, production build and all 40 tests passed.
+- Backend validation: all 38 tests and Quarkus packaging passed.
+- Behavioral API QA: insight off, insight on, unconsented and missing-context requests all returned valid score evidence.
+- Hard-control result: excluded routes were absent from score results and could not be rescued by customer fit.
+- Bounded-score result: positive adjustment capped at `+10`; observed negative adjustment was `-3` and code enforces a `-5` lower bound.
+- No-insight result: disabled, unconsented and missing insight all produced adjustment `0` with `insightUsed=false`.
+- Insight comparison (`SCN-003`): selected route remained `route-wallet-to-wallet-stablecoin`; off was `90.65 + 0 = 90.65`, on was `90.65 + 10 = 100` with cap status and seven reasons.
+- Local runtime: Vite served `200` at `http://127.0.0.1:5173/` and proxied `/api/health` successfully to Quarkus.
+- Production packaging: `cloudbuild.yaml` builds `deployment/Dockerfile`; Vite `dist/` is copied into Quarkus `META-INF/resources` before backend packaging. Root and deployment Dockerfiles match.
+- Local Docker verification: not run because Docker is not installed on this machine.
+- Gemini: fallback mode is release-ready; live Gemini was not validated. Gemini remains outside route scoring/ranking/selection.
+- Secret scan: no private-key or Google API-key patterns found in tracked files.
+- No push or deployment was run during Phase 4F.
+
+### Pre-Push Gate
+
+- Confirm the approved release range and `main` branch.
+- Confirm only `.claude/worktrees` noise is uncommitted.
+- Confirm fallback-only release posture with `GEMINI_ENABLED=false`.
+- Require explicit human approval before `git push origin main`.
+
+### Post-Deploy Verification
+
+- Confirm Cloud Build completes from the approved commit and uses `deployment/Dockerfile`.
+- Confirm Cloud Run revision is healthy and `/api/health` returns `ok`.
+- Confirm the production URL serves the six-stage Money Movement Intelligence UI.
+- Exercise insight on and off; verify base, adjustment and final score evidence.
+- Confirm excluded routes remain unscored and the no-insight adjustment remains zero.
+- Confirm fallback intent structuring and template explanation work with `GEMINI_ENABLED=false`.
+- Confirm representative-map, no-live-telemetry and passkey approval boundaries remain visible.
+- Do not enable live Gemini until its Secret Manager configuration and explanation-only behavior are separately verified.
+
 ## Do Not Deploy Without Confirmation
 
 Do not run Cloud Build or Cloud Run deployment commands without explicit user confirmation in the active task.

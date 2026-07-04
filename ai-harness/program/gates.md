@@ -19,3 +19,11 @@ If a task needs to cross a gate, stop and report:
 - why the gate is needed
 - what files or systems would be affected
 - what exact approval is required
+
+## Current Release Gate
+
+- Phase 4F regression QA result: passed.
+- Release decision: `READY_TO_PUSH_FALLBACK_ONLY`.
+- Approved runtime posture for the candidate: `GEMINI_ENABLED=false` with rules/template fallback.
+- Push, Cloud Build and Cloud Run deployment still require explicit human approval.
+- Live Gemini enablement is a separate gate because its credentials and runtime behavior were not validated in Phase 4F.
