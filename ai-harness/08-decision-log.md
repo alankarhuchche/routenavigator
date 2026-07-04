@@ -215,3 +215,16 @@
 - Failure simulation moved into collapsed demo controls; static scenario functionality remains secondary and intact.
 - No backend route scoring, payment execution, API contract, dependency, push or deployment change was made.
 - Next phase is Phase 5B — Simplify customer journey and responsive stepper.
+
+## Phase 5B Compact Journey Decisions
+
+- The six large stage cards were replaced with a compact progress component containing `Step X of 6`, an accessible progressbar and six concise stage controls.
+- Desktop shows short stage labels; narrow screens show the current stage name plus six numbered/completed markers without verbose descriptions.
+- Existing locked-stage disabled behavior and navigation to previously unlocked stages are preserved.
+- Duplicate `Stage X of 6` text was removed from the page header because progress now owns that status.
+- The stage shell no longer renders as a floating card around nested content, reducing repeated borders and shadows.
+- Stage 1 now has one primary Continue action in the shared navigation rather than duplicate CTAs.
+- Bank Intelligence remains visible and accessible, uses a shorter visible label on desktop and becomes an icon control on narrow screens while retaining `Show bank intelligence` as its accessible name.
+- Visual smoke checks found no horizontal overflow. Progress height was approximately 78px desktop and 80px mobile; mobile Stage 2 height reduced substantially from the original review baseline.
+- No backend route/scoring logic, payment execution logic, API contract, dependency, Gemini behavior, push or deployment changed.
+- Next phase is Phase 5C — Rebuild Route Intelligence outcome-first and refine Bank Intelligence.

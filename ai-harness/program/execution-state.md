@@ -1,18 +1,18 @@
 # Program Execution State
 
-Previous completed phase: Phase 5A — Correct scoring copy and defer derived intent content
+Previous completed phase: Phase 5B — Simplify customer journey and responsive stepper
 
-Current program phase: Phase 5B — Simplify customer journey and responsive stepper
+Current program phase: Phase 5C — Rebuild Route Intelligence outcome-first and refine Bank Intelligence
 
 Current phase file: not created yet
 
-Next phase: Phase 5B — Simplify customer journey and responsive stepper
+Next phase: Phase 5C — Rebuild Route Intelligence outcome-first and refine Bank Intelligence
 
-Last completed local commit: this commit (`Correct scoring copy and defer derived intent content`)
+Last completed local commit: this commit (`Simplify journey progress layout`)
 
 Latest gate resolution: Phase 2C-fix kept scenarios `SCN-007` through `SCN-011` as labelled static frontend corridor demos. Backend corridor route support remains deferred behind the route decision logic / product scope gate.
 
-Latest phase result: Phase 5A corrected stale scoring claims and removed premature Stage 2 content. Intent capture now starts empty with an optional labelled demo example; transcript, structured intent and confirmation content appear only after their triggering actions. Backend route scoring, payment execution, API contracts, dependencies and deployment files are unchanged.
+Latest phase result: Phase 5B replaced the heavy six-card stepper with compact accessible desktop/mobile progress, removed duplicate stage count and Stage 1 CTA chrome, kept Bank Intelligence secondary, and removed the outer floating stage card. Six-stage locking and navigation remain intact. Backend route/scoring logic, payment execution, API contracts, Gemini behavior, dependencies and deployment files are unchanged.
 
 Push status: Do not push without explicit human approval. Pushing to GitHub may trigger Cloud Build and Cloud Run deployment.
 

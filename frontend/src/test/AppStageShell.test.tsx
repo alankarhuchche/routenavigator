@@ -113,6 +113,9 @@ describe('page-like demo stage shell', () => {
     render(<App />)
 
     expect(screen.getAllByText('Secure Session').length).toBeGreaterThan(0)
+    expect(screen.getByText('Step 1 of 6')).toBeInTheDocument()
+    expect(screen.getByRole('progressbar', { name: /journey progress/i })).toHaveAttribute('aria-valuenow', '1')
+    expect(screen.getByRole('button', { name: /^Secure Session$/i })).toHaveAttribute('aria-current', 'step')
     expect(screen.getByText('Customer verified. Agent scoped. Execution locked.')).toBeInTheDocument()
     expect(screen.getAllByRole('button', { name: /Continue to Money Movement Intent/i })[0]).toBeInTheDocument()
     expect(screen.getByText('Session ready for intent capture')).toBeInTheDocument()
@@ -138,6 +141,9 @@ describe('page-like demo stage shell', () => {
     expect(screen.getByRole('button', { name: /Approval & Tracking locked until prior stage is complete/i })).toBeDisabled()
 
     fireEvent.click(screen.getAllByRole('button', { name: /Continue to Money Movement Intent/i })[0])
+    expect(screen.getByText('Step 2 of 6')).toBeInTheDocument()
+    expect(screen.getByRole('progressbar', { name: /journey progress/i })).toHaveAttribute('aria-valuenow', '2')
+    expect(screen.getByRole('button', { name: /^Money Movement Intent$/i })).toHaveAttribute('aria-current', 'step')
     expect(screen.getAllByText('Money Movement Intent').length).toBeGreaterThan(0)
     expect(screen.getByRole('button', { name: /speak money movement intent/i })).toBeInTheDocument()
     expect(screen.getByLabelText('Money movement outcome')).toHaveValue('')

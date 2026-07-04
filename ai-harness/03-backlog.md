@@ -43,4 +43,5 @@ Phase 1 overall status: Complete. Payment Route Intelligence Phase 1 was deploye
 | 4E-implementation | Bounded customer-fit scoring | Done | Product/backend | Added optional demo insight context, hard-controls-first capped scoring, no-insight zero adjustment and score evidence. |
 | 4F | Customer-fit regression QA and release decision | Done | QA/release gate | Regression passed and fallback-only release candidate was approved and pushed through the human gate. |
 | 5A | Correct scoring copy and defer derived intent content | Done | Frontend/docs | Corrected stale post-4E scoring claims and starts intent capture empty with optional demo example and action-gated derived content. |
-| 5B | Simplify customer journey and responsive stepper | Next | Frontend/product | Reduce customer-screen density and replace the large six-card journey navigation with compact responsive progress. |
+| 5B | Simplify customer journey and responsive stepper | Done | Frontend/product | Replaced the large six-card stepper with compact accessible progress and reduced repeated stage framing on desktop/mobile. |
+| 5C | Rebuild Route Intelligence outcome-first and refine Bank Intelligence | Next | Frontend/product | Lead with the customer recommendation and move detailed scoring/analysis mechanics into secondary Bank Intelligence evidence. |

@@ -32,7 +32,7 @@ describe('Customer Insight Context stage', () => {
     mockBackendFallback()
     render(<App />)
 
-    expect(screen.getByText('Stage 1 of 6')).toBeInTheDocument()
+    expect(screen.getByText('Step 1 of 6')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Customer Insight Context locked until prior stage is complete/i })).toBeDisabled()
     expect(screen.getByRole('button', { name: /Route Intelligence locked until prior stage is complete/i })).toBeDisabled()
 

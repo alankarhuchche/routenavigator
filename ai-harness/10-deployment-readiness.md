@@ -97,6 +97,15 @@ The current Docker path builds the Vite app and copies `frontend/dist/` into `ba
 - Before release, verify the initial Stage 2 composer is empty, the demo example is labelled, and both manual and voice structuring still unlock confirmation.
 - No push or deployment was run during Phase 5A.
 
+## Phase 5B Deployment Note
+
+- Phase 5B is frontend and harness only; no backend, API, dependency or deployment file changed.
+- Six-stage locking/navigation behavior is preserved behind a compact accessible progress indicator.
+- Desktop and 390px visual smoke checks showed no horizontal overflow; the progress component remained approximately 80px high.
+- Bank Intelligence retains its accessible label when rendered as an icon-only narrow-screen control.
+- Before release, verify all six progress states, backward navigation and drawer opening on the production-built UI.
+- No push or deployment was run during Phase 5B.
+
 ### Pre-Push Gate
 
 - Confirm the approved release range and `main` branch.

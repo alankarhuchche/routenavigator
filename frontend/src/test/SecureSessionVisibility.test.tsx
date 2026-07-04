@@ -7,7 +7,7 @@ describe('Secure Session initial visibility', () => {
     expect(() => render(<App />)).not.toThrow()
 
     expect(screen.getAllByText('Secure Session').length).toBeGreaterThan(0)
-    expect(screen.getByText('Stage 1 of 6')).toBeInTheDocument()
+    expect(screen.getByText('Step 1 of 6')).toBeInTheDocument()
     expect(screen.getByText('Customer verified. Agent scoped. Execution locked.')).toBeInTheDocument()
     expect(screen.getByText('Session ready for intent capture')).toBeInTheDocument()
     expect(screen.getByText('Device-bound authentication confirmed')).toBeInTheDocument()

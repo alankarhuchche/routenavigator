@@ -344,7 +344,6 @@ function App() {
         <section className="stage-shell" aria-label={`Stage ${step}: ${stageTitle(step)}`} key={step}>
           <div className="stage-shell-head">
             <div>
-            <p className="eyebrow">Stage {step} of 6</p>
               <h2>{stageTitle(step)}</h2>
               <p>{stageDescription(step)}</p>
             </div>
@@ -355,12 +354,14 @@ function App() {
               <button
                 type="button"
                 className="bank-intelligence-toggle"
+                aria-label="Show bank intelligence"
                 aria-expanded={isBankIntelligenceOpen}
                 aria-controls="bank-intelligence-drawer"
                 onClick={() => setIsBankIntelligenceOpen(true)}
+                title="Show bank intelligence"
               >
                 <SlidersHorizontal size={16} aria-hidden="true" />
-                Show bank intelligence
+                <span>Bank intelligence</span>
               </button>
             </div>
           </div>
@@ -405,13 +406,6 @@ function App() {
                         The agent can help structure and explain intent. It cannot approve, execute, amend, cancel, or move money.
                         Final approval remains passkey-protected.
                       </span>
-                    </div>
-                    <div className="secure-session-actions">
-                      <button type="button" className="primary-btn secure-session-primary" onClick={handleContinue}>
-                        Continue to Money Movement Intent
-                        <ArrowRight size={16} aria-hidden="true" />
-                      </button>
-                      <span>Next: speak or type the money movement outcome.</span>
                     </div>
                   </div>
                 </div>
