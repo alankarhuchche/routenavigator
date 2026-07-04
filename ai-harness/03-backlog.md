@@ -40,4 +40,5 @@ Phase 1 overall status: Complete. Payment Route Intelligence Phase 1 was deploye
 | 4C | Add Customer Insight Context screen | Done | Frontend/docs | Added a six-stage journey with consented mock customer insight context before route analysis; no route scoring or backend decision logic changed. |
 | 4D | Profile-aware route explanation | Done | Frontend/docs | Added customer-fit and no-insight explanations while keeping customer insight as explanation context only. |
 | 4E-design | Bounded customer-fit scoring design | Done | Docs/design | Defined hard-control gating, capped customer-fit contribution, transparency, Gemini and data/privacy boundaries. |
-| 4E-implementation | Bounded customer-fit scoring | Next | Product/backend gated | Implement bounded scoring influence from customer insight only after explicit route-logic and controls approval. |
+| 4E-implementation | Bounded customer-fit scoring | Done | Product/backend | Added optional demo insight context, hard-controls-first capped scoring, no-insight zero adjustment and score evidence. |
+| 4F | Customer-fit regression QA and release decision | Next | QA/release gate | Re-run end-to-end regression, inspect production packaging and make a human-gated push recommendation. |

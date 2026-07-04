@@ -26,6 +26,35 @@ export interface ApiExecutionEvent {
   pointOfNoReturnReached: boolean
 }
 
+export interface ApiCustomerInsightContext {
+  purposeDetected: string
+  usualMovementPattern: string
+  typicalAmountRange: string
+  beneficiaryRelationship: string
+  trackingPreference: string
+  speedPreference: string
+  feeSensitivity: string
+  previousRouteExperience: string
+  riskNormality: string
+  digitalRoutesAllowed: string
+  consentForPersonalisedRouting: boolean
+  insightSource: string
+}
+
+export interface ApiScoreResult {
+  routeId: string
+  totalScore: number
+  dimensions: Record<string, number>
+  reasons: string[]
+  baseScore: number
+  customerFitAdjustment: number
+  finalScore: number
+  customerFitReasons: string[]
+  customerFitCapApplied: boolean
+  insightUsed: boolean
+  scoringVersion: string
+}
+
 export interface ApiDecisionTrace {
   traceId: string
   scenarioId: string
@@ -41,6 +70,7 @@ export interface ApiDecisionTrace {
   candidateRoutes: ApiRouteCandidate[]
   gateResults: ApiGateResult[]
   excludedRoutes: ApiRouteCandidate[]
+  scoreResults?: ApiScoreResult[]
   selectedRoute: ApiRouteCandidate
   pointOfNoReturn: string
   finalityModel: string

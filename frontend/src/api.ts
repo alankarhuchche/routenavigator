@@ -1,4 +1,10 @@
-import type { ApiDecisionTrace, ApiExplanationResponse, ApiIntentClassificationResponse, ApiPaymentSnapshot } from './apiTypes'
+import type {
+  ApiCustomerInsightContext,
+  ApiDecisionTrace,
+  ApiExplanationResponse,
+  ApiIntentClassificationResponse,
+  ApiPaymentSnapshot,
+} from './apiTypes'
 
 async function requireOk(res: Response): Promise<Response> {
   if (!res.ok) {
@@ -7,11 +13,19 @@ async function requireOk(res: Response): Promise<Response> {
   return res
 }
 
-export async function createRouteDecision(scenarioId: string): Promise<ApiDecisionTrace> {
+export interface RouteDecisionInsightOptions {
+  customerInsightUsed: boolean
+  customerInsightContext?: ApiCustomerInsightContext
+}
+
+export async function createRouteDecision(
+  scenarioId: string,
+  insightOptions?: RouteDecisionInsightOptions,
+): Promise<ApiDecisionTrace> {
   const res = await fetch('/api/route-decisions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ scenarioId }),
+    body: JSON.stringify({ scenarioId, ...insightOptions }),
   })
   await requireOk(res)
   return res.json()

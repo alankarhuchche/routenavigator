@@ -174,8 +174,8 @@ function CustomerInsightIntel({
         </dl>
       </IntelCard>
       <IntelCard icon={ShieldCheck} title="Insight boundary">
-        <ChipGrid items={['No external services called', 'No profile-aware scoring yet', 'Hard controls still override']} />
-        <p>Customer insight can influence ranking only in a future phase and cannot override fraud, sanctions, limits, eligibility or regulatory controls.</p>
+        <ChipGrid items={['No external services called', 'Bounded fit only after controls', 'Hard controls always override']} />
+        <p>If selected, this mocked context may add a capped fit adjustment only after a route passes fraud, sanctions, limits, eligibility and regulatory controls.</p>
       </IntelCard>
     </>
   )
@@ -197,6 +197,8 @@ function RouteIntel({
   const passedGates = trace.gates.filter(gate => gate.result === 'PASS').length
   const blockedGates = trace.gates.length - passedGates
   const fitSignals = customerFitReasons(customerInsightProfile).slice(0, 4)
+  const scoreEvidence = trace.scoreEvidence
+  const evidenceSignals = scoreEvidence?.customerFitReasons.length ? scoreEvidence.customerFitReasons : fitSignals
 
   return (
     <>
@@ -204,26 +206,29 @@ function RouteIntel({
         <ChipGrid items={['Route engine owns recommendation', explanationProvider(provider), 'AI cannot choose or approve']} />
         <p>The deterministic route engine applies gates, controls and scoring. Gemini/template explanation only turns the redacted trace into plain language.</p>
       </IntelCard>
-      <IntelCard icon={BrainCircuit} title="Customer insight pass-through">
+      <IntelCard icon={BrainCircuit} title="Customer-fit scoring evidence">
         <dl className="bank-intelligence-facts">
-          <div><dt>Insight used</dt><dd>{customerInsightsUsedForAnalysis ? 'Yes, as context only' : 'No'}</dd></div>
+          <div><dt>Insight used</dt><dd>{scoreEvidence?.insightUsed ? 'Yes, after hard controls' : customerInsightsUsedForAnalysis ? 'Requested; scoring evidence unavailable' : 'No'}</dd></div>
           <div><dt>Source</dt><dd>{customerInsightProfile.insightSource}</dd></div>
-          <div><dt>Purpose</dt><dd>{customerInsightProfile.purposeDetected}</dd></div>
-          <div><dt>Pattern</dt><dd>{customerInsightProfile.usualMovementPattern}</dd></div>
-          <div><dt>Profile-aware scoring</dt><dd>Not implemented yet</dd></div>
-          <div><dt>Scoring change</dt><dd>None in Phase 4D</dd></div>
+          <div><dt>Base route score</dt><dd>{scoreEvidence ? scoreEvidence.baseScore.toFixed(2) : 'Evidence unavailable'}</dd></div>
+          <div><dt>Customer-fit adjustment</dt><dd>{scoreEvidence ? signedScore(scoreEvidence.customerFitAdjustment) : customerInsightsUsedForAnalysis ? 'Evidence unavailable' : '0.00'}</dd></div>
+          <div><dt>Final score</dt><dd>{scoreEvidence ? scoreEvidence.finalScore.toFixed(2) : selectedScore?.toFixed(2) ?? 'Not scored'}</dd></div>
+          <div><dt>Cap applied</dt><dd>{scoreEvidence?.customerFitCapApplied ? 'Yes, bounded at +10 / -5' : 'No'}</dd></div>
+          <div><dt>Scoring version</dt><dd>{scoreEvidence?.scoringVersion ?? 'Base demo scoring'}</dd></div>
         </dl>
-        {customerInsightsUsedForAnalysis && (
+        {scoreEvidence?.insightUsed && (
           <ul className="bank-intelligence-list">
-            {fitSignals.map(signal => (
+            {evidenceSignals.map(signal => (
               <li key={signal}>
-                <strong>Explanation signal</strong>
+                <strong>Deterministic fit signal</strong>
                 <span>{signal}</span>
               </li>
             ))}
           </ul>
         )}
-        <p>Route scoring and ranking have not changed in this phase. Customer insight is explanation context only and cannot override fraud, sanctions, limits, eligibility or regulatory controls.</p>
+        <p>
+          Hard controls passed first. Customer fit is deterministic and capped, cannot rescue an excluded route, and is zero when insight is not used. Gemini did not score or select.
+        </p>
       </IntelCard>
       <IntelCard icon={Gauge} title="Route evidence">
         <dl className="bank-intelligence-facts">
@@ -392,4 +397,8 @@ function explanationProvider(provider?: string) {
   if (provider === 'GEMINI') return 'Gemini explains only'
   if (provider) return 'Template/fallback explains only'
   return 'Demo explanation only'
+}
+
+function signedScore(value: number) {
+  return `${value >= 0 ? '+' : ''}${value.toFixed(2)}`
 }

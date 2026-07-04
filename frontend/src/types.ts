@@ -42,6 +42,18 @@ export interface DecisionTrace {
   explanation: string
   events: string[]
   fallbackEvent?: FallbackEvent
+  scoreEvidence?: RouteScoreEvidence
+}
+
+export interface RouteScoreEvidence {
+  routeId: string
+  baseScore: number
+  customerFitAdjustment: number
+  finalScore: number
+  customerFitReasons: string[]
+  customerFitCapApplied: boolean
+  insightUsed: boolean
+  scoringVersion: string
 }
 
 export interface FallbackEvent {

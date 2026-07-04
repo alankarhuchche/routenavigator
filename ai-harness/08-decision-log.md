@@ -190,3 +190,16 @@
 - The design records consent, data minimisation, transparency, retention, audit and protected-characteristic boundaries for any future real implementation.
 - No runtime app logic, backend route logic, API contracts, payment execution logic, dependencies, push or deploy changed in Phase 4E-design.
 - Next phase is Phase 4E-implementation — Bounded customer-fit scoring, gated for explicit route-logic approval.
+
+## Bounded Customer-Fit Scoring Implementation Decisions
+
+- Phase 4E-implementation was explicitly approved and implements the design in `ai-harness/16-customer-fit-scoring-design.md`.
+- `POST /api/route-decisions` remains backwards-compatible and now accepts optional `customerInsightUsed` and mocked `customerInsightContext` fields.
+- Hard gates still execute first. Only surviving `AVAILABLE` routes enter base and customer-fit scoring; excluded routes cannot be rescued.
+- The deterministic customer-fit adjustment is capped at `-5` to `+10`. It applies only when insight use and personalised-routing consent are both true.
+- Missing, declined or unconsented insight produces a zero adjustment and preserves base deterministic selection.
+- Score evidence includes base score, customer-fit adjustment, final score, fit reasons, cap state, insight state and `customer-fit-v1-demo` version.
+- Route Intelligence keeps score impact compact; Bank Intelligence carries detailed evidence and the hard-controls-first boundary.
+- Gemini does not participate in scoring, ranking or route selection. Approval, execution and payment state logic are unchanged.
+- Only mocked/static demo context is sent; no real customer data or external customer-data service is used.
+- Next phase is Phase 4F — Customer-fit regression QA and release decision. Push and deploy remain human-gated.

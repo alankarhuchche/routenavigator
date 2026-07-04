@@ -907,6 +907,33 @@ h2 {
   font-weight: 850;
 }
 
+.customer-fit-score-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.customer-fit-score-strip div {
+  padding: 9px 10px;
+  border: 1px solid #d9dee8;
+  border-radius: 6px;
+  background: #f8fafc;
+}
+
+.customer-fit-score-strip dt {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.customer-fit-score-strip dd {
+  margin: 3px 0 0;
+  color: #0f172a;
+  font-size: 16px;
+  font-weight: 850;
+}
+
 .stage-nav-note {
   color: #64748b;
   font-size: 13px;

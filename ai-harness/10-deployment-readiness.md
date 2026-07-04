@@ -60,6 +60,16 @@ The current Docker path builds the Vite app and copies `frontend/dist/` into `ba
 - Customer insight remains mocked/static and explanation context only.
 - No deploy was run for Phase 4D.
 
+## Phase 4E Deployment Note
+
+- Phase 4E-implementation is local-only until regression QA and explicit human approval to push.
+- Route-decision requests remain backwards-compatible and may carry optional mocked customer insight.
+- Customer-fit runs only after hard controls, only for `AVAILABLE` routes, and is capped at `-5` to `+10`.
+- Missing, declined or unconsented insight applies zero adjustment.
+- No deployment files, dependencies, payment execution logic, secrets or live integrations changed.
+- Before release, verify both insight and no-insight journeys from the production-built frontend and confirm the Bank Intelligence score evidence.
+- No deploy was run for Phase 4E.
+
 ## Do Not Deploy Without Confirmation
 
 Do not run Cloud Build or Cloud Run deployment commands without explicit user confirmation in the active task.

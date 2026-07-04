@@ -1,5 +1,6 @@
 package com.routenavigator.service;
 
+import com.routenavigator.domain.CustomerInsightContext;
 import com.routenavigator.domain.PaymentIntent;
 import com.routenavigator.domain.RouteCandidate;
 import com.routenavigator.domain.ScoreResult;
@@ -15,31 +16,67 @@ import java.util.Map;
 @ApplicationScoped
 public class RouteScoringService {
     private final ScoringProfileService scoringProfileService;
+    private final CustomerFitScoringService customerFitScoringService;
 
     @Inject
-    public RouteScoringService(ScoringProfileService scoringProfileService) {
+    public RouteScoringService(
+            ScoringProfileService scoringProfileService,
+            CustomerFitScoringService customerFitScoringService) {
         this.scoringProfileService = scoringProfileService;
+        this.customerFitScoringService = customerFitScoringService;
     }
 
     public List<ScoreResult> score(PaymentIntent intent, List<RouteCandidate> survivingRoutes) {
+        return score(intent, survivingRoutes, false, null);
+    }
+
+    public List<ScoreResult> score(
+            PaymentIntent intent,
+            List<RouteCandidate> survivingRoutes,
+            Boolean customerInsightUsed,
+            CustomerInsightContext customerInsightContext) {
         Map<String, BigDecimal> weights = scoringProfileService.weightsFor(intent.objective());
         return survivingRoutes.stream()
-                .map(candidate -> scoreCandidate(candidate, weights))
+                .map(candidate -> scoreCandidate(candidate, weights, customerInsightUsed, customerInsightContext))
                 .sorted(Comparator.comparing(ScoreResult::totalScore).reversed().thenComparing(ScoreResult::routeId))
                 .toList();
     }
 
-    private ScoreResult scoreCandidate(RouteCandidate candidate, Map<String, BigDecimal> weights) {
+    private ScoreResult scoreCandidate(
+            RouteCandidate candidate,
+            Map<String, BigDecimal> weights,
+            Boolean customerInsightUsed,
+            CustomerInsightContext customerInsightContext) {
         if (!GateEvaluationService.AVAILABLE.equals(candidate.status())) {
             throw new IllegalArgumentException("RouteScoringService received non-surviving route: " + candidate.routeId());
         }
 
         Map<String, BigDecimal> dimensions = baseDimensions(candidate.family());
-        BigDecimal total = weights.entrySet().stream()
+        BigDecimal baseScore = weights.entrySet().stream()
                 .map(entry -> dimensions.getOrDefault(entry.getKey(), BigDecimal.ZERO).multiply(entry.getValue()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .setScale(2, RoundingMode.HALF_UP);
-        return new ScoreResult(candidate.routeId(), total, dimensions, List.of("Scored using " + candidate.family() + " illustrative demo dimensions."));
+        var customerFit = customerFitScoringService.score(
+                candidate,
+                dimensions,
+                customerInsightUsed,
+                customerInsightContext);
+        BigDecimal finalScore = baseScore.add(customerFit.adjustment())
+                .max(BigDecimal.ZERO)
+                .min(BigDecimal.valueOf(100))
+                .setScale(2, RoundingMode.HALF_UP);
+        return new ScoreResult(
+                candidate.routeId(),
+                finalScore,
+                dimensions,
+                List.of("Scored using " + candidate.family() + " illustrative demo dimensions."),
+                baseScore,
+                customerFit.adjustment(),
+                finalScore,
+                customerFit.reasons(),
+                customerFit.capApplied(),
+                customerFit.insightUsed(),
+                "customer-fit-v1-demo");
     }
 
     private Map<String, BigDecimal> baseDimensions(String family) {

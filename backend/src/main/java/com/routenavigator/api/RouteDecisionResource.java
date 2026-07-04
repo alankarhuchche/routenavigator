@@ -32,7 +32,10 @@ public class RouteDecisionResource {
     @POST
     public DecisionTrace create(RouteDecisionRequest request) {
         PaymentIntent intent = intentFrom(request);
-        return decisionTraceService.createTrace(routeDecisionService.decide(intent));
+        return decisionTraceService.createTrace(routeDecisionService.decide(
+                intent,
+                request.customerInsightUsed(),
+                request.customerInsightContext()));
     }
 
     @GET

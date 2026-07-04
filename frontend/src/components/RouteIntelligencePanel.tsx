@@ -75,7 +75,10 @@ export function RouteIntelligencePanel({ trace, customerInsightsUsed, insightPro
     { label: 'Rejected options', value: candidateRoutes > 0 ? String(rejectedRoutes) : 'Demo' },
     { label: 'Recommended safe route', value: trace.selectedRoute.label || 'To be confirmed' },
   ]
-  const fitReasons = insightProfile ? customerFitReasons(insightProfile) : []
+  const scoreEvidence = trace.scoreEvidence
+  const fitReasons = scoreEvidence?.customerFitReasons.length
+    ? scoreEvidence.customerFitReasons
+    : insightProfile ? customerFitReasons(insightProfile) : []
 
   return (
     <section className="route-intelligence-panel" aria-label="Route intelligence analysis">
@@ -104,8 +107,8 @@ export function RouteIntelligencePanel({ trace, customerInsightsUsed, insightPro
               ? `This recommendation considered the confirmed money movement intent and relevant customer context, including ${insightProfile?.purposeDetected ?? 'declared purpose'} and ${insightProfile?.riskNormality ?? 'normality context'}.`
               : 'This recommendation used the confirmed money movement intent and route controls only.'}
           </p>
-          {customerInsightsUsed && (
-            <small>Customer insight is shown as context in this phase. Profile-aware scoring is planned for a later phase.</small>
+          {customerInsightsUsed && scoreEvidence?.insightUsed && (
+            <small>Customer-fit adjustment applied after hard controls passed.</small>
           )}
         </div>
       </div>
@@ -116,7 +119,7 @@ export function RouteIntelligencePanel({ trace, customerInsightsUsed, insightPro
             <UserCheck size={18} aria-hidden="true" />
             <div>
               <h3>Why this fits your money movement</h3>
-              <p>These reasons use the mocked consented customer context for explanation only.</p>
+              <p>This route passed bank controls and best fits your confirmed money movement.</p>
             </div>
           </div>
           <ul>
@@ -128,8 +131,17 @@ export function RouteIntelligencePanel({ trace, customerInsightsUsed, insightPro
             ))}
           </ul>
           <p className="customer-fit-boundary">
-            Customer insight can explain fit and future ranking, but it cannot override fraud, sanctions, limits, eligibility or regulatory controls.
+            {scoreEvidence?.insightUsed
+              ? 'Customer insight added a bounded fit adjustment after controls passed. It cannot override fraud, sanctions, limits, eligibility or regulatory controls.'
+              : 'Customer insight was requested, but this demo trace has no scoring evidence. It cannot override fraud, sanctions, limits, eligibility or regulatory controls.'}
           </p>
+          {scoreEvidence?.insightUsed && (
+            <dl className="customer-fit-score-strip" aria-label="Customer-fit score impact">
+              <div><dt>Base score</dt><dd>{scoreEvidence.baseScore.toFixed(1)}</dd></div>
+              <div><dt>Customer fit</dt><dd>{signedScore(scoreEvidence.customerFitAdjustment)}</dd></div>
+              <div><dt>Final score</dt><dd>{scoreEvidence.finalScore.toFixed(1)}</dd></div>
+            </dl>
+          )}
         </div>
       ) : (
         <div className="customer-fit-explanation no-insight" aria-label="No customer insight explanation">
@@ -137,7 +149,7 @@ export function RouteIntelligencePanel({ trace, customerInsightsUsed, insightPro
             <Info size={18} aria-hidden="true" />
             <div>
               <h3>Customer insight was not used for this analysis.</h3>
-              <p>The recommendation used confirmed intent, controls and route conditions only. No customer profile context was applied.</p>
+              <p>The recommendation used confirmed intent, controls and route conditions only. No customer-fit scoring was applied; adjustment is 0.</p>
             </div>
           </div>
         </div>
@@ -182,4 +194,8 @@ export function RouteIntelligencePanel({ trace, customerInsightsUsed, insightPro
       </div>
     </section>
   )
+}
+
+function signedScore(value: number) {
+  return `${value >= 0 ? '+' : ''}${value.toFixed(1)}`
 }

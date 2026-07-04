@@ -25,10 +25,11 @@ export function TrustedAgentExplanationPanel({
     if (trace.explanation?.trim()) return trace.explanation
     return 'Demo fallback explanation: the deterministic route engine recommended this route after controls and scoring were applied. Review the Decision Trace for alternatives and gate results.'
   }, [trace.explanation])
-  const fitReasons = useMemo(
-    () => insightProfile && customerInsightsUsed ? customerFitReasons(insightProfile).slice(0, 3) : [],
-    [customerInsightsUsed, insightProfile],
-  )
+  const fitReasons = useMemo(() => {
+    if (!customerInsightsUsed) return []
+    if (trace.scoreEvidence?.customerFitReasons.length) return trace.scoreEvidence.customerFitReasons.slice(0, 3)
+    return insightProfile ? customerFitReasons(insightProfile).slice(0, 3) : []
+  }, [customerInsightsUsed, insightProfile, trace.scoreEvidence])
 
   useEffect(() => {
     return () => {
@@ -88,7 +89,7 @@ export function TrustedAgentExplanationPanel({
 
       <div className="trusted-agent-boundary">
         <ShieldCheck size={15} aria-hidden="true" />
-        <span>Agent boundary: explain and summarise only. Customer-fit reasoning is explanation-only. The agent cannot approve, execute, amend, cancel or move money.</span>
+        <span>Agent boundary: explain and summarise computed evidence only. The agent cannot approve, execute, amend, cancel or move money. It cannot score or rank routes.</span>
       </div>
 
       <div className="trusted-agent-actions">

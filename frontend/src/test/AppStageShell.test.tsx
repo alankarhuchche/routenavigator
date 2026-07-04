@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import App from '../App'
 
 vi.mock('../api', () => ({
@@ -36,6 +36,21 @@ vi.mock('../api', () => ({
         customerLabel: 'International bank transfer',
         status: 'EXCLUDED',
         reasons: ['Did not best match confirmed intent and controls.'],
+      },
+    ],
+    scoreResults: [
+      {
+        routeId: 'route-uk-instant-bank-transfer',
+        totalScore: 98,
+        dimensions: { speed: 98, cost: 95, certainty: 95, transparency: 75 },
+        reasons: ['Illustrative base dimensions.'],
+        baseScore: 88,
+        customerFitAdjustment: 10,
+        finalScore: 98,
+        customerFitReasons: ['+2 - Purpose fit favours certainty.', '+2 - High speed preference favours a faster eligible route.'],
+        customerFitCapApplied: true,
+        insightUsed: true,
+        scoringVersion: 'customer-fit-v1-demo',
       },
     ],
     pointOfNoReturn: 'On submission to Faster Payments',
@@ -143,9 +158,24 @@ describe('page-like demo stage shell', () => {
     fireEvent.click(screen.getByRole('button', { name: /Use insights and analyse safe routes/i }))
 
     expect(await screen.findByText('Analysing the best safe way')).toBeInTheDocument()
+    expect(screen.getByText('Base score')).toBeInTheDocument()
+    expect(screen.getByText('Customer fit')).toBeInTheDocument()
+    expect(screen.getByText('Final score')).toBeInTheDocument()
+    expect(screen.getByText('+10.0')).toBeInTheDocument()
+    expect(screen.getByText(/bounded fit adjustment after controls passed/i)).toBeInTheDocument()
     expect(screen.getByText('Trusted banking agent')).toBeInTheDocument()
     expect(screen.queryByText('Money movement journey map')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: /^Journey & Controls$/i })).not.toBeDisabled()
+
+    fireEvent.click(screen.getByRole('button', { name: /show bank intelligence/i }))
+    const routeDrawer = screen.getByRole('dialog', { name: /route recommendation evidence/i })
+    expect(within(routeDrawer).getByText('88.00')).toBeInTheDocument()
+    expect(within(routeDrawer).getByText('+10.00')).toBeInTheDocument()
+    expect(within(routeDrawer).getByText('98.00')).toBeInTheDocument()
+    expect(within(routeDrawer).getByText('Yes, bounded at +10 / -5')).toBeInTheDocument()
+    expect(within(routeDrawer).getByText(/Hard controls passed first/i)).toBeInTheDocument()
+    expect(within(routeDrawer).getByText(/Gemini did not score or select/i)).toBeInTheDocument()
+    fireEvent.click(within(routeDrawer).getByRole('button', { name: /close bank intelligence/i }))
 
     fireEvent.click(screen.getByRole('button', { name: /Continue to Journey & Controls/i }))
 

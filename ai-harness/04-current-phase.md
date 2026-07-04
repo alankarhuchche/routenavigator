@@ -1,53 +1,53 @@
 # Current Phase
 
-Phase 4E-implementation — Bounded customer-fit scoring
+Phase 4F — Customer-fit regression QA and release decision
 
-Execution mode: do not start Phase 4E-implementation unless explicitly instructed. Use `ai-harness/program/execution-state.md` and `bash scripts/ai-program-next.sh` to confirm state before further controlled execution.
+Execution mode: do not start Phase 4F unless explicitly instructed. Use `ai-harness/program/execution-state.md` to confirm state before further controlled execution.
 
 ## Objective
 
-Implement bounded customer-fit scoring only if the route-logic gate is explicitly approved.
+Verify the complete six-stage journey after bounded customer-fit scoring and make a release recommendation without pushing or deploying.
 
 ## Current Status
 
 - Phase 4A reframed the product as Money Movement Intelligence.
-- Phase 4E-design is complete locally.
+- Phase 4E-design and Phase 4E-implementation are complete locally.
 - Customer View is the default, simple, outcome-led layer.
 - Bank Intelligence is now optional behind-the-scenes context for controls, AI role, route evidence, map caveats and approval boundaries.
 - Detailed route evidence and control-room content are no longer the first thing a customer sees.
 - Phase 4C added Customer Insight Context as stage 3 in a six-stage journey.
 - Customer insight is mocked/static, visible to the customer, and can be included or excluded before analysis.
 - Route Intelligence and Bank Intelligence now show whether insight was used as context.
-- Phase 4D added customer-fit explanation when insight is used, plus a no-insight explanation path when it is not used.
-- Trusted agent explanation now separates route outcome explanation from customer-fit explanation.
-- Phase 4E-design documented a hard-control-first model, capped customer-fit scoring, no-insight behaviour, explainability, Gemini boundaries and data/privacy controls.
-- No runtime app logic, backend route decision logic, payment execution logic, API contracts, deployment files, dependencies, customer profile scoring or ranking logic changed in Phase 4E-design.
+- Phase 4E-implementation added optional mocked customer insight to route-decision requests.
+- Hard gates remain first; only `AVAILABLE` routes receive deterministic customer-fit scoring.
+- Customer-fit adjustment is capped at `-5` to `+10`; missing, disabled or unconsented insight applies `0`.
+- Route responses and the UI expose base score, bounded adjustment, final score, reasons and cap state.
+- Gemini remains explanation-only and payment execution/approval boundaries are unchanged.
 
-## Expected Phase 4E Scope
+## Expected Phase 4F Scope
 
-- Implement the bounded customer-fit scoring model from `ai-harness/16-customer-fit-scoring-design.md`, only after gate approval.
-- Keep hard controls, sanctions, fraud, eligibility, limits and regulatory checks non-overridable.
-- Keep customer insight consent, visibility and no-real-data demo boundaries explicit.
-- Update route decision logic only within the approved scope.
-- Preserve Gemini/agent boundaries: AI may explain but must not score, select, approve, execute or update payment state.
+- Re-run frontend lint, typecheck, build and tests plus backend tests and package.
+- Regression-check insight and no-insight paths, voice/text structuring, explanation, map, approval and tracking.
+- Inspect the committed diff and production packaging without changing deployment files.
+- Recommend push or do not push; stop at the human release gate.
 
 ## Constraints
 
 - Do not push without explicit approval.
 - Do not deploy without explicit approval.
-- Do not change backend route logic.
-- Do not change payment execution logic.
-- Do not change API contracts unless explicitly approved by a gate.
+- Fix only small regressions directly caused by Phase 4E.
+- Do not broaden customer insight, route logic or payment execution scope.
+- Do not change API contracts or deployment files.
 - Do not change deployment files.
 - Do not add dependencies.
 - Do not touch `.claude/worktrees`.
 
-## Expected Outputs For Phase 4E
+## Expected Outputs For Phase 4F
 
 - Files inspected.
 - Files changed.
-- Bounded scoring implementation summary.
-- Safety/consent/hard-control boundary summary.
+- Regression scope and results.
+- Release recommendation.
 - Commands run and results.
 - Acceptance criteria result.
 - Local commit only if checks pass.

@@ -1,5 +1,5 @@
 import type { DecisionTrace, RouteCandidate, GateResult } from './types'
-import type { ApiDecisionTrace, ApiRouteCandidate } from './apiTypes'
+import type { ApiDecisionTrace, ApiRouteCandidate, ApiScoreResult } from './apiTypes'
 import type { DemoScenario } from './types'
 
 const DEFAULT_EVENTS = [
@@ -12,6 +12,7 @@ const DEFAULT_EVENTS = [
 function adaptRouteCandidate(
   api: ApiRouteCandidate,
   staticCandidates: RouteCandidate[],
+  score?: ApiScoreResult,
 ): RouteCandidate {
   const match = staticCandidates.find((c) => c.family === api.family)
   return {
@@ -21,7 +22,7 @@ function adaptRouteCandidate(
     status: api.status as RouteCandidate['status'],
     eta: match?.eta ?? '-',
     cost: match?.cost ?? '-',
-    score: match?.score,
+    score: score?.finalScore ?? match?.score,
     reasons: api.reasons,
     coordinates: match?.coordinates ?? [],
   }
@@ -33,6 +34,7 @@ export function adaptTrace(
   explanation: string,
 ): DecisionTrace {
   const staticCandidates = scenario.trace.candidates
+  const scoreByRouteId = new Map((api.scoreResults ?? []).map(score => [score.routeId, score]))
 
   const seen = new Set<string>()
   const allApiRoutes = [...api.candidateRoutes, ...api.excludedRoutes].filter((r) => {
@@ -42,14 +44,14 @@ export function adaptTrace(
   })
 
   const candidates: RouteCandidate[] = allApiRoutes.map((r) => {
-    const adapted = adaptRouteCandidate(r, staticCandidates)
+    const adapted = adaptRouteCandidate(r, staticCandidates, scoreByRouteId.get(r.routeId))
     return r.routeId === api.selectedRoute.routeId
       ? { ...adapted, status: 'SELECTED' as RouteCandidate['status'] }
       : adapted
   })
 
   const selectedRoute = {
-    ...adaptRouteCandidate(api.selectedRoute, staticCandidates),
+    ...adaptRouteCandidate(api.selectedRoute, staticCandidates, scoreByRouteId.get(api.selectedRoute.routeId)),
     status: 'SELECTED' as RouteCandidate['status'],
   }
 
@@ -69,6 +71,7 @@ export function adaptTrace(
     api.executionEvents.length > 0
       ? api.executionEvents.map((e) => e.message)
       : DEFAULT_EVENTS
+  const selectedScore = scoreByRouteId.get(api.selectedRoute.routeId)
 
   return {
     traceId: api.traceId,
@@ -83,5 +86,15 @@ export function adaptTrace(
     explanation,
     events,
     fallbackEvent: undefined,
+    scoreEvidence: selectedScore ? {
+      routeId: selectedScore.routeId,
+      baseScore: selectedScore.baseScore,
+      customerFitAdjustment: selectedScore.customerFitAdjustment,
+      finalScore: selectedScore.finalScore,
+      customerFitReasons: selectedScore.customerFitReasons,
+      customerFitCapApplied: selectedScore.customerFitCapApplied,
+      insightUsed: selectedScore.insightUsed,
+      scoringVersion: selectedScore.scoringVersion,
+    } : undefined,
   }
 }

@@ -212,7 +212,23 @@ function App() {
         return
       }
       // Step 2: run route decision + Gemini explanation
-      const apiTrace = await createRouteDecision(resolvedScenarioId)
+      const apiTrace = await createRouteDecision(resolvedScenarioId, useInsights ? {
+        customerInsightUsed: true,
+        customerInsightContext: {
+          purposeDetected: demoCustomerInsightProfile.purposeDetected,
+          usualMovementPattern: demoCustomerInsightProfile.usualMovementPattern,
+          typicalAmountRange: demoCustomerInsightProfile.typicalAmountRange,
+          beneficiaryRelationship: demoCustomerInsightProfile.beneficiaryRelationship,
+          trackingPreference: demoCustomerInsightProfile.trackingPreference,
+          speedPreference: demoCustomerInsightProfile.speedPreference,
+          feeSensitivity: demoCustomerInsightProfile.feeSensitivity,
+          previousRouteExperience: demoCustomerInsightProfile.previousRouteExperience,
+          riskNormality: demoCustomerInsightProfile.riskNormality,
+          digitalRoutesAllowed: demoCustomerInsightProfile.digitalRoutesAllowed,
+          consentForPersonalisedRouting: demoCustomerInsightProfile.consentForPersonalisedRouting,
+          insightSource: demoCustomerInsightProfile.insightSource,
+        },
+      } : { customerInsightUsed: false })
       const explanationResp = await fetchExplanation(apiTrace.traceId)
       const matchedScenario = demoScenarios.find(s => s.id === resolvedScenarioId) ?? scenario
       const adapted = adaptTrace(apiTrace, matchedScenario, explanationResp.explanation)

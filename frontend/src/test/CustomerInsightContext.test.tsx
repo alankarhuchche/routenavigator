@@ -3,14 +3,19 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import App from '../App'
 
 function mockBackendFallback() {
-  vi.stubGlobal('fetch', vi.fn(() => Promise.reject(new Error('demo fallback'))))
+  const fetchMock = vi.fn((...request: [RequestInfo | URL, RequestInit?]) => {
+    void request
+    return Promise.reject(new Error('demo fallback'))
+  })
+  vi.stubGlobal('fetch', fetchMock)
+  return fetchMock
 }
 
 async function reachInsightStage() {
   render(<App />)
   fireEvent.click(screen.getAllByRole('button', { name: /Continue to Money Movement Intent/i })[0])
   fireEvent.change(screen.getByLabelText('Money movement outcome'), {
-    target: { value: 'Send GBP 5,000 to India in INR with tracking.' },
+    target: { value: 'Send GBP 500 to a UK beneficiary as quickly as possible.' },
   })
   fireEvent.click(screen.getByRole('button', { name: /structure intent/i }))
   await waitFor(() => expect(screen.getAllByText(/structured this intent/i).length).toBeGreaterThan(0))
@@ -49,7 +54,7 @@ describe('Customer Insight Context stage', () => {
   }, 10_000)
 
   it('analyses with customer insight and shows insight considered in Route Intelligence', async () => {
-    mockBackendFallback()
+    const fetchMock = mockBackendFallback()
     await reachInsightStage()
 
     fireEvent.click(screen.getByRole('button', { name: /Use insights and analyse safe routes/i }))
@@ -60,20 +65,22 @@ describe('Customer Insight Context stage', () => {
     expect(screen.getAllByText(/This looks like family support/i).length).toBeGreaterThan(1)
     expect(screen.getAllByText(/within the usual movement range/i).length).toBeGreaterThan(1)
     expect(screen.getAllByText(/beneficiary is a previously paid beneficiary/i).length).toBeGreaterThan(1)
-    expect(screen.getByText(/Customer insight can explain fit and future ranking/i)).toBeInTheDocument()
-    expect(screen.getByText(/profile-aware scoring is planned for a later phase/i)).toBeInTheDocument()
+    expect(screen.getByText(/Customer insight was requested, but this demo trace has no scoring evidence/i)).toBeInTheDocument()
     expect(screen.getByText('Customer-fit explanation')).toBeInTheDocument()
-    expect(screen.getByText(/Customer-fit reasoning is explanation-only/i)).toBeInTheDocument()
+    expect(screen.getByText(/agent cannot approve, execute, amend, cancel or move money.*cannot score or rank routes/i)).toBeInTheDocument()
+    const routeDecisionCall = fetchMock.mock.calls.find(([input]) => input === '/api/route-decisions')
+    const requestBody = JSON.parse(String(routeDecisionCall?.[1]?.body))
+    expect(requestBody.customerInsightUsed).toBe(true)
+    expect(requestBody.customerInsightContext.insightSource).toBe('Demo customer profile')
+    expect(requestBody.customerInsightContext.consentForPersonalisedRouting).toBe(true)
     fireEvent.click(screen.getByRole('button', { name: /show bank intelligence/i }))
     const drawer = screen.getByRole('dialog', { name: /route recommendation evidence/i })
-    expect(within(drawer).getByText('Yes, as context only')).toBeInTheDocument()
-    expect(within(drawer).getByText('Not implemented yet')).toBeInTheDocument()
-    expect(within(drawer).getByText('None in Phase 4D')).toBeInTheDocument()
-    expect(within(drawer).getByText(/cannot override fraud, sanctions, limits, eligibility or regulatory controls/i)).toBeInTheDocument()
+    expect(within(drawer).getByText('Requested; scoring evidence unavailable')).toBeInTheDocument()
+    expect(within(drawer).getByText(/Hard controls passed first.*cannot rescue an excluded route/i)).toBeInTheDocument()
   })
 
   it('analyses without customer insight and keeps no-real-data boundary visible in the drawer', async () => {
-    mockBackendFallback()
+    const fetchMock = mockBackendFallback()
     await reachInsightStage()
 
     fireEvent.click(screen.getByLabelText('Use customer insight for this analysis'))
@@ -83,10 +90,16 @@ describe('Customer Insight Context stage', () => {
     expect(await screen.findByText('Analysing the best safe way')).toBeInTheDocument()
     expect(screen.getByText('Customer insight not used for this analysis')).toBeInTheDocument()
     expect(screen.getByText('Customer insight was not used for this analysis.')).toBeInTheDocument()
-    expect(screen.getByText(/No customer profile context was applied/i)).toBeInTheDocument()
+    expect(screen.getByText(/No customer-fit scoring was applied; adjustment is 0/i)).toBeInTheDocument()
+    const routeDecisionCall = fetchMock.mock.calls.find(([input]) => input === '/api/route-decisions')
+    const requestBody = JSON.parse(String(routeDecisionCall?.[1]?.body))
+    expect(requestBody.customerInsightUsed).toBe(false)
+    expect(requestBody.customerInsightContext).toBeUndefined()
     fireEvent.click(screen.getByRole('button', { name: /show bank intelligence/i }))
     const drawer = screen.getByRole('dialog', { name: /route recommendation evidence/i })
-    expect(within(drawer).getByText('No')).toBeInTheDocument()
+    const insightUsedFact = within(drawer).getByText('Insight used').closest('div')
+    expect(insightUsedFact).not.toBeNull()
+    expect(within(insightUsedFact as HTMLElement).getByText('No')).toBeInTheDocument()
 
     fireEvent.click(within(drawer).getByRole('button', { name: /close bank intelligence/i }))
     fireEvent.click(screen.getByRole('button', { name: /^Customer Insight Context$/i }))

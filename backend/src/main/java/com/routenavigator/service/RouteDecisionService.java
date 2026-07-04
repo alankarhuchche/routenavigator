@@ -1,5 +1,6 @@
 package com.routenavigator.service;
 
+import com.routenavigator.domain.CustomerInsightContext;
 import com.routenavigator.domain.PaymentIntent;
 import com.routenavigator.domain.RouteCandidate;
 import com.routenavigator.domain.RouteDecisionResult;
@@ -25,8 +26,19 @@ public class RouteDecisionService {
     }
 
     public RouteDecisionResult decide(PaymentIntent intent) {
+        return decide(intent, false, null);
+    }
+
+    public RouteDecisionResult decide(
+            PaymentIntent intent,
+            Boolean customerInsightUsed,
+            CustomerInsightContext customerInsightContext) {
         var gateOutcome = gateEvaluationService.evaluate(intent, routeCatalogueService.findAll());
-        var scoreResults = routeScoringService.score(intent, gateOutcome.survivingRoutes());
+        var scoreResults = routeScoringService.score(
+                intent,
+                gateOutcome.survivingRoutes(),
+                customerInsightUsed,
+                customerInsightContext);
         var selectedRouteId = scoreResults.stream()
                 .max(Comparator.comparing(com.routenavigator.domain.ScoreResult::totalScore)
                         .thenComparing(com.routenavigator.domain.ScoreResult::routeId))

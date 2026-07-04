@@ -2,7 +2,7 @@
 
 Phase: 4E-design
 
-Status: Design complete. No runtime scoring, API, backend route decision, payment execution, dependency, push or deploy changes were made.
+Status: Design implemented locally in Phase 4E-implementation. Push and deploy remain human-gated.
 
 ## Purpose
 
@@ -263,4 +263,14 @@ Forbidden or high-risk data:
 
 ## Implementation Gate
 
-Phase 4E-design does not authorize scoring implementation. Phase 4E-implementation must be separately approved because it can affect backend route scoring/ranking and public API evidence.
+Phase 4E-implementation was separately approved and completed locally. Regression QA and release approval remain separate gates.
+
+## Implementation Result
+
+- Optional `customerInsightUsed` and `customerInsightContext` request fields preserve existing scenario and payment-intent requests.
+- Existing route dimensions produce the base score; deterministic fit signals then produce a bounded `-5` to `+10` adjustment.
+- Fit scoring receives only routes that already survived hard gates.
+- Missing, declined or unconsented insight produces adjustment `0`.
+- Responses expose base score, adjustment, final score, reasons, cap state, insight state and scoring version.
+- Frontend Route Intelligence shows a compact score impact; Bank Intelligence shows detailed evidence and control boundaries.
+- Implementation uses the existing mocked frontend profile only. No real customer data, external services, dependencies, payment execution changes, push or deploy were introduced.

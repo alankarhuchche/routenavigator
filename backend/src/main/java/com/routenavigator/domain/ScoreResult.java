@@ -8,5 +8,12 @@ public record ScoreResult(
         String routeId,
         BigDecimal totalScore,
         Map<String, BigDecimal> dimensions,
-        List<String> reasons) {
+        List<String> reasons,
+        BigDecimal baseScore,
+        BigDecimal customerFitAdjustment,
+        BigDecimal finalScore,
+        List<String> customerFitReasons,
+        boolean customerFitCapApplied,
+        boolean insightUsed,
+        String scoringVersion) {
 }
