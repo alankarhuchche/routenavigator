@@ -1,17 +1,17 @@
 # syntax=docker/dockerfile:1
 
 FROM node:24-alpine AS frontend-build
-WORKDIR /workspace/frontend
-COPY frontend/package*.json ./
+WORKDIR /workspace/studio
+COPY studio/package*.json ./
 RUN npm ci
-COPY frontend/ ./
+COPY studio/ ./
 RUN npm run build
 
 FROM maven:3.9.16-eclipse-temurin-21 AS backend-build
 WORKDIR /workspace
 COPY backend/pom.xml backend/
 COPY backend/ backend/
-COPY --from=frontend-build /workspace/frontend/dist/ backend/src/main/resources/META-INF/resources/
+COPY --from=frontend-build /workspace/studio/dist/ backend/src/main/resources/META-INF/resources/
 RUN cd backend && mvn -B package -DskipTests
 
 FROM registry.access.redhat.com/ubi9/openjdk-21-runtime:1.24

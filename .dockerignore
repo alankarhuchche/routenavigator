@@ -4,6 +4,10 @@
 backend/target
 frontend/dist
 frontend/node_modules
+studio/dist
+studio/test-results
+studio/playwright-report
+studio/.openai
 
 **/.env
 **/.env.*

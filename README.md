@@ -4,6 +4,12 @@ Payment Route Orchestrator is a simulated executive demo for explainable payment
 
 This is a demo only. It must not connect to live payment rails, SWIFT, bank accounts, wallets, stablecoin networks, FX systems, sanctions systems, real customer data, or production secrets.
 
+## Supplier payment demo
+
+The Cloud Run homepage opens the Route Navigator Studio supplier case. It compares routes for a US$30,000 invoice due within 90 minutes and replays the same payout outage before and after settlement commitment. Run the studio from `studio/` with `npm ci` and `npm run dev`. See the [Studio walkthrough](studio/README.md) for review and test steps.
+
+The container serves the studio at `/` and the Quarkus endpoints at `/api/*`. The original API-connected frontend runs locally from `frontend/` using the steps below.
+
 ## Planned stack
 - Backend: Java + Quarkus
 - API: REST endpoints served by Quarkus

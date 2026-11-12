@@ -105,3 +105,11 @@ Result: passed.
 2026-06-09 — Harness migration to payments-agent-harness v0.6.1 contract
 Change: Replaced legacy AGENTS.md with the new contract; added STATE.md, history.md (this file), 04 updated to 5-bucket acceptance criteria, 05 renamed from 05-demo-scenarios.md, new docs 06–09, adr/ folder.
 Result: migration complete.
+
+## 2026-11-12 — Supplier payment Studio deployment source
+
+- Added the reviewed Studio source and configured both Dockerfiles to bundle its compiled assets. The Quarkus API routes retain their existing contracts.
+- Verified `cd studio && npm test` with 20 passing tests and `npm run build` with a successful TypeScript and Vite build.
+- Packaged the Studio assets with `cd backend && ./mvnw -B package`. Maven reported 38 tests, zero failures and BUILD SUCCESS.
+- Ran `cd studio && npm run test:e2e` against the packaged Quarkus JAR. All seven browser tests passed, `/api/health` returned `{"status":"ok","service":"payment-route-orchestrator-demo"}`, and the homepage served the supplier payment case.
+- See [ADR 0002](adr/0002-serve-supplier-payment-studio.md). Cloud Build will build the container image.

@@ -1,6 +1,6 @@
 # Cloud Run Demo Deployment
 
-This deployment path creates one container that serves the React demo UI and Quarkus REST APIs from the same Cloud Run URL.
+This deployment path creates one container that serves the Route Navigator Studio supplier case at `/` and the Quarkus REST APIs at `/api/*`. Both Dockerfiles build the React app from `studio/` and copy its compiled assets into the Quarkus package.
 
 No live payment rails, SWIFT, bank accounts, wallets, stablecoin networks, FX systems, sanctions systems, real customer data or production secrets are required.
 

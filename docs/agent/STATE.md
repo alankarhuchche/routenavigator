@@ -6,9 +6,10 @@
 - Confirmed scope — OUT: live payment rails, real secrets (except GEMINI_API_KEY at runtime),
   database (PostgreSQL deferred), tokenised securities settlement.
 - Scope confirmed on: 2026-06-03 (MVP complete). Re-confirm if scope changes.
-- Current phase: post-MVP — harness migration complete; deployment handover pending.
-- Last green run: cd backend && ./mvnw test → 18/18 passed · cd frontend && npm run build →
-  clean · cd frontend && npm run typecheck → 0 errors · cd frontend && npm run lint → clean.
-- Next backlog item: none open. Next action: Docker/Cloud Build deployment handover.
-- Open risks / blockers: Docker not installed locally — container build not verified locally;
-  use Cloud Build. Browser visual smoke not run (browser runtime unavailable in this session).
+- Current phase: the supplier payment Studio is wired into the Cloud Build container.
+- Last green run: `cd studio && npm test` passed 20 tests, `npm run build` succeeded, and
+  `cd backend && ./mvnw -B package` passed 38 tests with the Studio assets bundled. All seven
+  Playwright tests passed against the packaged Quarkus service.
+- Next action: observe the Cloud Build image build and configured Cloud Run rollout.
+- Open risk: Docker is unavailable locally. The Quarkus package and browser walkthrough
+  were verified directly with JDK 21.
